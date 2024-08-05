@@ -220,14 +220,20 @@ export default function Home() {
           )}
         </div>
 
-        <Timelines
-          nowLocalDate={nowLocalDate}
-          dataCalendar1={dataCalendar1}
-          dataCalendar2={dataCalendar2}
-          dataCalendar3={dataCalendar3}
-          dataCalendar4={dataCalendar4}
-          dataCalendar5={dataCalendar5}
-        />
+        {!!dataCalendar1 &&
+          !!dataCalendar2 &&
+          !!dataCalendar3 &&
+          !!dataCalendar4 &&
+          !!dataCalendar5 && (
+            <Timelines
+              nowLocalDate={nowLocalDate}
+              dataCalendar1={dataCalendar1}
+              dataCalendar2={dataCalendar2}
+              dataCalendar3={dataCalendar3}
+              dataCalendar4={dataCalendar4}
+              dataCalendar5={dataCalendar5}
+            />
+          )}
       </section>
     </UserLayout>
   )

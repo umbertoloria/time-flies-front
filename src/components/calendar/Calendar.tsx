@@ -99,7 +99,7 @@ export const CalendarTitle: FC<
   </div>
 )
 
-const CalendarArrowControl: FC<{
+export const CalendarArrowControl: FC<{
   firstMonthLang: string
   lastMonthLang: string
   goInThePast: () => void

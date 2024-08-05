@@ -15,13 +15,14 @@ import {
   localDatesLT,
 } from '../../lib/utils'
 
-function createCalendarCellPropsList(
+export function createCalendarLinePropsList(
   endDate: Date,
   numDaysBefore: number,
   calendar: TCalendar,
   nowDate: Date,
   color: string
-): CalendarCellProps[] {
+): CalendarLineProps[] {
+  // Calculating cells
   let iDatesInfo = 0
 
   const cells: CalendarCellProps[] = []
@@ -71,7 +72,11 @@ function createCalendarCellPropsList(
 
     --iCell
   }
-  return cells
+  return [
+    {
+      cells,
+    },
+  ]
 }
 
 export const Timeline: FC<{
@@ -82,20 +87,13 @@ export const Timeline: FC<{
 }> = props => {
   const { color } = props.calendar
 
-  // Calculating cells
-  const cells = createCalendarCellPropsList(
+  const calendarLines = createCalendarLinePropsList(
     props.endDate,
     props.numDaysBefore,
     props.calendar,
     props.nowDate,
     color
   )
-
-  const calendarLines: CalendarLineProps[] = [
-    {
-      cells,
-    },
-  ]
 
   return (
     <>
