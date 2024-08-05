@@ -12,38 +12,35 @@ import {
 import {
   datesInTheSameDay,
   getDayCodeByDate,
-  getNowDate,
   localDatesLT,
 } from '../../lib/utils'
 
-export const Timeline: FC<{
-  endDate: Date
-  numDaysBefore: number
-  calendar: TCalendar
-}> = props => {
+function createCalendarCellPropsList(
+  endDate: Date,
+  numDaysBefore: number,
+  calendar: TCalendar,
+  nowDate: Date,
+  color: string
+): CalendarCellProps[] {
   let iDatesInfo = 0
 
-  const nowDate = getNowDate()
-  const { color } = props.calendar
-
-  // Calculating cells
   const cells: CalendarCellProps[] = []
-  let iCell = props.numDaysBefore
+  let iCell = numDaysBefore
   while (iCell >= 0) {
-    const curDate = getDateWithOffsetDays(props.endDate, -iCell)
+    const curDate = getDateWithOffsetDays(endDate, -iCell)
     const localDate = getDayCodeByDate(curDate)
 
     const isToday = datesInTheSameDay(curDate, nowDate)
 
     while (
-      iDatesInfo < props.calendar.datesInfo.length &&
-      localDatesLT(props.calendar.datesInfo[iDatesInfo].date, localDate)
+      iDatesInfo < calendar.datesInfo.length &&
+      localDatesLT(calendar.datesInfo[iDatesInfo].date, localDate)
     ) {
       ++iDatesInfo
     }
 
-    if (iDatesInfo < props.calendar.datesInfo.length) {
-      const dateInfo = props.calendar.datesInfo[iDatesInfo]
+    if (iDatesInfo < calendar.datesInfo.length) {
+      const dateInfo = calendar.datesInfo[iDatesInfo]
 
       if (dateInfo.date === localDate) {
         cells.push({
@@ -74,6 +71,25 @@ export const Timeline: FC<{
 
     --iCell
   }
+  return cells
+}
+
+export const Timeline: FC<{
+  endDate: Date
+  numDaysBefore: number
+  nowDate: Date
+  calendar: TCalendar
+}> = props => {
+  const { color } = props.calendar
+
+  // Calculating cells
+  const cells = createCalendarCellPropsList(
+    props.endDate,
+    props.numDaysBefore,
+    props.calendar,
+    props.nowDate,
+    color
+  )
 
   const calendarLines: CalendarLineProps[] = [
     {

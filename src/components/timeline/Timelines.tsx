@@ -2,6 +2,7 @@ import { FC, useState } from 'react'
 import { CalendarTitle } from '../calendar/Calendar.tsx'
 import { Timeline } from './Timeline.tsx'
 import { TCalendar } from '../../remote/sdk/types'
+import { getNowDate } from '../../lib/utils.ts'
 
 type TimelinesDataCalendar = TCalendar & {
   loading: boolean
@@ -24,6 +25,7 @@ export const Timelines: FC<{
 }) => {
   const [endDate] = useState(new Date(nowLocalDate))
   const [numDaysBefore] = useState(38)
+  const nowDate = getNowDate()
 
   return (
     <>
@@ -35,6 +37,7 @@ export const Timelines: FC<{
           <Timeline
             endDate={endDate}
             numDaysBefore={numDaysBefore}
+            nowDate={nowDate}
             calendar={dataCalendar1}
           />
         </>
@@ -47,6 +50,7 @@ export const Timelines: FC<{
           <Timeline
             endDate={endDate}
             numDaysBefore={numDaysBefore}
+            nowDate={nowDate}
             calendar={dataCalendar2}
           />
         </>
@@ -59,6 +63,7 @@ export const Timelines: FC<{
           <Timeline
             endDate={endDate}
             numDaysBefore={numDaysBefore}
+            nowDate={nowDate}
             calendar={dataCalendar3}
           />
         </>
@@ -71,6 +76,7 @@ export const Timelines: FC<{
           <Timeline
             endDate={endDate}
             numDaysBefore={numDaysBefore}
+            nowDate={nowDate}
             calendar={dataCalendar4}
           />
         </>
@@ -83,6 +89,7 @@ export const Timelines: FC<{
           <Timeline
             endDate={endDate}
             numDaysBefore={numDaysBefore}
+            nowDate={nowDate}
             calendar={dataCalendar5}
           />
         </>
