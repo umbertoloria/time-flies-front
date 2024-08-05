@@ -1,7 +1,7 @@
 import {createContext, FC, PropsWithChildren, useContext, useEffect, useState} from "react";
 import {TAuthUser} from "../remote/sdk/types";
 import {authStatus} from "../remote/remote.ts";
-import {redirect} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 export const AuthContext = createContext<undefined | {
     user: TAuthUser | undefined
@@ -10,6 +10,8 @@ export const AuthContext = createContext<undefined | {
 }>(undefined);
 
 export const AuthProvider: FC<PropsWithChildren> = (props) => {
+    const navigate = useNavigate()
+
     const [user, setUser] = useState<TAuthUser | undefined>()
     const [loading, setLoading] = useState(false)
 
@@ -25,8 +27,7 @@ export const AuthProvider: FC<PropsWithChildren> = (props) => {
             .catch((err) => {
                 console.error(err)
                 setUser(undefined)
-                redirect('/login')
-                // navigate('/login', {replace: true}) FIXME
+                navigate('/login')
             })
             .finally(() => {
                 setLoading(false)

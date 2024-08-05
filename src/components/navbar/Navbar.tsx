@@ -14,7 +14,7 @@ export const Navbar = () => {
 						Home
 					</Link>
 				</li>
-				{!!user ? (<>
+				{user ? (<>
 					<li className="py-2 px-4">
 						<Link to="/account" className="no-underline hover:underline">
 							{user.email}
