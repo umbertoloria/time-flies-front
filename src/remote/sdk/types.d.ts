@@ -4,20 +4,20 @@
 
 // Calendar
 export type TCalendar = {
-	name: string;
-	color: string;
-	datesInfo: TDateInfo[];
-};
+  name: string
+  color: string
+  datesInfo: TDateInfo[]
+}
 export type TDateInfo = {
-	date: string; // Es. "2023-01-01"
-	intensity?: number;
-};
+  date: string // Es. "2023-01-01"
+  intensity?: number
+}
 
 // Auth
 export type TAuthStatus = {
-	user: TAuthUser;
-};
+  user: TAuthUser
+}
 export type TAuthUser = {
-	id: number;
-	email: string;
-};
+  id: number
+  email: string
+}
