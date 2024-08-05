@@ -38,14 +38,10 @@ export const CalendarStateless: FC<{
 }> = props => (
   <>
     {!!props.calendar && (
-      <h1
-        className='text-center text-lg font-semibold text-gray-700 bg-gray-500 rounded mb-2 py-0.5'
-        style={{
-          color: props.calendar.color || undefined,
-        }}
-      >
-        {props.calendar.name}
-      </h1>
+      <CalendarTitle
+        textColor={props.calendar.color}
+        label={props.calendar.name}
+      />
     )}
     <table className='m-auto text-gray-700'>
       <tbody>
@@ -56,6 +52,20 @@ export const CalendarStateless: FC<{
       </tbody>
     </table>
   </>
+)
+
+export const CalendarTitle: FC<{
+  textColor?: string
+  label: string
+}> = props => (
+  <h1
+    className='text-center text-lg font-semibold text-gray-700 bg-gray-500 rounded mb-2 mx-auto py-0.5 max-w-96'
+    style={{
+      color: props.textColor || undefined,
+    }}
+  >
+    {props.label}
+  </h1>
 )
 
 const weekDays = [

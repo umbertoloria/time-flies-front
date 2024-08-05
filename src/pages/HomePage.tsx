@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react'
 import { UserLayout } from '../layout/UserLayout.tsx'
 import { readCalendar } from '../remote/remote.ts'
 import { getDateWithOffsetDays } from '../components/calendar/utils.ts'
-import { Calendar } from '../components/calendar/Calendar.tsx'
+import { Calendar, CalendarTitle } from '../components/calendar/Calendar.tsx'
 import { Timeline } from '../components/timeline/Timeline.tsx'
 
-const defaultNumWeeks = 4 * 2 // Two months
+const defaultNumWeeks = 4 * 3 // Three months
 const periodRefreshCalendarsInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 
 const useWrapperForCreateResource = <T,>(
@@ -62,7 +62,7 @@ export default function Home() {
 
   const [numWeeks] = useState(defaultNumWeeks)
   const [endDate] = useState(new Date(nowLocalDate))
-  const [numDaysBefore] = useState(14)
+  const [numDaysBefore] = useState(38)
 
   const fromDate = () =>
     getDateWithOffsetDays(new Date(nowLocalDate), -(numWeeks * 7))
@@ -76,12 +76,15 @@ export default function Home() {
     useWrapperForCreateResource(3, readCalendar)
   const [dataCalendar4, { refetch: refetchCalendar4 }] =
     useWrapperForCreateResource(4, readCalendar)
+  const [dataCalendar5, { refetch: refetchCalendar5 }] =
+    useWrapperForCreateResource(5, readCalendar)
 
   const refreshCalendarIntervalTimer = setInterval(() => {
     refetchCalendar1()
     refetchCalendar2()
     refetchCalendar3()
     refetchCalendar4()
+    refetchCalendar5()
   }, periodRefreshCalendarsInMillis)
   useEffect(() => {
     return () => {
@@ -148,8 +151,25 @@ export default function Home() {
           ) : (
             <>Searching...</>
           )}
+
+          {dataCalendar5?.loading === false ? (
+            <>
+              <div>
+                <Calendar
+                  startWeekFromDate={fromDate()}
+                  numWeeks={numWeeks}
+                  calendar={dataCalendar5}
+                />
+              </div>
+            </>
+          ) : (
+            <>Searching...</>
+          )}
         </div>
 
+        <div className='pt-2 w-full text-center'>
+          <CalendarTitle textColor='#ddd' label='Timeline' />
+        </div>
         {dataCalendar1?.loading === false ? (
           <>
             <Timeline
@@ -192,6 +212,18 @@ export default function Home() {
               endDate={endDate}
               numDaysBefore={numDaysBefore}
               calendar={dataCalendar4}
+            />
+          </>
+        ) : (
+          <>Searching...</>
+        )}
+
+        {dataCalendar5?.loading === false ? (
+          <>
+            <Timeline
+              endDate={endDate}
+              numDaysBefore={numDaysBefore}
+              calendar={dataCalendar5}
             />
           </>
         ) : (
