@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react'
 import { UserLayout } from '../layout/UserLayout.tsx'
 import { readCalendar } from '../remote/remote.ts'
 import { getDateWithOffsetDays } from '../components/calendar/utils.ts'
-import { Calendar, CalendarTitle } from '../components/calendar/Calendar.tsx'
-import { Timeline } from '../components/timeline/Timeline.tsx'
+import { Calendar } from '../components/calendar/Calendar.tsx'
+import { Timelines } from '../components/timeline/Timelines.tsx'
 
 const defaultNumWeeks = 4 * 3 // Three months
 const periodRefreshCalendarsInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
@@ -60,9 +60,8 @@ export default function Home() {
   const nowDate = getNowDate()
   const nowLocalDate = getDayCodeByDate(nowDate)
 
+  // Calendars
   const [numWeeks] = useState(defaultNumWeeks)
-  const [endDate] = useState(new Date(nowLocalDate))
-  const [numDaysBefore] = useState(38)
 
   const [weeks4Before1, setWeeks4Before1] = useState(1)
   const [weeks4Before2, setWeeks4Before2] = useState(1)
@@ -221,68 +220,14 @@ export default function Home() {
           )}
         </div>
 
-        <div className='pt-2 w-full text-center'>
-          <CalendarTitle textColor='#ddd' label='Timeline' />
-        </div>
-        {dataCalendar1?.loading === false ? (
-          <>
-            <Timeline
-              endDate={endDate}
-              numDaysBefore={numDaysBefore}
-              calendar={dataCalendar1}
-            />
-          </>
-        ) : (
-          <>Searching...</>
-        )}
-
-        {dataCalendar2?.loading === false ? (
-          <>
-            <Timeline
-              endDate={endDate}
-              numDaysBefore={numDaysBefore}
-              calendar={dataCalendar2}
-            />
-          </>
-        ) : (
-          <>Searching...</>
-        )}
-
-        {dataCalendar3?.loading === false ? (
-          <>
-            <Timeline
-              endDate={endDate}
-              numDaysBefore={numDaysBefore}
-              calendar={dataCalendar3}
-            />
-          </>
-        ) : (
-          <>Searching...</>
-        )}
-
-        {dataCalendar4?.loading === false ? (
-          <>
-            <Timeline
-              endDate={endDate}
-              numDaysBefore={numDaysBefore}
-              calendar={dataCalendar4}
-            />
-          </>
-        ) : (
-          <>Searching...</>
-        )}
-
-        {dataCalendar5?.loading === false ? (
-          <>
-            <Timeline
-              endDate={endDate}
-              numDaysBefore={numDaysBefore}
-              calendar={dataCalendar5}
-            />
-          </>
-        ) : (
-          <>Searching...</>
-        )}
+        <Timelines
+          nowLocalDate={nowLocalDate}
+          dataCalendar1={dataCalendar1}
+          dataCalendar2={dataCalendar2}
+          dataCalendar3={dataCalendar3}
+          dataCalendar4={dataCalendar4}
+          dataCalendar5={dataCalendar5}
+        />
       </section>
     </UserLayout>
   )

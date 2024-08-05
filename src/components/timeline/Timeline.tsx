@@ -1,3 +1,4 @@
+import { FC } from 'react'
 import { TCalendar } from '../../remote/sdk/types'
 import {
   CalendarCellProps,
@@ -14,7 +15,6 @@ import {
   getNowDate,
   localDatesLT,
 } from '../../lib/utils'
-import { FC } from 'react'
 
 export const Timeline: FC<{
   endDate: Date
