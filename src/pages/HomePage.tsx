@@ -64,8 +64,10 @@ export default function Home() {
   const [endDate] = useState(new Date(nowLocalDate))
   const [numDaysBefore] = useState(38)
 
-  const fromDate = () =>
-    getDateWithOffsetDays(new Date(nowLocalDate), -(numWeeks * 7))
+  const fromDate = getDateWithOffsetDays(
+    new Date(nowLocalDate),
+    -(numWeeks * 7)
+  )
 
   // Calendars
   const [dataCalendar1, { refetch: refetchCalendar1 }] =
@@ -100,7 +102,7 @@ export default function Home() {
             <>
               <div>
                 <Calendar
-                  startWeekFromDate={fromDate()}
+                  startWeekFromDate={fromDate}
                   numWeeks={numWeeks}
                   calendar={dataCalendar1}
                   goInThePast={() => {
@@ -120,7 +122,7 @@ export default function Home() {
             <>
               <div>
                 <Calendar
-                  startWeekFromDate={fromDate()}
+                  startWeekFromDate={fromDate}
                   numWeeks={numWeeks}
                   calendar={dataCalendar2}
                   goInThePast={() => {
@@ -140,7 +142,7 @@ export default function Home() {
             <>
               <div>
                 <Calendar
-                  startWeekFromDate={fromDate()}
+                  startWeekFromDate={fromDate}
                   numWeeks={numWeeks}
                   calendar={dataCalendar3}
                   goInThePast={() => {
@@ -160,7 +162,7 @@ export default function Home() {
             <>
               <div>
                 <Calendar
-                  startWeekFromDate={fromDate()}
+                  startWeekFromDate={fromDate}
                   numWeeks={numWeeks}
                   calendar={dataCalendar4}
                   goInThePast={() => {
@@ -180,7 +182,7 @@ export default function Home() {
             <>
               <div>
                 <Calendar
-                  startWeekFromDate={fromDate()}
+                  startWeekFromDate={fromDate}
                   numWeeks={numWeeks}
                   calendar={dataCalendar5}
                   goInThePast={() => {
