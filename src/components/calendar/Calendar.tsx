@@ -48,7 +48,6 @@ export const CalendarStateless: FC<{
 }> = props => {
   const { firstLocalDate, lastLocalDate } =
     getFirstAndLastLocalDatesFromCalendarLines(props.calendarLines)
-
   const firstMonthLang = getITMonthFromLocalDate(firstLocalDate)
   const lastMonthLang = getITMonthFromLocalDate(lastLocalDate)
 
@@ -109,7 +108,7 @@ const CalendarArrowControl: FC<{
   return (
     <div className='flex flex-wrap gap-3 bg-gray-400 p-1 rounded-full w-fit'>
       <CalendarTimeTravelButton label='<' onClick={goInThePast} />
-      <div>
+      <div className='text-center min-w-20'>
         {firstMonthLang}
         {'-'}
         {lastMonthLang}

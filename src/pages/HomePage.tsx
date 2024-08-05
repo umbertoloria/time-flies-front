@@ -64,9 +64,31 @@ export default function Home() {
   const [endDate] = useState(new Date(nowLocalDate))
   const [numDaysBefore] = useState(38)
 
-  const fromDate = getDateWithOffsetDays(
+  const [weeks4Before1, setWeeks4Before1] = useState(1)
+  const [weeks4Before2, setWeeks4Before2] = useState(1)
+  const [weeks4Before3, setWeeks4Before3] = useState(1)
+  const [weeks4Before4, setWeeks4Before4] = useState(1)
+  const [weeks4Before5, setWeeks4Before5] = useState(1)
+
+  const fromDate1 = getDateWithOffsetDays(
     new Date(nowLocalDate),
-    -(numWeeks * 7)
+    -((numWeeks + 4 * weeks4Before1) * 7)
+  )
+  const fromDate2 = getDateWithOffsetDays(
+    new Date(nowLocalDate),
+    -((numWeeks + 4 * weeks4Before2) * 7)
+  )
+  const fromDate3 = getDateWithOffsetDays(
+    new Date(nowLocalDate),
+    -((numWeeks + 4 * weeks4Before3) * 7)
+  )
+  const fromDate4 = getDateWithOffsetDays(
+    new Date(nowLocalDate),
+    -((numWeeks + 4 * weeks4Before4) * 7)
+  )
+  const fromDate5 = getDateWithOffsetDays(
+    new Date(nowLocalDate),
+    -((numWeeks + 4 * weeks4Before5) * 7)
   )
 
   // Calendars
@@ -102,14 +124,14 @@ export default function Home() {
             <>
               <div>
                 <Calendar
-                  startWeekFromDate={fromDate}
+                  startWeekFromDate={fromDate1}
                   numWeeks={numWeeks}
                   calendar={dataCalendar1}
                   goInThePast={() => {
-                    console.log('goInThePast')
+                    setWeeks4Before1(weeks4Before1 + 1)
                   }}
                   goInTheFuture={() => {
-                    console.log('goInTheFuture')
+                    setWeeks4Before1(weeks4Before1 - 1)
                   }}
                 />
               </div>
@@ -122,14 +144,14 @@ export default function Home() {
             <>
               <div>
                 <Calendar
-                  startWeekFromDate={fromDate}
+                  startWeekFromDate={fromDate2}
                   numWeeks={numWeeks}
                   calendar={dataCalendar2}
                   goInThePast={() => {
-                    console.log('goInThePast')
+                    setWeeks4Before2(weeks4Before2 + 1)
                   }}
                   goInTheFuture={() => {
-                    console.log('goInTheFuture')
+                    setWeeks4Before2(weeks4Before2 - 1)
                   }}
                 />
               </div>
@@ -142,14 +164,14 @@ export default function Home() {
             <>
               <div>
                 <Calendar
-                  startWeekFromDate={fromDate}
+                  startWeekFromDate={fromDate3}
                   numWeeks={numWeeks}
                   calendar={dataCalendar3}
                   goInThePast={() => {
-                    console.log('goInThePast')
+                    setWeeks4Before3(weeks4Before3 + 1)
                   }}
                   goInTheFuture={() => {
-                    console.log('goInTheFuture')
+                    setWeeks4Before3(weeks4Before3 - 1)
                   }}
                 />
               </div>
@@ -162,14 +184,14 @@ export default function Home() {
             <>
               <div>
                 <Calendar
-                  startWeekFromDate={fromDate}
+                  startWeekFromDate={fromDate4}
                   numWeeks={numWeeks}
                   calendar={dataCalendar4}
                   goInThePast={() => {
-                    console.log('goInThePast')
+                    setWeeks4Before4(weeks4Before4 + 1)
                   }}
                   goInTheFuture={() => {
-                    console.log('goInTheFuture')
+                    setWeeks4Before4(weeks4Before4 - 1)
                   }}
                 />
               </div>
@@ -182,14 +204,14 @@ export default function Home() {
             <>
               <div>
                 <Calendar
-                  startWeekFromDate={fromDate}
+                  startWeekFromDate={fromDate5}
                   numWeeks={numWeeks}
                   calendar={dataCalendar5}
                   goInThePast={() => {
-                    console.log('goInThePast')
+                    setWeeks4Before5(weeks4Before5 + 1)
                   }}
                   goInTheFuture={() => {
-                    console.log('goInTheFuture')
+                    setWeeks4Before5(weeks4Before5 - 1)
                   }}
                 />
               </div>

@@ -1,5 +1,9 @@
 import { TCalendar } from '../../remote/sdk/types'
-import { CalendarCellProps, CalendarStateless } from '../calendar/Calendar'
+import {
+  CalendarCellProps,
+  CalendarLineProps,
+  CalendarStateless,
+} from '../calendar/Calendar'
 import {
   displayDateFromLocalDate,
   getDateWithOffsetDays,
@@ -22,6 +26,7 @@ export const Timeline: FC<{
   const nowDate = getNowDate()
   const { color } = props.calendar
 
+  // Calculating cells
   const cells: CalendarCellProps[] = []
   let iCell = props.numDaysBefore
   while (iCell >= 0) {
@@ -69,19 +74,24 @@ export const Timeline: FC<{
 
     --iCell
   }
+
+  const calendarLines: CalendarLineProps[] = [
+    {
+      cells,
+    },
+  ]
+
   return (
-    <CalendarStateless
-      calendarLines={[
-        {
-          cells,
-        },
-      ]}
-      goInThePast={() => {
-        console.log('goInThePast')
-      }}
-      goInTheFuture={() => {
-        console.log('goInTheFuture')
-      }}
-    />
+    <>
+      <CalendarStateless
+        calendarLines={calendarLines}
+        goInThePast={() => {
+          console.log('goInThePast')
+        }}
+        goInTheFuture={() => {
+          console.log('goInTheFuture')
+        }}
+      />
+    </>
   )
 }
