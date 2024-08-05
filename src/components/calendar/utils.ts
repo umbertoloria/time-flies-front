@@ -49,6 +49,7 @@ export function mapDataToCalendarLines(
   while (i < startFillCellsCount) {
     const curDate = getDateWithOffsetDays(fromDate, -(startFillCellsCount - i))
     addCell({
+      localDate: getDayCodeByDate(curDate),
       displayDate: displayDateFromLocalDate(getDayCodeByDate(curDate)),
       color,
       done: false,
@@ -79,6 +80,7 @@ export function mapDataToCalendarLines(
     }
 
     addCell({
+      localDate: strDate,
       displayDate: displayDateFromLocalDate(strDate),
       color,
       done,
@@ -94,6 +96,7 @@ export function mapDataToCalendarLines(
     while (i < endFillCellsCount) {
       const curDate = getDateWithOffsetDays(fromDate, daysToShow + i)
       addCell({
+        localDate: getDayCodeByDate(curDate),
         displayDate: displayDateFromLocalDate(getDayCodeByDate(curDate)),
         color,
         done: false,
@@ -104,6 +107,30 @@ export function mapDataToCalendarLines(
   }
 
   return result
+}
+
+export function getFirstAndLastLocalDatesFromCalendarLines(
+  calendarLines: CalendarLineProps[]
+) {
+  // Calculate "firstLocalDate" and "lastLocalDate"
+  let i = 0
+  const firstLocalDate = calendarLines[i].cells[0].localDate
+  let j = 1
+  let lastLocalDate = firstLocalDate
+  while (i < calendarLines.length) {
+    const calendarLine = calendarLines[i]
+    j = 0
+    while (j < calendarLine.cells.length) {
+      const cell = calendarLine.cells[j]
+      lastLocalDate = cell.localDate
+      ++j
+    }
+    ++i
+  }
+  return {
+    firstLocalDate,
+    lastLocalDate,
+  }
 }
 
 export function getDateWithOffsetDays(fromDate: Date, offset: number) {

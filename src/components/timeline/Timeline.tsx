@@ -42,6 +42,7 @@ export const Timeline: FC<{
 
       if (dateInfo.date === localDate) {
         cells.push({
+          localDate,
           displayDate: displayDateFromLocalDate(localDate),
           color,
           done: true,
@@ -49,6 +50,7 @@ export const Timeline: FC<{
         })
       } else {
         cells.push({
+          localDate,
           displayDate: displayDateFromLocalDate(localDate),
           color,
           done: false,
@@ -57,6 +59,7 @@ export const Timeline: FC<{
       }
     } else {
       cells.push({
+        localDate,
         displayDate: displayDateFromLocalDate(localDate),
         color,
         done: false,
@@ -73,6 +76,12 @@ export const Timeline: FC<{
           cells,
         },
       ]}
+      goInThePast={() => {
+        console.log('goInThePast')
+      }}
+      goInTheFuture={() => {
+        console.log('goInTheFuture')
+      }}
     />
   )
 }

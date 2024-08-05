@@ -103,6 +103,12 @@ export default function Home() {
                   startWeekFromDate={fromDate()}
                   numWeeks={numWeeks}
                   calendar={dataCalendar1}
+                  goInThePast={() => {
+                    console.log('goInThePast')
+                  }}
+                  goInTheFuture={() => {
+                    console.log('goInTheFuture')
+                  }}
                 />
               </div>
             </>
@@ -117,6 +123,12 @@ export default function Home() {
                   startWeekFromDate={fromDate()}
                   numWeeks={numWeeks}
                   calendar={dataCalendar2}
+                  goInThePast={() => {
+                    console.log('goInThePast')
+                  }}
+                  goInTheFuture={() => {
+                    console.log('goInTheFuture')
+                  }}
                 />
               </div>
             </>
@@ -131,6 +143,12 @@ export default function Home() {
                   startWeekFromDate={fromDate()}
                   numWeeks={numWeeks}
                   calendar={dataCalendar3}
+                  goInThePast={() => {
+                    console.log('goInThePast')
+                  }}
+                  goInTheFuture={() => {
+                    console.log('goInTheFuture')
+                  }}
                 />
               </div>
             </>
@@ -145,6 +163,12 @@ export default function Home() {
                   startWeekFromDate={fromDate()}
                   numWeeks={numWeeks}
                   calendar={dataCalendar4}
+                  goInThePast={() => {
+                    console.log('goInThePast')
+                  }}
+                  goInTheFuture={() => {
+                    console.log('goInTheFuture')
+                  }}
                 />
               </div>
             </>
@@ -159,6 +183,12 @@ export default function Home() {
                   startWeekFromDate={fromDate()}
                   numWeeks={numWeeks}
                   calendar={dataCalendar5}
+                  goInThePast={() => {
+                    console.log('goInThePast')
+                  }}
+                  goInTheFuture={() => {
+                    console.log('goInTheFuture')
+                  }}
                 />
               </div>
             </>

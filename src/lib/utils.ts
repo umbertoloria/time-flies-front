@@ -33,3 +33,9 @@ export function datesInTheSameDay(aDate: Date, bDate: Date) {
 export function getNowDate() {
   return new Date()
 }
+
+export function getITMonthFromLocalDate(localDate: string): string {
+  const date = new Date(localDate)
+  const formatter = new Intl.DateTimeFormat('it-IT', { month: 'short' })
+  return formatter.format(date)
+}
