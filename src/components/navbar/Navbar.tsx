@@ -1,10 +1,10 @@
-import { useUser } from '../../auth/user-data'
+import { useAuth } from '../../auth/AuthContext.tsx'
 import { backendLogoutAction } from '../../remote/remote'
 import { Link, useLocation } from 'react-router-dom'
 
 export const Navbar = () => {
   const location = useLocation()
-  const { user } = useUser()
+  const { user } = useAuth()
 
   return (
     <nav className='bg-gray-200 text-gray-900 px-4'>

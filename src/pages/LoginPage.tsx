@@ -3,11 +3,9 @@ import classNames from 'classnames'
 
 export default function LoginPage() {
   return (
-    <>
-      <section className=' p-8'>
-        <Login />
-      </section>
-    </>
+    <section className=' p-8'>
+      <Login />
+    </section>
   )
 }
 
