@@ -6,12 +6,11 @@ export default function ErrorPage() {
     console.error(error);
 
     return (
-        <div id="error-page">
-            <h1>Oops!</h1>
-            <p>Sorry, an unexpected error has occurred.</p>
-            <p>
+        <section className="text-gray-700 p-8">
+            <h1 className="text-2xl font-bold">Oops!</h1>
+            <p className="mt-4">
                 <i>{error.statusText || error.message}</i>
             </p>
-        </div>
+        </section>
     );
 }
