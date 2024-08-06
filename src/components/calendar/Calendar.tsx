@@ -185,14 +185,20 @@ export type CalendarCellProps = {
   localDate: string
   displayDate: string
   color: string
-  done: boolean
+  plannedColor: string
+  status: 'none' | 'planned' | 'done'
   isToday: boolean
 }
 const CalendarCell: FC<CalendarCellProps> = props => (
   <td className='m-0 p-0'>
     <DayStatus
-      checked={props.done}
+      status={
+        props.status === 'planned' || props.status === 'done'
+          ? props.status
+          : undefined
+      }
       color={props.color}
+      plannedColor={props.plannedColor}
       tooltip={props.displayDate}
       highlightToday={props.isToday}
     />

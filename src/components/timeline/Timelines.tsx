@@ -38,7 +38,8 @@ export const Timelines: FC<{
     numDaysBefore,
     dataCalendar1,
     nowDate,
-    dataCalendar1.color
+    dataCalendar1.color,
+    dataCalendar1.plannedColor
   )
   if (!calendarLines.length) {
     throw new Error('First calendar was empty')

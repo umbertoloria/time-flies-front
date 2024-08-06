@@ -2,8 +2,9 @@ import { FC } from 'react'
 import classNames from 'classnames'
 
 export const DayStatus: FC<{
-  checked?: boolean
+  status?: 'planned' | 'done'
   color: string
+  plannedColor: string
   tooltip?: string
   highlightToday?: boolean
 }> = props => (
@@ -11,11 +12,15 @@ export const DayStatus: FC<{
     <div
       className={classNames('rounded-sm w-full h-full', {
         'day-status-today': props.highlightToday,
-        'bg-green-300': props.checked && !!props.color,
-        'bg-gray-200': !props.checked,
+        'bg-gray-200': !props.status,
       })}
       style={{
-        background: props.checked && !!props.color ? props.color : undefined,
+        background:
+          props.status === 'done'
+            ? props.color
+            : props.status === 'planned'
+              ? props.plannedColor
+              : undefined,
       }}
     />
   </div>

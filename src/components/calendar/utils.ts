@@ -12,8 +12,18 @@ export function mapDataToCalendarLines(
   fromDate: Date,
   daysToShow: number
 ): CalendarLineProps[] {
-  const { color, datesInfo } = calendar
-  if (datesInfo.length === 0) {
+  // TODO: Improve this algorithm
+
+  const { color, plannedColor } = calendar
+
+  // All "TDays" to evaluate
+  const allDays = [...calendar.days]
+  const allDaysIndexFromThatArePlanned = allDays.length
+  if (calendar.plannedDays && calendar.plannedDays.length) {
+    allDays.push(...calendar.plannedDays)
+  }
+
+  if (allDays.length === 0) {
     // Given no dates.
     return [
       {
@@ -29,7 +39,7 @@ export function mapDataToCalendarLines(
       cells: [],
     },
   ]
-  function addCell(cellToAdd: CalendarCellProps) {
+  function appendCell(cellToAdd: CalendarCellProps) {
     const lastRow = result[result.length - 1]
     const { cells } = lastRow
     cells.push(cellToAdd)
@@ -48,11 +58,13 @@ export function mapDataToCalendarLines(
   let i = 0
   while (i < startFillCellsCount) {
     const curDate = getDateWithOffsetDays(fromDate, -(startFillCellsCount - i))
-    addCell({
-      localDate: getDayCodeByDate(curDate),
-      displayDate: displayDateFromLocalDate(getDayCodeByDate(curDate)),
+    const localDate = getDayCodeByDate(curDate)
+    appendCell({
+      localDate,
+      displayDate: displayDateFromLocalDate(localDate),
       color,
-      done: false,
+      plannedColor,
+      status: 'none',
       isToday: datesInTheSameDay(curDate, nowDate),
     })
     ++i
@@ -61,10 +73,10 @@ export function mapDataToCalendarLines(
   let daysShown = 0
   const strDate = getDayCodeByDate(getDateWithOffsetDays(fromDate, daysShown))
 
-  let iData = 0
-  let lastDateInfo = datesInfo[iData++]
+  let iDay = 0
+  let lastDateInfo = allDays[iDay++]
   while (!!lastDateInfo && !localDatesLTE(strDate, lastDateInfo.date)) {
-    lastDateInfo = datesInfo[iData++]
+    lastDateInfo = allDays[iDay++]
   }
 
   while (daysShown < daysToShow) {
@@ -72,18 +84,23 @@ export function mapDataToCalendarLines(
     const strDate = getDayCodeByDate(curDate)
 
     let done = false
+    let justPlanned = false
     if (lastDateInfo) {
       if (strDate === lastDateInfo.date) {
         done = true
-        lastDateInfo = datesInfo[iData++]
+        if (iDay > allDaysIndexFromThatArePlanned) {
+          justPlanned = true
+        }
+        lastDateInfo = allDays[iDay++]
       }
     }
 
-    addCell({
+    appendCell({
       localDate: strDate,
       displayDate: displayDateFromLocalDate(strDate),
       color,
-      done,
+      plannedColor,
+      status: justPlanned ? 'planned' : done ? 'done' : 'none',
       isToday: datesInTheSameDay(curDate, nowDate),
     })
 
@@ -95,11 +112,12 @@ export function mapDataToCalendarLines(
     i = 0
     while (i < endFillCellsCount) {
       const curDate = getDateWithOffsetDays(fromDate, daysToShow + i)
-      addCell({
+      appendCell({
         localDate: getDayCodeByDate(curDate),
         displayDate: displayDateFromLocalDate(getDayCodeByDate(curDate)),
         color,
-        done: false,
+        plannedColor,
+        status: 'none',
         isToday: datesInTheSameDay(curDate, nowDate),
       })
       ++i

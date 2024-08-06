@@ -20,10 +20,13 @@ export function createCalendarLinePropsList(
   numDaysBefore: number,
   calendar: TCalendar,
   nowDate: Date,
-  color: string
+  color: string,
+  plannedColor: string
 ): CalendarLineProps[] {
+  // TODO: Improve this algorithm
+
   // Calculating cells
-  let iDatesInfo = 0
+  let iDays = 0
 
   const cells: CalendarCellProps[] = []
   let iCell = numDaysBefore
@@ -33,22 +36,31 @@ export function createCalendarLinePropsList(
 
     const isToday = datesInTheSameDay(curDate, nowDate)
 
-    while (
-      iDatesInfo < calendar.datesInfo.length &&
-      localDatesLT(calendar.datesInfo[iDatesInfo].date, localDate)
-    ) {
-      ++iDatesInfo
+    // All "TDays" to evaluate
+    const allDays = [...calendar.days]
+    const allDaysIndexFromThatArePlanned = allDays.length
+    if (calendar.plannedDays && calendar.plannedDays.length) {
+      allDays.push(...calendar.plannedDays)
     }
 
-    if (iDatesInfo < calendar.datesInfo.length) {
-      const dateInfo = calendar.datesInfo[iDatesInfo]
+    while (
+      iDays < allDays.length &&
+      localDatesLT(allDays[iDays].date, localDate)
+    ) {
+      ++iDays
+    }
 
-      if (dateInfo.date === localDate) {
+    if (iDays < allDays.length) {
+      const day = allDays[iDays]
+      const justPlanned = iDays >= allDaysIndexFromThatArePlanned
+
+      if (day.date === localDate) {
         cells.push({
           localDate,
           displayDate: displayDateFromLocalDate(localDate),
           color,
-          done: true,
+          plannedColor,
+          status: justPlanned ? 'planned' : 'done',
           isToday,
         })
       } else {
@@ -56,7 +68,8 @@ export function createCalendarLinePropsList(
           localDate,
           displayDate: displayDateFromLocalDate(localDate),
           color,
-          done: false,
+          plannedColor,
+          status: 'none',
           isToday,
         })
       }
@@ -65,7 +78,8 @@ export function createCalendarLinePropsList(
         localDate,
         displayDate: displayDateFromLocalDate(localDate),
         color,
-        done: false,
+        plannedColor,
+        status: 'none',
         isToday,
       })
     }
@@ -85,14 +99,15 @@ export const Timeline: FC<{
   nowDate: Date
   calendar: TCalendar
 }> = props => {
-  const { color } = props.calendar
+  const { color, plannedColor } = props.calendar
 
   const calendarLines = createCalendarLinePropsList(
     props.endDate,
     props.numDaysBefore,
     props.calendar,
     props.nowDate,
-    color
+    color,
+    plannedColor
   )
 
   return (
