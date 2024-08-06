@@ -1,8 +1,9 @@
-export function getDayCodeByDate(date: Date) {
-  return getDayCode(date.getFullYear(), date.getMonth() + 1, date.getDate())
+export function getLocalDayByDate(date: Date) {
+  return getLocalDate(date.getFullYear(), date.getMonth() + 1, date.getDate())
 }
 
-function getDayCode(year: number, month: number, day: number) {
+function getLocalDate(year: number, month: number, day: number) {
+  // Es. dayCode="2024-06-08"
   return (
     `${year}` +
     `-${month.toString().padStart(2, '0')}` +
@@ -27,11 +28,16 @@ function datesLT(aDate: Date, bDate: Date) {
 }
 
 export function datesInTheSameDay(aDate: Date, bDate: Date) {
-  return getDayCodeByDate(aDate) === getDayCodeByDate(bDate)
+  return getLocalDayByDate(aDate) === getLocalDayByDate(bDate)
 }
 
 export function getNowDate() {
   return new Date()
+}
+
+export function getDateFromLocalDate(localDate: string) {
+  // Es. localDate="2024-08-06"
+  return new Date(localDate)
 }
 
 export function getITMonthFromLocalDate(localDate: string): string {

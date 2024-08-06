@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren } from 'react'
 import { TCalendar } from '../../remote/sdk/types'
-import { datesInTheSameDay, getITMonthFromLocalDate } from '../../lib/utils'
+import { getITMonthFromLocalDate } from '../../lib/utils'
 import { DayStatus } from './DayStatus'
 import {
   getFirstAndLastLocalDatesFromCalendarLines,
@@ -15,27 +15,22 @@ export const Calendar: FC<{
   goInThePast: () => void
   goInTheFuture: () => void
 }> = props => {
-  const fromDateInitial = new Date(props.startWeekFromDate)
-  const fromDateFloor = moveDateToWeekStart(fromDateInitial)
-
-  const numDays = !datesInTheSameDay(fromDateInitial, fromDateFloor)
-    ? (props.numWeeks + 1) * 7
-    : (props.numWeeks + 1) * 7 // Showing one additional week in this case (previously it was "props.numWeeks * 7")
-
   const calendarLines = mapDataToCalendarLines(
     props.calendar,
-    fromDateFloor,
-    numDays
+    moveDateToWeekStart(props.startWeekFromDate),
+    props.numWeeks
   )
 
   return (
-    <CalendarStateless
-      calendar={props.calendar}
-      calendarLines={calendarLines}
-      placeTableHeadWithWeekDays
-      goInThePast={props.goInThePast}
-      goInTheFuture={props.goInTheFuture}
-    />
+    <>
+      <CalendarStateless
+        calendar={props.calendar}
+        calendarLines={calendarLines}
+        placeTableHeadWithWeekDays
+        goInThePast={props.goInThePast}
+        goInTheFuture={props.goInTheFuture}
+      />
+    </>
   )
 }
 

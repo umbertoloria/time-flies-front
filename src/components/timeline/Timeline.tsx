@@ -11,7 +11,7 @@ import {
 } from '../calendar/utils'
 import {
   datesInTheSameDay,
-  getDayCodeByDate,
+  getLocalDayByDate,
   localDatesLT,
 } from '../../lib/utils'
 
@@ -32,7 +32,7 @@ export function createCalendarLinePropsList(
   let iCell = numDaysBefore
   while (iCell >= 0) {
     const curDate = getDateWithOffsetDays(endDate, -iCell)
-    const localDate = getDayCodeByDate(curDate)
+    const localDate = getLocalDayByDate(curDate)
 
     const isToday = datesInTheSameDay(curDate, nowDate)
 

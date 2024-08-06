@@ -1,7 +1,7 @@
 import { TCalendar } from '../../remote/sdk/types'
 import {
   datesInTheSameDay,
-  getDayCodeByDate,
+  getLocalDayByDate,
   getNowDate,
   localDatesLTE,
 } from '../../lib/utils'
@@ -10,118 +10,91 @@ import { CalendarCellProps, CalendarLineProps } from './Calendar'
 export function mapDataToCalendarLines(
   calendar: TCalendar,
   fromDate: Date,
-  daysToShow: number
+  weeksToShow: number
 ): CalendarLineProps[] {
-  // TODO: Improve this algorithm
+  // Requirement: "fromDate" *MUST* be a Monday.
 
+  const fillingCellsCount = 7 as const // 7 days per week.
   const { color, plannedColor } = calendar
+  const nowDate = getNowDate()
 
-  // All "TDays" to evaluate
-  const allDays = [...calendar.days]
-  const allDaysIndexFromThatArePlanned = allDays.length
-  if (calendar.plannedDays && calendar.plannedDays.length) {
-    allDays.push(...calendar.plannedDays)
-  }
+  const result: CalendarLineProps[] = []
 
-  if (allDays.length === 0) {
-    // Given no dates.
-    return [
-      {
-        cells: [],
-      },
-    ]
-  }
-
-  const fillingCellsCount = 7 as const
-
-  const result: CalendarLineProps[] = [
-    {
-      cells: [],
-    },
-  ]
   function appendCell(cellToAdd: CalendarCellProps) {
-    const lastRow = result[result.length - 1]
-    const { cells } = lastRow
-    cells.push(cellToAdd)
-    if (cells.length === fillingCellsCount) {
+    if (result.length === 0) {
       result.push({
         cells: [],
       })
     }
+    let cells = result[result.length - 1].cells
+    if (cells.length === fillingCellsCount) {
+      result.push({
+        cells: [],
+      })
+      cells = result[result.length - 1].cells
+    }
+    cells.push(cellToAdd)
   }
 
-  const nowDate = getNowDate()
-
-  const fromDateWeekday = fromDate.getDay() // 0 => sunday
-  const startFillCellsCount =
-    (fillingCellsCount + fromDateWeekday - 1) % fillingCellsCount
-  let i = 0
-  while (i < startFillCellsCount) {
-    const curDate = getDateWithOffsetDays(fromDate, -(startFillCellsCount - i))
-    const localDate = getDayCodeByDate(curDate)
-    appendCell({
-      localDate,
-      displayDate: displayDateFromLocalDate(localDate),
-      color,
-      plannedColor,
-      status: 'none',
-      isToday: datesInTheSameDay(curDate, nowDate),
-    })
-    ++i
+  // All "TDays" to evaluate
+  const calendarDays = [...calendar.days]
+  const allDaysIndexFromThatArePlanned = calendarDays.length
+  if (calendar.plannedDays && calendar.plannedDays.length) {
+    calendarDays.push(...calendar.plannedDays)
   }
 
-  let daysShown = 0
-  const strDate = getDayCodeByDate(getDateWithOffsetDays(fromDate, daysShown))
-
-  let iDay = 0
-  let lastDateInfo = allDays[iDay++]
-  while (!!lastDateInfo && !localDatesLTE(strDate, lastDateInfo.date)) {
-    lastDateInfo = allDays[iDay++]
+  if (calendarDays.length === 0) {
+    // Given no dates.
+    return result
   }
 
-  while (daysShown < daysToShow) {
-    const curDate = getDateWithOffsetDays(fromDate, daysShown)
-    const strDate = getDayCodeByDate(curDate)
+  // From "calendarDays", skipping all days that are before "fromLocalDate"
+  const fromLocalDate = getLocalDayByDate(fromDate)
+  let iCalendarDay = 0
+  let curCalendarDay =
+    iCalendarDay < calendarDays.length
+      ? calendarDays[iCalendarDay++]
+      : undefined
+  while (
+    !!curCalendarDay &&
+    iCalendarDay < calendarDays.length &&
+    !localDatesLTE(fromLocalDate, curCalendarDay.date)
+  ) {
+    curCalendarDay = calendarDays[iCalendarDay++]
+  }
 
-    let done = false
-    let justPlanned = false
-    if (lastDateInfo) {
-      if (strDate === lastDateInfo.date) {
-        done = true
-        if (iDay > allDaysIndexFromThatArePlanned) {
-          justPlanned = true
+  // Filling "result"
+  let dayOffset = 0
+  const daysToShow = weeksToShow * 7
+  while (dayOffset < daysToShow) {
+    const curDate = getDateWithOffsetDays(fromDate, dayOffset)
+    const curLocalDate = getLocalDayByDate(curDate)
+
+    let status: 'planned' | 'done' | 'none' = 'none'
+
+    if (!!curCalendarDay && iCalendarDay < calendarDays.length) {
+      if (curLocalDate === curCalendarDay.date) {
+        // Is ts Done or Just Planned?
+        if (iCalendarDay > allDaysIndexFromThatArePlanned) {
+          status = 'planned'
+        } else {
+          status = 'done'
         }
-        lastDateInfo = allDays[iDay++]
+
+        curCalendarDay = calendarDays[iCalendarDay++]
       }
     }
 
     appendCell({
-      localDate: strDate,
-      displayDate: displayDateFromLocalDate(strDate),
+      localDate: curLocalDate,
+      displayDate: displayDateFromLocalDate(curLocalDate),
       color,
       plannedColor,
-      status: justPlanned ? 'planned' : done ? 'done' : 'none',
+      status,
       isToday: datesInTheSameDay(curDate, nowDate),
     })
 
-    ++daysShown
-  }
-
-  if (startFillCellsCount > 0) {
-    const endFillCellsCount = fillingCellsCount - startFillCellsCount
-    i = 0
-    while (i < endFillCellsCount) {
-      const curDate = getDateWithOffsetDays(fromDate, daysToShow + i)
-      appendCell({
-        localDate: getDayCodeByDate(curDate),
-        displayDate: displayDateFromLocalDate(getDayCodeByDate(curDate)),
-        color,
-        plannedColor,
-        status: 'none',
-        isToday: datesInTheSameDay(curDate, nowDate),
-      })
-      ++i
-    }
+    ++dayOffset
   }
 
   return result

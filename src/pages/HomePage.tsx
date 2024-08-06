@@ -1,4 +1,8 @@
-import { getDayCodeByDate, getNowDate } from '../lib/utils.ts'
+import {
+  getDateFromLocalDate,
+  getLocalDayByDate,
+  getNowDate,
+} from '../lib/utils.ts'
 import { useEffect, useState } from 'react'
 import { UserLayout } from '../layout/UserLayout.tsx'
 import { readCalendar } from '../remote/remote.ts'
@@ -58,36 +62,36 @@ const useWrapperForCreateResource = <T,>(
 
 export default function Home() {
   const nowDate = getNowDate()
-  const nowLocalDate = getDayCodeByDate(nowDate)
+  const nowLocalDate = getLocalDayByDate(nowDate)
 
   // Calendars
   const [numWeeks] = useState(defaultNumWeeks)
 
-  const [weeks4Before1, setWeeks4Before1] = useState(1)
-  const [weeks4Before2, setWeeks4Before2] = useState(1)
-  const [weeks4Before3, setWeeks4Before3] = useState(1)
-  const [weeks4Before4, setWeeks4Before4] = useState(1)
-  const [weeks4Before5, setWeeks4Before5] = useState(1)
+  const [weeks4Before1, setWeeks4Before1] = useState(0)
+  const [weeks4Before2, setWeeks4Before2] = useState(0)
+  const [weeks4Before3, setWeeks4Before3] = useState(0)
+  const [weeks4Before4, setWeeks4Before4] = useState(0)
+  const [weeks4Before5, setWeeks4Before5] = useState(0)
 
   const fromDate1 = getDateWithOffsetDays(
-    new Date(nowLocalDate),
-    -((numWeeks + 4 * weeks4Before1) * 7)
+    getDateFromLocalDate(nowLocalDate),
+    -7 * (numWeeks - 1 + 4 * weeks4Before1)
   )
   const fromDate2 = getDateWithOffsetDays(
-    new Date(nowLocalDate),
-    -((numWeeks + 4 * weeks4Before2) * 7)
+    getDateFromLocalDate(nowLocalDate),
+    -7 * (numWeeks - 1 + 4 * weeks4Before2)
   )
   const fromDate3 = getDateWithOffsetDays(
-    new Date(nowLocalDate),
-    -((numWeeks + 4 * weeks4Before3) * 7)
+    getDateFromLocalDate(nowLocalDate),
+    -7 * (numWeeks - 1 + 4 * weeks4Before3)
   )
   const fromDate4 = getDateWithOffsetDays(
-    new Date(nowLocalDate),
-    -((numWeeks + 4 * weeks4Before4) * 7)
+    getDateFromLocalDate(nowLocalDate),
+    -7 * (numWeeks - 1 + 4 * weeks4Before4)
   )
   const fromDate5 = getDateWithOffsetDays(
-    new Date(nowLocalDate),
-    -((numWeeks + 4 * weeks4Before5) * 7)
+    getDateFromLocalDate(nowLocalDate),
+    -7 * (numWeeks - 1 + 4 * weeks4Before5)
   )
 
   // Calendars
