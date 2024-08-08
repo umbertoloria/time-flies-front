@@ -1,9 +1,10 @@
 // Types
-// 2024-08-06T09:41:56Z
-// v2.1
+// 2024-08-08T17:37:40Z
+// v2.2
 
 // Calendar
 export type TCalendar = {
+  id: number
   name: string
   color: string
   plannedColor: string
@@ -22,4 +23,9 @@ export type TAuthStatus = {
 export type TAuthUser = {
   id: number
   email: string
+}
+
+// SDK: Calendar
+export namespace TCalendarSDK {
+  export type CheckDateWithSuccessPromiseOutput = 'invalid' | 'ok'
 }

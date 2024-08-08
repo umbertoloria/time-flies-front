@@ -53,6 +53,7 @@ export function createCalendarCellPropsList(
       if (day.date === localDate) {
         cells.push({
           localDate,
+          calendarId: calendar.id,
           displayDate: displayDateFromLocalDate(localDate),
           color,
           plannedColor,
@@ -62,6 +63,7 @@ export function createCalendarCellPropsList(
       } else {
         cells.push({
           localDate,
+          calendarId: calendar.id,
           displayDate: displayDateFromLocalDate(localDate),
           color,
           plannedColor,
@@ -72,6 +74,7 @@ export function createCalendarCellPropsList(
     } else {
       cells.push({
         localDate,
+        calendarId: calendar.id,
         displayDate: displayDateFromLocalDate(localDate),
         color,
         plannedColor,

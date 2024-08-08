@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
-import { useAuth } from '../../auth/AuthContext.tsx'
+import { useAuth } from '../../context/AuthContext.tsx'
 import { backendLogoutAction } from '../../remote/remote'
 
 export const Navbar = () => {

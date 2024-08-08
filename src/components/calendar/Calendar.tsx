@@ -178,6 +178,7 @@ const CalendarLine: FC<CalendarLineProps> = props => (
 
 export type CalendarCellProps = {
   localDate: string
+  calendarId: number
   displayDate: string
   color: string
   plannedColor: string
@@ -196,6 +197,10 @@ const CalendarCell: FC<CalendarCellProps> = props => (
       plannedColor={props.plannedColor}
       tooltip={props.displayDate}
       highlightToday={props.isToday}
+      apiData={{
+        calendarId: props.calendarId,
+        localDate: props.localDate,
+      }}
     />
   </td>
 )

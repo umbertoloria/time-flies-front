@@ -87,6 +87,7 @@ export function mapDataToCalendarLines(
 
     appendCell({
       localDate: curLocalDate,
+      calendarId: calendar.id,
       displayDate: displayDateFromLocalDate(curLocalDate),
       color,
       plannedColor,
