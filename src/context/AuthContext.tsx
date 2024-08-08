@@ -36,7 +36,9 @@ export const AuthProvider: FC<PropsWithChildren> = props => {
           setUser(authStatus.user)
         })
         .catch(err => {
-          console.error(err)
+          if (err.response?.status !== 401) {
+            console.error(err)
+          }
           setUser(undefined)
           navigate('/login')
         })

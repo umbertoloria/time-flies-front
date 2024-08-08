@@ -1,9 +1,9 @@
+import { FC, useEffect, useState } from 'react'
 import {
   getDateFromLocalDate,
   getLocalDayByDate,
   getNowDate,
 } from '../lib/utils.ts'
-import { useEffect, useState } from 'react'
 import { UserLayout } from '../layout/UserLayout.tsx'
 import { readCalendar } from '../remote/remote.ts'
 import { getDateWithOffsetDays } from '../components/calendar/utils.ts'
@@ -61,7 +61,14 @@ const useWrapperForCreateResource = <T,>(
 }
 
 export default function HomePage() {
-  // FIXME: Some connections should be done only *IF* UserLayout renders its content
+  return (
+    <UserLayout>
+      <InnerPage />
+    </UserLayout>
+  )
+}
+
+const InnerPage: FC = () => {
   const nowDate = getNowDate()
   const nowLocalDate = getLocalDayByDate(nowDate)
 
@@ -121,146 +128,144 @@ export default function HomePage() {
   }, [])
 
   return (
-    <UserLayout>
-      <section className=' p-8'>
-        <div className='flex justify-center gap-10'>
-          {dataCalendar1?.loading === false ? (
-            <>
-              <div>
-                <Calendar
-                  startWeekFromDate={fromDate1}
-                  numWeeks={numWeeks}
-                  calendar={dataCalendar1}
-                  pleaseUpdateCalendar={refetchCalendar1}
-                  goInThePast={() => {
-                    setWeeks4Before1(weeks4Before1 + 1)
-                  }}
-                  goInTheFuture={() => {
-                    setWeeks4Before1(weeks4Before1 - 1)
-                  }}
-                />
-              </div>
-            </>
-          ) : (
-            <>Searching...</>
-          )}
+    <section className=' p-8'>
+      <div className='flex justify-center gap-10'>
+        {dataCalendar1?.loading === false ? (
+          <>
+            <div>
+              <Calendar
+                startWeekFromDate={fromDate1}
+                numWeeks={numWeeks}
+                calendar={dataCalendar1}
+                pleaseUpdateCalendar={refetchCalendar1}
+                goInThePast={() => {
+                  setWeeks4Before1(weeks4Before1 + 1)
+                }}
+                goInTheFuture={() => {
+                  setWeeks4Before1(weeks4Before1 - 1)
+                }}
+              />
+            </div>
+          </>
+        ) : (
+          <>Searching...</>
+        )}
 
-          {dataCalendar2?.loading === false ? (
-            <>
-              <div>
-                <Calendar
-                  startWeekFromDate={fromDate2}
-                  numWeeks={numWeeks}
-                  calendar={dataCalendar2}
-                  pleaseUpdateCalendar={refetchCalendar2}
-                  goInThePast={() => {
-                    setWeeks4Before2(weeks4Before2 + 1)
-                  }}
-                  goInTheFuture={() => {
-                    setWeeks4Before2(weeks4Before2 - 1)
-                  }}
-                />
-              </div>
-            </>
-          ) : (
-            <>Searching...</>
-          )}
+        {dataCalendar2?.loading === false ? (
+          <>
+            <div>
+              <Calendar
+                startWeekFromDate={fromDate2}
+                numWeeks={numWeeks}
+                calendar={dataCalendar2}
+                pleaseUpdateCalendar={refetchCalendar2}
+                goInThePast={() => {
+                  setWeeks4Before2(weeks4Before2 + 1)
+                }}
+                goInTheFuture={() => {
+                  setWeeks4Before2(weeks4Before2 - 1)
+                }}
+              />
+            </div>
+          </>
+        ) : (
+          <>Searching...</>
+        )}
 
-          {dataCalendar3?.loading === false ? (
-            <>
-              <div>
-                <Calendar
-                  startWeekFromDate={fromDate3}
-                  numWeeks={numWeeks}
-                  calendar={dataCalendar3}
-                  pleaseUpdateCalendar={refetchCalendar3}
-                  goInThePast={() => {
-                    setWeeks4Before3(weeks4Before3 + 1)
-                  }}
-                  goInTheFuture={() => {
-                    setWeeks4Before3(weeks4Before3 - 1)
-                  }}
-                />
-              </div>
-            </>
-          ) : (
-            <>Searching...</>
-          )}
+        {dataCalendar3?.loading === false ? (
+          <>
+            <div>
+              <Calendar
+                startWeekFromDate={fromDate3}
+                numWeeks={numWeeks}
+                calendar={dataCalendar3}
+                pleaseUpdateCalendar={refetchCalendar3}
+                goInThePast={() => {
+                  setWeeks4Before3(weeks4Before3 + 1)
+                }}
+                goInTheFuture={() => {
+                  setWeeks4Before3(weeks4Before3 - 1)
+                }}
+              />
+            </div>
+          </>
+        ) : (
+          <>Searching...</>
+        )}
 
-          {dataCalendar4?.loading === false ? (
-            <>
-              <div>
-                <Calendar
-                  startWeekFromDate={fromDate4}
-                  numWeeks={numWeeks}
-                  calendar={dataCalendar4}
-                  pleaseUpdateCalendar={refetchCalendar4}
-                  goInThePast={() => {
-                    setWeeks4Before4(weeks4Before4 + 1)
-                  }}
-                  goInTheFuture={() => {
-                    setWeeks4Before4(weeks4Before4 - 1)
-                  }}
-                />
-              </div>
-            </>
-          ) : (
-            <>Searching...</>
-          )}
+        {dataCalendar4?.loading === false ? (
+          <>
+            <div>
+              <Calendar
+                startWeekFromDate={fromDate4}
+                numWeeks={numWeeks}
+                calendar={dataCalendar4}
+                pleaseUpdateCalendar={refetchCalendar4}
+                goInThePast={() => {
+                  setWeeks4Before4(weeks4Before4 + 1)
+                }}
+                goInTheFuture={() => {
+                  setWeeks4Before4(weeks4Before4 - 1)
+                }}
+              />
+            </div>
+          </>
+        ) : (
+          <>Searching...</>
+        )}
 
-          {dataCalendar5?.loading === false ? (
-            <>
-              <div>
-                <Calendar
-                  startWeekFromDate={fromDate5}
-                  numWeeks={numWeeks}
-                  calendar={dataCalendar5}
-                  pleaseUpdateCalendar={refetchCalendar5}
-                  goInThePast={() => {
-                    setWeeks4Before5(weeks4Before5 + 1)
-                  }}
-                  goInTheFuture={() => {
-                    setWeeks4Before5(weeks4Before5 - 1)
-                  }}
-                />
-              </div>
-            </>
-          ) : (
-            <>Searching...</>
-          )}
-        </div>
+        {dataCalendar5?.loading === false ? (
+          <>
+            <div>
+              <Calendar
+                startWeekFromDate={fromDate5}
+                numWeeks={numWeeks}
+                calendar={dataCalendar5}
+                pleaseUpdateCalendar={refetchCalendar5}
+                goInThePast={() => {
+                  setWeeks4Before5(weeks4Before5 + 1)
+                }}
+                goInTheFuture={() => {
+                  setWeeks4Before5(weeks4Before5 - 1)
+                }}
+              />
+            </div>
+          </>
+        ) : (
+          <>Searching...</>
+        )}
+      </div>
 
-        {!!dataCalendar1 &&
-          !!dataCalendar2 &&
-          !!dataCalendar3 &&
-          !!dataCalendar4 &&
-          !!dataCalendar5 && (
-            <Timelines
-              nowLocalDate={nowLocalDate}
-              dataCalendar1={dataCalendar1}
-              dataCalendar2={dataCalendar2}
-              dataCalendar3={dataCalendar3}
-              dataCalendar4={dataCalendar4}
-              dataCalendar5={dataCalendar5}
-              pleaseUpdateCalendar={calendarId => {
-                // TODO: Improve this
-                if (calendarId === 1) {
-                  refetchCalendar1()
-                } else if (calendarId === 2) {
-                  refetchCalendar2()
-                } else if (calendarId === 3) {
-                  refetchCalendar3()
-                } else if (calendarId === 4) {
-                  refetchCalendar4()
-                } else if (calendarId === 5) {
-                  refetchCalendar5()
-                } else {
-                  // No support for other calendars...
-                }
-              }}
-            />
-          )}
-      </section>
-    </UserLayout>
+      {!!dataCalendar1 &&
+        !!dataCalendar2 &&
+        !!dataCalendar3 &&
+        !!dataCalendar4 &&
+        !!dataCalendar5 && (
+          <Timelines
+            nowLocalDate={nowLocalDate}
+            dataCalendar1={dataCalendar1}
+            dataCalendar2={dataCalendar2}
+            dataCalendar3={dataCalendar3}
+            dataCalendar4={dataCalendar4}
+            dataCalendar5={dataCalendar5}
+            pleaseUpdateCalendar={calendarId => {
+              // TODO: Improve this
+              if (calendarId === 1) {
+                refetchCalendar1()
+              } else if (calendarId === 2) {
+                refetchCalendar2()
+              } else if (calendarId === 3) {
+                refetchCalendar3()
+              } else if (calendarId === 4) {
+                refetchCalendar4()
+              } else if (calendarId === 5) {
+                refetchCalendar5()
+              } else {
+                // No support for other calendars...
+              }
+            }}
+          />
+        )}
+    </section>
   )
 }

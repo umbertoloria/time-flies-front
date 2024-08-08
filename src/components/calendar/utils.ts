@@ -50,17 +50,18 @@ export function mapDataToCalendarLines(
 
   // From "calendarDays", skipping all days that are before "fromLocalDate"
   const fromLocalDate = getLocalDayByDate(fromDate)
-  let iCalendarDay = 0
+  let iNextCalendarDay = 0
   let curCalendarDay =
-    iCalendarDay < calendarDays.length
-      ? calendarDays[iCalendarDay++]
+    iNextCalendarDay < calendarDays.length
+      ? calendarDays[iNextCalendarDay++]
       : undefined
+
   while (
     !!curCalendarDay &&
-    iCalendarDay < calendarDays.length &&
+    iNextCalendarDay < calendarDays.length &&
     !localDatesLTE(fromLocalDate, curCalendarDay.date)
   ) {
-    curCalendarDay = calendarDays[iCalendarDay++]
+    curCalendarDay = calendarDays[iNextCalendarDay++]
   }
 
   // Filling "result"
@@ -72,16 +73,16 @@ export function mapDataToCalendarLines(
 
     let status: 'planned' | 'done' | 'none' = 'none'
 
-    if (!!curCalendarDay && iCalendarDay < calendarDays.length) {
+    if (!!curCalendarDay && iNextCalendarDay - 1 < calendarDays.length) {
       if (curLocalDate === curCalendarDay.date) {
         // Is ts Done or Just Planned?
-        if (iCalendarDay > allDaysIndexFromThatArePlanned) {
+        if (iNextCalendarDay - 1 >= allDaysIndexFromThatArePlanned) {
           status = 'planned'
         } else {
           status = 'done'
         }
 
-        curCalendarDay = calendarDays[iCalendarDay++]
+        curCalendarDay = calendarDays[iNextCalendarDay++]
       }
     }
 

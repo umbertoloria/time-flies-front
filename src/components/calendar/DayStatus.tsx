@@ -21,7 +21,7 @@ export const DayStatus: FC<{
         className={classNames('rounded-sm w-full h-full', {
           'bg-gray-200': !props.status,
           'day-status-today': props.highlightToday,
-          clickable: props.highlightToday,
+          clickable: props.status !== 'done' && props.highlightToday,
         })}
         style={{
           background:
@@ -32,8 +32,10 @@ export const DayStatus: FC<{
                 : undefined,
         }}
         onClick={() => {
-          if (props.highlightToday) {
-            openInputDialog(props.apiData.calendarId, props.apiData.localDate)
+          if (props.status !== 'done') {
+            if (props.highlightToday) {
+              openInputDialog(props.apiData.calendarId, props.apiData.localDate)
+            }
           }
         }}
       />
