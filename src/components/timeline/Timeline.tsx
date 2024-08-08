@@ -93,6 +93,7 @@ export const Timeline: FC<{
   numDaysBefore: number
   nowDate: Date
   calendar: TCalendar
+  pleaseUpdateCalendar: () => void
 }> = props => {
   const { color, plannedColor } = props.calendar
 
@@ -107,7 +108,10 @@ export const Timeline: FC<{
 
   return (
     <>
-      <CalendarStateless calendarLines={[{ cells: calendarCells }]} />
+      <CalendarStateless
+        calendarLines={[{ cells: calendarCells }]}
+        pleaseUpdateCalendar={props.pleaseUpdateCalendar}
+      />
     </>
   )
 }

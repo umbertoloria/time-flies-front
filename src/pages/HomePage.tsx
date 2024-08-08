@@ -60,7 +60,8 @@ const useWrapperForCreateResource = <T,>(
   ]
 }
 
-export default function Home() {
+export default function HomePage() {
+  // FIXME: Some connections should be done only *IF* UserLayout renders its content
   const nowDate = getNowDate()
   const nowLocalDate = getLocalDayByDate(nowDate)
 
@@ -130,6 +131,7 @@ export default function Home() {
                   startWeekFromDate={fromDate1}
                   numWeeks={numWeeks}
                   calendar={dataCalendar1}
+                  pleaseUpdateCalendar={refetchCalendar1}
                   goInThePast={() => {
                     setWeeks4Before1(weeks4Before1 + 1)
                   }}
@@ -150,6 +152,7 @@ export default function Home() {
                   startWeekFromDate={fromDate2}
                   numWeeks={numWeeks}
                   calendar={dataCalendar2}
+                  pleaseUpdateCalendar={refetchCalendar2}
                   goInThePast={() => {
                     setWeeks4Before2(weeks4Before2 + 1)
                   }}
@@ -170,6 +173,7 @@ export default function Home() {
                   startWeekFromDate={fromDate3}
                   numWeeks={numWeeks}
                   calendar={dataCalendar3}
+                  pleaseUpdateCalendar={refetchCalendar3}
                   goInThePast={() => {
                     setWeeks4Before3(weeks4Before3 + 1)
                   }}
@@ -190,6 +194,7 @@ export default function Home() {
                   startWeekFromDate={fromDate4}
                   numWeeks={numWeeks}
                   calendar={dataCalendar4}
+                  pleaseUpdateCalendar={refetchCalendar4}
                   goInThePast={() => {
                     setWeeks4Before4(weeks4Before4 + 1)
                   }}
@@ -210,6 +215,7 @@ export default function Home() {
                   startWeekFromDate={fromDate5}
                   numWeeks={numWeeks}
                   calendar={dataCalendar5}
+                  pleaseUpdateCalendar={refetchCalendar5}
                   goInThePast={() => {
                     setWeeks4Before5(weeks4Before5 + 1)
                   }}
@@ -236,6 +242,22 @@ export default function Home() {
               dataCalendar3={dataCalendar3}
               dataCalendar4={dataCalendar4}
               dataCalendar5={dataCalendar5}
+              pleaseUpdateCalendar={calendarId => {
+                // TODO: Improve this
+                if (calendarId === 1) {
+                  refetchCalendar1()
+                } else if (calendarId === 2) {
+                  refetchCalendar2()
+                } else if (calendarId === 3) {
+                  refetchCalendar3()
+                } else if (calendarId === 4) {
+                  refetchCalendar4()
+                } else if (calendarId === 5) {
+                  refetchCalendar5()
+                } else {
+                  // No support for other calendars...
+                }
+              }}
             />
           )}
       </section>

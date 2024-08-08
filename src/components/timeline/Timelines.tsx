@@ -15,7 +15,6 @@ import { createCalendarCellPropsList, Timeline } from './Timeline.tsx'
 type TimelinesDataCalendar = TCalendar & {
   loading: boolean
 }
-
 export const Timelines: FC<{
   nowLocalDate: string
   dataCalendar1: TimelinesDataCalendar
@@ -23,6 +22,7 @@ export const Timelines: FC<{
   dataCalendar3: TimelinesDataCalendar
   dataCalendar4: TimelinesDataCalendar
   dataCalendar5: TimelinesDataCalendar
+  pleaseUpdateCalendar: (calendarId: number) => void
 }> = ({
   nowLocalDate,
   dataCalendar1,
@@ -30,6 +30,7 @@ export const Timelines: FC<{
   dataCalendar3,
   dataCalendar4,
   dataCalendar5,
+  pleaseUpdateCalendar,
 }) => {
   const nowDate = getDateFromLocalDate(nowLocalDate)
   const [numDaysBefore] = useState(38)
@@ -77,6 +78,9 @@ export const Timelines: FC<{
             numDaysBefore={numDaysBefore}
             nowDate={nowDate}
             calendar={dataCalendar1}
+            pleaseUpdateCalendar={() => {
+              pleaseUpdateCalendar(1)
+            }}
           />
         </>
       ) : (
@@ -90,6 +94,9 @@ export const Timelines: FC<{
             numDaysBefore={numDaysBefore}
             nowDate={nowDate}
             calendar={dataCalendar2}
+            pleaseUpdateCalendar={() => {
+              pleaseUpdateCalendar(2)
+            }}
           />
         </>
       ) : (
@@ -103,6 +110,9 @@ export const Timelines: FC<{
             numDaysBefore={numDaysBefore}
             nowDate={nowDate}
             calendar={dataCalendar3}
+            pleaseUpdateCalendar={() => {
+              pleaseUpdateCalendar(3)
+            }}
           />
         </>
       ) : (
@@ -116,6 +126,9 @@ export const Timelines: FC<{
             numDaysBefore={numDaysBefore}
             nowDate={nowDate}
             calendar={dataCalendar4}
+            pleaseUpdateCalendar={() => {
+              pleaseUpdateCalendar(4)
+            }}
           />
         </>
       ) : (
@@ -129,6 +142,9 @@ export const Timelines: FC<{
             numDaysBefore={numDaysBefore}
             nowDate={nowDate}
             calendar={dataCalendar5}
+            pleaseUpdateCalendar={() => {
+              pleaseUpdateCalendar(5)
+            }}
           />
         </>
       ) : (

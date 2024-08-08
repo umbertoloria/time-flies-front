@@ -1,7 +1,12 @@
-import { FC, PropsWithChildren } from 'react'
+import { FC, PropsWithChildren, useEffect } from 'react'
 import { TCalendar } from '../../remote/sdk/types'
 import { getITMonthFromLocalDate } from '../../lib/utils'
 import { DayStatus } from './DayStatus'
+import {
+  subscribeToCalendarUpdates,
+  CalendarUpdatedEventFnType,
+  unsubscribeToCalendarUpdates,
+} from '../../events/calendar-events.ts'
 import {
   getFirstAndLastLocalDatesFromCalendarLines,
   mapDataToCalendarLines,
@@ -12,6 +17,7 @@ export const Calendar: FC<{
   startWeekFromDate: Date
   numWeeks: number
   calendar: TCalendar
+  pleaseUpdateCalendar: () => void
   goInThePast: () => void
   goInTheFuture: () => void
 }> = props => {
@@ -27,6 +33,7 @@ export const Calendar: FC<{
         calendar={props.calendar}
         calendarLines={calendarLines}
         placeTableHeadWithWeekDays
+        pleaseUpdateCalendar={props.pleaseUpdateCalendar}
         goInThePast={props.goInThePast}
         goInTheFuture={props.goInTheFuture}
       />
@@ -38,6 +45,7 @@ export const CalendarStateless: FC<{
   calendar?: TCalendar
   calendarLines: CalendarLineProps[]
   placeTableHeadWithWeekDays?: boolean
+  pleaseUpdateCalendar: () => void
   goInThePast?: () => void
   goInTheFuture?: () => void
 }> = props => {
@@ -45,6 +53,21 @@ export const CalendarStateless: FC<{
     getFirstAndLastLocalDatesFromCalendarLines(props.calendarLines)
   const firstMonthLang = getITMonthFromLocalDate(firstLocalDate)
   const lastMonthLang = getITMonthFromLocalDate(lastLocalDate)
+
+  useEffect(() => {
+    const listener: CalendarUpdatedEventFnType = event => {
+      const { calendarId } = event.detail
+      if (props.calendar && props.pleaseUpdateCalendar) {
+        if (calendarId === props.calendar.id) {
+          props.pleaseUpdateCalendar()
+        }
+      }
+    }
+    subscribeToCalendarUpdates(listener)
+    return () => {
+      unsubscribeToCalendarUpdates(listener)
+    }
+  }, [])
 
   return (
     <>

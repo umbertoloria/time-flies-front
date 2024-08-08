@@ -7,6 +7,7 @@ import {
 } from 'react'
 import { InputDialogDayStatus } from '../components/calendar/InputDialogDayStatus.tsx'
 import { checkDateWithSuccess } from '../remote/remote.ts'
+import { fireEventCalendarUpdated } from '../events/calendar-events.ts'
 
 type UXContextTypeInputDialogData = {
   calendarId: number
@@ -83,10 +84,12 @@ export const UXProvider: FC<PropsWithChildren> = props => {
                 loading: true,
               },
             })
+            // TODO: De-couple this component from this logic
             checkDateWithSuccess(calendarId, localDate)
               .then(() => {
                 // Yay!
                 // TODO: Tell user all went OK
+                fireEventCalendarUpdated(calendarId)
                 setInputDialog({
                   isOpen: false,
                   // data: undefined,
