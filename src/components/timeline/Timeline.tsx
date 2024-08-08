@@ -1,10 +1,6 @@
 import { FC } from 'react'
 import { TCalendar } from '../../remote/sdk/types'
-import {
-  CalendarCellProps,
-  CalendarLineProps,
-  CalendarStateless,
-} from '../calendar/Calendar'
+import { CalendarCellProps, CalendarStateless } from '../calendar/Calendar'
 import {
   displayDateFromLocalDate,
   getDateWithOffsetDays,
@@ -15,14 +11,14 @@ import {
   localDatesLT,
 } from '../../lib/utils'
 
-export function createCalendarLinePropsList(
+export function createCalendarCellPropsList(
   endDate: Date,
   numDaysBefore: number,
   calendar: TCalendar,
   nowDate: Date,
   color: string,
   plannedColor: string
-): CalendarLineProps[] {
+): CalendarCellProps[] {
   // TODO: Improve this algorithm
 
   // Calculating cells
@@ -86,11 +82,7 @@ export function createCalendarLinePropsList(
 
     --iCell
   }
-  return [
-    {
-      cells,
-    },
-  ]
+  return cells
 }
 
 export const Timeline: FC<{
@@ -101,7 +93,7 @@ export const Timeline: FC<{
 }> = props => {
   const { color, plannedColor } = props.calendar
 
-  const calendarLines = createCalendarLinePropsList(
+  const calendarCells = createCalendarCellPropsList(
     props.endDate,
     props.numDaysBefore,
     props.calendar,
@@ -112,15 +104,7 @@ export const Timeline: FC<{
 
   return (
     <>
-      <CalendarStateless
-        calendarLines={calendarLines}
-        goInThePast={() => {
-          console.log('goInThePast')
-        }}
-        goInTheFuture={() => {
-          console.log('goInTheFuture')
-        }}
-      />
+      <CalendarStateless calendarLines={[{ cells: calendarCells }]} />
     </>
   )
 }

@@ -38,8 +38,8 @@ export const CalendarStateless: FC<{
   calendar?: TCalendar
   calendarLines: CalendarLineProps[]
   placeTableHeadWithWeekDays?: boolean
-  goInThePast: () => void
-  goInTheFuture: () => void
+  goInThePast?: () => void
+  goInTheFuture?: () => void
 }> = props => {
   const { firstLocalDate, lastLocalDate } =
     getFirstAndLastLocalDatesFromCalendarLines(props.calendarLines)
@@ -48,7 +48,7 @@ export const CalendarStateless: FC<{
 
   return (
     <>
-      {!!props.calendar && (
+      {!!props.calendar && !!props.goInThePast && !!props.goInTheFuture && (
         <>
           <CalendarTitle
             textColor={props.calendar.color}

@@ -1,9 +1,16 @@
 import { FC, useState } from 'react'
-import { CalendarArrowControl, CalendarTitle } from '../calendar/Calendar.tsx'
+import {
+  CalendarArrowControl,
+  CalendarLineProps,
+  CalendarTitle,
+} from '../calendar/Calendar.tsx'
 import { TCalendar } from '../../remote/sdk/types'
-import { getITMonthFromLocalDate } from '../../lib/utils.ts'
+import {
+  getDateFromLocalDate,
+  getITMonthFromLocalDate,
+} from '../../lib/utils.ts'
 import { getFirstAndLastLocalDatesFromCalendarLines } from '../calendar/utils.ts'
-import { createCalendarLinePropsList, Timeline } from './Timeline.tsx'
+import { createCalendarCellPropsList, Timeline } from './Timeline.tsx'
 
 type TimelinesDataCalendar = TCalendar & {
   loading: boolean
@@ -24,7 +31,7 @@ export const Timelines: FC<{
   dataCalendar4,
   dataCalendar5,
 }) => {
-  const nowDate = new Date(nowLocalDate)
+  const nowDate = getDateFromLocalDate(nowLocalDate)
   const [numDaysBefore] = useState(38)
   const [weeks4Before, setWeeks4Before] = useState(0)
   const endDate = (() => {
@@ -33,7 +40,7 @@ export const Timelines: FC<{
     return clone
   })()
 
-  const calendarLines = createCalendarLinePropsList(
+  const calendarCells = createCalendarCellPropsList(
     endDate,
     numDaysBefore,
     dataCalendar1,
@@ -41,9 +48,7 @@ export const Timelines: FC<{
     dataCalendar1.color,
     dataCalendar1.plannedColor
   )
-  if (!calendarLines.length) {
-    throw new Error('First calendar was empty')
-  }
+  const calendarLines: CalendarLineProps[] = [{ cells: calendarCells }]
   const { firstLocalDate, lastLocalDate } =
     getFirstAndLastLocalDatesFromCalendarLines(calendarLines)
   const firstMonthLang = getITMonthFromLocalDate(firstLocalDate)
