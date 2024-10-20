@@ -9,17 +9,17 @@ const api = axios.create({
 })
 
 export const authStatus = () =>
-  api.get('auth/status').then<TAuthStatus>(({ data }) => data)
+  api.get('?a=status').then<TAuthStatus>(({ data }) => data)
 
 export const readCalendar = (id: number) =>
-  api.get(`calendar/${id}`).then<TCalendar>(({ data }) => data)
+  api.get(`?a=calendar&p1=${id}`).then<TCalendar>(({ data }) => data)
 
 export const checkDateWithSuccess = (
   id: number,
   localDate: string
 ): Promise<TCalendarSDK.CheckDateWithSuccessPromiseOutput> =>
   api
-    .post(`calendar/${id}/date/${localDate}`)
+    .post(`?a=calendar&p1=${id}&p2=${localDate}`)
     .then<'ok'>(() => 'ok')
     .catch(err => {
       if (err.response?.data === 'invalid') {
@@ -28,5 +28,33 @@ export const checkDateWithSuccess = (
       throw err
     })
 
-export const backendLoginAction = `${backendURL}/auth/login`
-export const backendLogoutAction = `${backendURL}/auth/logout`
+export const authLogin = (email: string, password: string) =>
+  api
+    .post('?a=login', makeFormData({ email, password }))
+    .then<'ok'>(() => 'ok')
+    .catch(err => {
+      if (err.response?.data === 'invalid') {
+        return 'invalid'
+      }
+      throw err
+    })
+
+export const authLogout = () =>
+  api
+    .get('?a=logout')
+    .then<'ok'>(() => 'ok')
+    .catch(err => {
+      if (err.response?.data === 'invalid') {
+        return 'invalid'
+      }
+      throw err
+    })
+
+function makeFormData(args: Record<string, string>) {
+  const formData = new FormData()
+  for (const key in args) {
+    const value = args[key]
+    formData.set(key, value)
+  }
+  return formData
+}

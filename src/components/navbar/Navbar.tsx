@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.tsx'
-import { backendLogoutAction } from '../../remote/remote'
+import { authLogout } from '../../remote/remote'
 
 export const Navbar = () => {
   const { user } = useAuth()
@@ -13,7 +13,14 @@ export const Navbar = () => {
         {user ? (
           <>
             <NavbarItem to='/account' label={user.email} />
-            <NavbarItem to={backendLogoutAction} label='Logout' />
+            <NavbarItem
+              onClick={() => {
+                authLogout().then(() => {
+                  location.href = '/'
+                })
+              }}
+              label='Logout'
+            />
           </>
         ) : (
           <>
@@ -27,11 +34,21 @@ export const Navbar = () => {
 }
 
 const NavbarItem: FC<{
-  to: string
+  to?: string
   label: string
+  onClick?: () => any
 }> = props => (
   <li className='py-2 px-4'>
-    <Link to={props.to} className='no-underline hover:underline'>
+    <Link
+      onClick={e => {
+        if (props.onClick) {
+          e.preventDefault()
+          props.onClick()
+        }
+      }}
+      to={props.to || ''}
+      className='no-underline hover:underline'
+    >
       {props.label}
     </Link>
   </li>

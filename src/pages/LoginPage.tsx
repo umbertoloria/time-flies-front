@@ -1,4 +1,4 @@
-import { backendLoginAction } from '../remote/remote.ts'
+import { authLogin } from '../remote/remote.ts'
 import classNames from 'classnames'
 
 export default function LoginPage() {
@@ -16,15 +16,24 @@ const Login = () => {
   return (
     <form
       method='post'
-      action={backendLoginAction}
       className='bg-gray-300 w-80 p-2 radius'
+      onSubmit={e => {
+        e.preventDefault()
+        const form = e.currentTarget
+        const formData = new FormData(form)
+        const email = (formData.get('email') as string) || ''
+        const password = (formData.get('password') as string) || ''
+        authLogin(email, password).then(() => {
+          location.href = '/'
+        })
+      }}
     >
       <fieldset className='flex flex-col gap-2 items-center'>
         <div className='flex gap-2 items-center'>
-          <label className='w-32'>Username</label>
+          <label className='w-32'>Email</label>
           <input
             type='text'
-            name='username'
+            name='email'
             className={classNames('w-full border-2 rounded', {
               'border-blue-400': !isFailed,
               'border-red-400': isFailed,
