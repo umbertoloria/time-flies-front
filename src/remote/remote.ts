@@ -12,14 +12,17 @@ export const authStatus = () =>
   api.get('?a=status').then<TAuthStatus>(({ data }) => data)
 
 export const readCalendar = (id: number) =>
-  api.get(`?a=calendar&p1=${id}`).then<TCalendar>(({ data }) => data)
+  api.get(`?a=calendar-read&id=${id}`).then<TCalendar>(({ data }) => data)
 
 export const checkDateWithSuccess = (
   id: number,
   localDate: string
 ): Promise<TCalendarSDK.CheckDateWithSuccessPromiseOutput> =>
   api
-    .post(`?a=calendar&p1=${id}&p2=${localDate}`)
+    .post(
+      '?a=calendar-date-create',
+      makeFormData({ id: `${id}`, 'local-date': localDate })
+    )
     .then<'ok'>(() => 'ok')
     .catch(err => {
       if (err.response?.data === 'invalid') {
