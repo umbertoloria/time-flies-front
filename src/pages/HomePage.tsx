@@ -128,8 +128,8 @@ const InnerPage: FC = () => {
   }, [])
 
   return (
-    <section className=' p-8'>
-      <div className='flex justify-center gap-10'>
+    <section className='p-8'>
+      <div className='flex flex-wrap justify-center gap-10 w-100'>
         {dataCalendar1?.loading === false ? (
           <>
             <div>

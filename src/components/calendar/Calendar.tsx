@@ -3,8 +3,8 @@ import { TCalendar } from '../../remote/sdk/types'
 import { getITMonthFromLocalDate } from '../../lib/utils'
 import { DayStatus } from './DayStatus'
 import {
-  subscribeToCalendarUpdates,
   CalendarUpdatedEventFnType,
+  subscribeToCalendarUpdates,
   unsubscribeToCalendarUpdates,
 } from '../../events/calendar-events.ts'
 import {
@@ -70,7 +70,7 @@ export const CalendarStateless: FC<{
   }, [])
 
   return (
-    <>
+    <div>
       {!!props.calendar && !!props.goInThePast && !!props.goInTheFuture && (
         <>
           <CalendarTitle
@@ -94,7 +94,7 @@ export const CalendarStateless: FC<{
           ))}
         </tbody>
       </table>
-    </>
+    </div>
   )
 }
 
