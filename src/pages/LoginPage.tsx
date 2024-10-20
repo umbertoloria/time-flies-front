@@ -1,5 +1,6 @@
 import { authLogin } from '../remote/remote.ts'
 import classNames from 'classnames'
+import { baseRoot } from '../main.tsx'
 
 export default function LoginPage() {
   return (
@@ -24,7 +25,7 @@ const Login = () => {
         const email = (formData.get('email') as string) || ''
         const password = (formData.get('password') as string) || ''
         authLogin(email, password).then(() => {
-          location.href = '/'
+          location.href = baseRoot
         })
       }}
     >

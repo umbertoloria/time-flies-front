@@ -7,23 +7,29 @@ import ErrorPage from './error-page.tsx'
 import HomePage from './pages/HomePage.tsx'
 import LoginPage from './pages/LoginPage.tsx'
 
-const router = createBrowserRouter([
+export const baseRoot = '/app/time-flies' as const
+const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <Root />,
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          path: '',
+          element: <HomePage />,
+        },
+        {
+          path: 'login',
+          element: <LoginPage />,
+        },
+      ],
+    },
+  ],
   {
-    path: '/',
-    element: <Root />,
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        path: '',
-        element: <HomePage />,
-      },
-      {
-        path: 'login',
-        element: <LoginPage />,
-      },
-    ],
-  },
-])
+    basename: baseRoot,
+  }
+)
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

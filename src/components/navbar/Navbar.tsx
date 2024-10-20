@@ -2,6 +2,7 @@ import { FC } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.tsx'
 import { authLogout } from '../../remote/remote'
+import { baseRoot } from '../../main.tsx'
 
 export const Navbar = () => {
   const { user } = useAuth()
@@ -16,7 +17,7 @@ export const Navbar = () => {
             <NavbarItem
               onClick={() => {
                 authLogout().then(() => {
-                  location.href = '/'
+                  location.href = baseRoot
                 })
               }}
               label='Logout'
