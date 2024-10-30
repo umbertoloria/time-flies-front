@@ -61,6 +61,7 @@ export function createCalendarCellPropsList(
           color: day.color,
           status: day.isPlanned ? 'planned' : 'done',
           isToday,
+          day: day.day,
         })
       } else {
         cells.push({
@@ -70,6 +71,7 @@ export function createCalendarCellPropsList(
           // color: undefined,
           status: 'none',
           isToday,
+          // day: undefined,
         })
       }
     } else {
@@ -80,6 +82,7 @@ export function createCalendarCellPropsList(
         // color: undefined,
         status: 'none',
         isToday,
+        // day: undefined,
       })
     }
 

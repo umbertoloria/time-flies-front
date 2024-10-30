@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, useEffect } from 'react'
-import { TCalendar } from '../../remote/sdk/types'
+import { TCalendar, TDay } from '../../remote/sdk/types'
 import { getITMonthFromLocalDate } from '../../lib/utils'
 import { DayStatus } from './DayStatus'
 import {
@@ -206,10 +206,12 @@ export type CalendarCellProps = {
   color?: string
   status: 'none' | 'planned' | 'done'
   isToday: boolean
+  day?: TDay
 }
 const CalendarCell: FC<CalendarCellProps> = props => (
   <td className='m-0 p-0'>
     <DayStatus
+      day={props.day}
       status={
         props.status === 'planned' || props.status === 'done'
           ? props.status

@@ -5,51 +5,75 @@ import {
   useContext,
   useState,
 } from 'react'
-import { InputDialogDayStatus } from '../components/calendar/InputDialogDayStatus.tsx'
+import { InputDialogInsertNewGoal } from '../components/calendar/InputDialogInsertNewGoal.tsx'
 import { checkDateWithSuccess } from '../remote/remote.ts'
 import { fireEventCalendarUpdated } from '../events/calendar-events.ts'
+import { InputDialogSeeNotes } from '../components/calendar/InputDialogSeeNotes.tsx'
 
-type UXContextTypeInputDialogData = {
+type UXContextTypeDialogForInsertNewGoal = {
   calendarId: number
   localDate: string
   loading: boolean
 }
+type UXContextTypeDialogForSeeNotes = {
+  notes: string
+}
 const UXContext = createContext<{
-  inputDialog: {
+  dialogForInsertNewGoal: {
     isOpen: boolean
-    data?: UXContextTypeInputDialogData
-    openInputDialog: (calendarId: number, localDate: string) => void
-    closeInputDialog: () => void
+    data?: UXContextTypeDialogForInsertNewGoal
+    openDialog: (calendarId: number, localDate: string) => void
+    closeDialog: () => void
     confirmProgressDone: () => void
   }
+  dialogForSeeNotes: {
+    isOpen: boolean
+    data?: UXContextTypeDialogForSeeNotes
+    openDialog: (notes: string) => void
+    closeDialog: () => void
+  }
 }>({
-  inputDialog: {
+  dialogForInsertNewGoal: {
     isOpen: false,
     // data: undefined,
-    openInputDialog() {},
-    closeInputDialog() {},
+    openDialog() {},
+    closeDialog() {},
     confirmProgressDone() {},
+  },
+  dialogForSeeNotes: {
+    isOpen: false,
+    // data: undefined,
+    openDialog() {},
+    closeDialog() {},
   },
 })
 
 export const UXProvider: FC<PropsWithChildren> = props => {
-  const [inputDialog, setInputDialog] = useState<{
+  const [dialogForInsertNewGoal, setDialogForInsertNewGoal] = useState<{
     isOpen: boolean
-    data?: UXContextTypeInputDialogData
+    data?: UXContextTypeDialogForInsertNewGoal
+  }>({ isOpen: false })
+
+  const [dialogForSeeNotes, setDialogForSeeNotes] = useState<{
+    isOpen: boolean
+    data?: UXContextTypeDialogForSeeNotes
   }>({ isOpen: false })
 
   return (
     <UXContext.Provider
       value={{
-        inputDialog: {
-          isOpen: inputDialog.isOpen,
-          data: inputDialog.data,
-          openInputDialog(calendarId, localDate) {
-            if (inputDialog.isOpen || inputDialog.data?.loading) {
+        dialogForInsertNewGoal: {
+          isOpen: dialogForInsertNewGoal.isOpen,
+          data: dialogForInsertNewGoal.data,
+          openDialog(calendarId, localDate) {
+            if (
+              dialogForInsertNewGoal.isOpen ||
+              dialogForInsertNewGoal.data?.loading
+            ) {
               return
             }
-            setInputDialog({
-              ...inputDialog,
+            setDialogForInsertNewGoal({
+              ...dialogForInsertNewGoal,
               isOpen: true,
               data: {
                 calendarId,
@@ -58,25 +82,28 @@ export const UXProvider: FC<PropsWithChildren> = props => {
               },
             })
           },
-          closeInputDialog() {
-            if (!inputDialog.isOpen || inputDialog.data?.loading) {
+          closeDialog() {
+            if (
+              !dialogForInsertNewGoal.isOpen ||
+              dialogForInsertNewGoal.data?.loading
+            ) {
               return
             }
-            setInputDialog({
-              ...inputDialog,
+            setDialogForInsertNewGoal({
+              ...dialogForInsertNewGoal,
               isOpen: false,
             })
           },
           confirmProgressDone() {
             if (
-              !inputDialog.isOpen ||
-              !inputDialog.data ||
-              inputDialog.data.loading
+              !dialogForInsertNewGoal.isOpen ||
+              !dialogForInsertNewGoal.data ||
+              dialogForInsertNewGoal.data.loading
             ) {
               return
             }
-            const { calendarId, localDate } = inputDialog.data
-            setInputDialog({
+            const { calendarId, localDate } = dialogForInsertNewGoal.data
+            setDialogForInsertNewGoal({
               isOpen: true,
               data: {
                 calendarId,
@@ -90,7 +117,7 @@ export const UXProvider: FC<PropsWithChildren> = props => {
                 // Yay!
                 // TODO: Tell user all went OK
                 fireEventCalendarUpdated(calendarId)
-                setInputDialog({
+                setDialogForInsertNewGoal({
                   isOpen: false,
                   // data: undefined,
                 })
@@ -99,7 +126,7 @@ export const UXProvider: FC<PropsWithChildren> = props => {
                 console.error(err)
                 // TODO: Tell user all went KO
                 alert('Errore avvenuto')
-                setInputDialog({
+                setDialogForInsertNewGoal({
                   isOpen: true,
                   data: {
                     calendarId,
@@ -110,9 +137,35 @@ export const UXProvider: FC<PropsWithChildren> = props => {
               })
           },
         },
+        dialogForSeeNotes: {
+          isOpen: dialogForSeeNotes.isOpen,
+          data: dialogForSeeNotes.data,
+          openDialog(notes) {
+            if (dialogForSeeNotes.isOpen) {
+              return
+            }
+            setDialogForSeeNotes({
+              ...dialogForSeeNotes,
+              isOpen: true,
+              data: {
+                notes,
+              },
+            })
+          },
+          closeDialog() {
+            if (!dialogForSeeNotes.isOpen || !dialogForSeeNotes.data) {
+              return
+            }
+            setDialogForSeeNotes({
+              ...dialogForSeeNotes,
+              isOpen: false,
+            })
+          },
+        },
       }}
     >
-      <InputDialogDayStatus />
+      <InputDialogInsertNewGoal />
+      <InputDialogSeeNotes />
       {props.children}
     </UXContext.Provider>
   )
@@ -121,8 +174,11 @@ export const UXProvider: FC<PropsWithChildren> = props => {
 export const useUXContext = () => {
   return useContext(UXContext)
 }
-
-export const useUXInputDialogControls = () => {
+export const useUXDialogForInsertNewGoal = () => {
   const uxContext = useUXContext()
-  return uxContext.inputDialog
+  return uxContext.dialogForInsertNewGoal
+}
+export const useUXDialogForSeeNotes = () => {
+  const uxContext = useUXContext()
+  return uxContext.dialogForSeeNotes
 }

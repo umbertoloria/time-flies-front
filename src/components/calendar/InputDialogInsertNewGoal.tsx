@@ -1,10 +1,10 @@
 import { FC } from 'react'
-import { useUXInputDialogControls } from '../../context/UXContext.tsx'
+import { useUXDialogForInsertNewGoal } from '../../context/UXContext.tsx'
 
-// TODO: Clean "InputDialogDayStatus" component
-export const InputDialogDayStatus: FC = () => {
-  const { isOpen, closeInputDialog, confirmProgressDone } =
-    useUXInputDialogControls()
+// TODO: Clean "InputDialogInsertNewGoal" component
+export const InputDialogInsertNewGoal: FC = () => {
+  const { isOpen, closeDialog, confirmProgressDone } =
+    useUXDialogForInsertNewGoal()
 
   return (
     <>
@@ -20,7 +20,7 @@ export const InputDialogDayStatus: FC = () => {
                   <button
                     type='button'
                     className='text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white'
-                    onClick={closeInputDialog}
+                    onClick={closeDialog}
                   >
                     Indietro
                     {/*<svg

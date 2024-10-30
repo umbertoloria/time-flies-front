@@ -1,8 +1,13 @@
 import { FC } from 'react'
 import classNames from 'classnames'
-import { useUXInputDialogControls } from '../../context/UXContext.tsx'
+import {
+  useUXDialogForInsertNewGoal,
+  useUXDialogForSeeNotes,
+} from '../../context/UXContext.tsx'
+import { TDay } from '../../remote/sdk/types'
 
 export const DayStatus: FC<{
+  day?: TDay
   status?: 'planned' | 'done'
   color?: string
   tooltip?: string
@@ -12,24 +17,32 @@ export const DayStatus: FC<{
     localDate: string
   }
 }> = props => {
-  const { openInputDialog } = useUXInputDialogControls()
+  const { openDialog: openDialogForInsertNewGoal } =
+    useUXDialogForInsertNewGoal()
+  const { openDialog: openDialogForSeeNotes } = useUXDialogForSeeNotes()
 
   return (
     <div className='w-10 h-9 p-1' title={props.tooltip || undefined}>
       <div
         className={classNames('rounded-sm w-full h-full', {
           'bg-gray-200': !props.status,
-          'day-status-today': props.highlightToday,
-          clickable: props.status !== 'done' && props.highlightToday,
+          'day-status-today':
+            props.highlightToday || typeof props.day?.notes === 'string',
+          clickable:
+            (props.status !== 'done' && props.highlightToday) ||
+            typeof props.day?.notes === 'string',
         })}
         style={{
           background: props.color || undefined,
         }}
         onClick={() => {
-          if (props.status !== 'done') {
-            if (props.highlightToday) {
-              openInputDialog(props.apiData.calendarId, props.apiData.localDate)
-            }
+          if (props.status !== 'done' && props.highlightToday) {
+            openDialogForInsertNewGoal(
+              props.apiData.calendarId,
+              props.apiData.localDate
+            )
+          } else if (typeof props.day?.notes === 'string') {
+            openDialogForSeeNotes(props.day?.notes)
           }
         }}
       />

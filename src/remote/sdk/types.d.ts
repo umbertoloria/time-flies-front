@@ -1,6 +1,6 @@
 // Types
-// 2024-10-30T15:39:55Z
-// v2.3
+// 2024-10-30T23:54:22Z
+// v2.4
 
 // Calendar
 export type TCalendar = TCalendarCh & {
@@ -17,6 +17,7 @@ type TCalendarCh = {
 export type TDay = {
   date: string // Es. "2023-01-01"
   intensity?: number
+  notes?: string
 }
 
 // Auth

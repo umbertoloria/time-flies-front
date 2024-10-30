@@ -104,6 +104,7 @@ export function mapDataToCalendarLines(
 
     let color: undefined | string = undefined
     let status: 'planned' | 'done' | 'none' = 'none'
+    let day: undefined | TDay = undefined
 
     if (!!curCalendarDay && iNextCalendarDay - 1 < allDays.length) {
       if (curLocalDate === curCalendarDay.day.date) {
@@ -116,6 +117,7 @@ export function mapDataToCalendarLines(
           status = 'done'
         }
 
+        day = curCalendarDay.day
         curCalendarDay = allDays[iNextCalendarDay++]
       }
     }
@@ -127,6 +129,7 @@ export function mapDataToCalendarLines(
       color: color || undefined,
       status,
       isToday: datesInTheSameDay(curDate, nowDate),
+      day,
     })
 
     ++dayOffset
