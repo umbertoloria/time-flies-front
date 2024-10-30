@@ -1,4 +1,4 @@
-import { TCalendar, TDay } from '../../remote/sdk/types'
+import { TCalendar, TCalendarCh, TDay } from '../../remote/sdk/types'
 import {
   datesInTheSameDay,
   getLocalDayByDate,
@@ -10,19 +10,17 @@ import { CalendarCellProps, CalendarLineProps } from './Calendar'
 export type AllDaysElem = {
   day: TDay
   isPlanned?: boolean
-  color: string // TODO: Remove double color
-  plannedColor: string
+  color: string
 }
 
-export function addCalDaysFromCalendar(
+export function appendToAllDaysList(
   allDays: AllDaysElem[],
-  calendar: TCalendar
+  calendar: TCalendarCh
 ) {
   allDays.push(
     ...calendar.days.map(day => ({
       day,
       color: calendar.color,
-      plannedColor: calendar.plannedColor,
     }))
   )
   if (calendar.plannedDays && calendar.plannedDays.length) {
@@ -30,11 +28,14 @@ export function addCalDaysFromCalendar(
       ...calendar.plannedDays.map(day => ({
         day,
         isPlanned: true,
-        color: calendar.color,
-        plannedColor: calendar.plannedColor,
+        color: calendar.plannedColor,
       }))
     )
   }
+}
+
+export function finalizeAllDaysList(allDays: AllDaysElem[]) {
+  allDays.sort((a, b) => (a.day.date.localeCompare(b.day.date) < 0 ? -1 : 1))
 }
 
 export function mapDataToCalendarLines(
@@ -67,7 +68,13 @@ export function mapDataToCalendarLines(
 
   // All "TDays" to evaluate
   const allDays: AllDaysElem[] = []
-  addCalDaysFromCalendar(allDays, calendar)
+  appendToAllDaysList(allDays, calendar)
+  if (calendar.children && calendar.children.length) {
+    for (const childCalendar of calendar.children) {
+      appendToAllDaysList(allDays, childCalendar)
+    }
+  }
+  finalizeAllDaysList(allDays)
 
   if (allDays.length === 0) {
     // Given no dates.
@@ -95,10 +102,13 @@ export function mapDataToCalendarLines(
     const curDate = getDateWithOffsetDays(fromDate, dayOffset)
     const curLocalDate = getLocalDayByDate(curDate)
 
+    let color: string = ''
     let status: 'planned' | 'done' | 'none' = 'none'
 
     if (!!curCalendarDay && iNextCalendarDay - 1 < allDays.length) {
       if (curLocalDate === curCalendarDay.day.date) {
+        color = curCalendarDay.color
+
         // Is it Done or Just Planned?
         if (curCalendarDay.isPlanned) {
           status = 'planned'
@@ -114,7 +124,7 @@ export function mapDataToCalendarLines(
       localDate: curLocalDate,
       calendarId: calendar.id,
       displayDate: displayDateFromLocalDate(curLocalDate),
-      color: status === 'done' ? calendar.color : calendar.plannedColor,
+      color,
       status,
       isToday: datesInTheSameDay(curDate, nowDate),
     })

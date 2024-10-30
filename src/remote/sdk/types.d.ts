@@ -1,9 +1,12 @@
 // Types
-// 2024-08-08T17:37:40Z
-// v2.2
+// 2024-10-30T15:39:55Z
+// v2.3
 
 // Calendar
-export type TCalendar = {
+export type TCalendar = TCalendarCh & {
+  children?: TCalendarCh[]
+}
+type TCalendarCh = {
   id: number
   name: string
   color: string

@@ -2,9 +2,10 @@ import { FC } from 'react'
 import { TCalendar } from '../../remote/sdk/types'
 import { CalendarCellProps, CalendarStateless } from '../calendar/Calendar'
 import {
-  addCalDaysFromCalendar,
   AllDaysElem,
+  appendToAllDaysList,
   displayDateFromLocalDate,
+  finalizeAllDaysList,
   getDateWithOffsetDays,
 } from '../calendar/utils'
 import {
@@ -34,7 +35,13 @@ export function createCalendarCellPropsList(
 
     // All "TDays" to evaluate
     const allDays: AllDaysElem[] = []
-    addCalDaysFromCalendar(allDays, calendar)
+    appendToAllDaysList(allDays, calendar)
+    if (calendar.children && calendar.children.length) {
+      for (const childCalendar of calendar.children) {
+        appendToAllDaysList(allDays, childCalendar)
+      }
+    }
+    finalizeAllDaysList(allDays)
 
     while (
       iDays < allDays.length &&
@@ -51,7 +58,7 @@ export function createCalendarCellPropsList(
           localDate,
           calendarId: calendar.id,
           displayDate: displayDateFromLocalDate(localDate),
-          color: day.isPlanned ? calendar.plannedColor : calendar.color,
+          color: day.color,
           status: day.isPlanned ? 'planned' : 'done',
           isToday,
         })
