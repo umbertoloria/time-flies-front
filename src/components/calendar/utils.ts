@@ -102,7 +102,7 @@ export function mapDataToCalendarLines(
     const curDate = getDateWithOffsetDays(fromDate, dayOffset)
     const curLocalDate = getLocalDayByDate(curDate)
 
-    let color: string = ''
+    let color: undefined | string = undefined
     let status: 'planned' | 'done' | 'none' = 'none'
 
     if (!!curCalendarDay && iNextCalendarDay - 1 < allDays.length) {
@@ -124,7 +124,7 @@ export function mapDataToCalendarLines(
       localDate: curLocalDate,
       calendarId: calendar.id,
       displayDate: displayDateFromLocalDate(curLocalDate),
-      color,
+      color: color || undefined,
       status,
       isToday: datesInTheSameDay(curDate, nowDate),
     })

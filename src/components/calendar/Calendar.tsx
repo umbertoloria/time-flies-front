@@ -203,7 +203,7 @@ export type CalendarCellProps = {
   localDate: string
   calendarId: number
   displayDate: string
-  color: string
+  color?: string
   status: 'none' | 'planned' | 'done'
   isToday: boolean
 }

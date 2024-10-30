@@ -67,7 +67,7 @@ export function createCalendarCellPropsList(
           localDate,
           calendarId: calendar.id,
           displayDate: displayDateFromLocalDate(localDate),
-          color: '',
+          // color: undefined,
           status: 'none',
           isToday,
         })
@@ -77,7 +77,7 @@ export function createCalendarCellPropsList(
         localDate,
         calendarId: calendar.id,
         displayDate: displayDateFromLocalDate(localDate),
-        color: '',
+        // color: undefined,
         status: 'none',
         isToday,
       })
