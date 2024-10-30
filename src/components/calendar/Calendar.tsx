@@ -204,7 +204,6 @@ export type CalendarCellProps = {
   calendarId: number
   displayDate: string
   color: string
-  plannedColor: string
   status: 'none' | 'planned' | 'done'
   isToday: boolean
 }
@@ -217,7 +216,6 @@ const CalendarCell: FC<CalendarCellProps> = props => (
           : undefined
       }
       color={props.color}
-      plannedColor={props.plannedColor}
       tooltip={props.displayDate}
       highlightToday={props.isToday}
       apiData={{

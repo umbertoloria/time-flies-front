@@ -2,6 +2,7 @@ import { FC } from 'react'
 import { TCalendar } from '../../remote/sdk/types'
 import { CalendarCellProps, CalendarStateless } from '../calendar/Calendar'
 import {
+  CalDayInternal,
   displayDateFromLocalDate,
   getDateWithOffsetDays,
 } from '../calendar/utils'
@@ -33,31 +34,43 @@ export function createCalendarCellPropsList(
     const isToday = datesInTheSameDay(curDate, nowDate)
 
     // All "TDays" to evaluate
-    const allDays = [...calendar.days]
-    const allDaysIndexFromThatArePlanned = allDays.length
+    const allDays: CalDayInternal[] = []
+    // ...from "main" calendar
+    allDays.push(
+      ...calendar.days.map(day => ({
+        day,
+        color,
+        plannedColor,
+      }))
+    )
     if (calendar.plannedDays && calendar.plannedDays.length) {
-      allDays.push(...calendar.plannedDays)
+      allDays.push(
+        ...calendar.plannedDays.map(day => ({
+          day,
+          isPlanned: true,
+          color,
+          plannedColor,
+        }))
+      )
     }
 
     while (
       iDays < allDays.length &&
-      localDatesLT(allDays[iDays].date, localDate)
+      localDatesLT(allDays[iDays].day.date, localDate)
     ) {
       ++iDays
     }
 
     if (iDays < allDays.length) {
       const day = allDays[iDays]
-      const justPlanned = iDays >= allDaysIndexFromThatArePlanned
 
-      if (day.date === localDate) {
+      if (day.day.date === localDate) {
         cells.push({
           localDate,
           calendarId: calendar.id,
           displayDate: displayDateFromLocalDate(localDate),
-          color,
-          plannedColor,
-          status: justPlanned ? 'planned' : 'done',
+          color: day.isPlanned ? plannedColor : color,
+          status: day.isPlanned ? 'planned' : 'done',
           isToday,
         })
       } else {
@@ -65,8 +78,7 @@ export function createCalendarCellPropsList(
           localDate,
           calendarId: calendar.id,
           displayDate: displayDateFromLocalDate(localDate),
-          color,
-          plannedColor,
+          color: '',
           status: 'none',
           isToday,
         })
@@ -76,8 +88,7 @@ export function createCalendarCellPropsList(
         localDate,
         calendarId: calendar.id,
         displayDate: displayDateFromLocalDate(localDate),
-        color,
-        plannedColor,
+        color: '',
         status: 'none',
         isToday,
       })

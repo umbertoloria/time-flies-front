@@ -4,8 +4,7 @@ import { useUXInputDialogControls } from '../../context/UXContext.tsx'
 
 export const DayStatus: FC<{
   status?: 'planned' | 'done'
-  color: string
-  plannedColor: string
+  color: string // Actual calendar's "color" or "plannedColor" is decided before.
   tooltip?: string
   highlightToday?: boolean
   apiData: {
@@ -28,7 +27,7 @@ export const DayStatus: FC<{
             props.status === 'done'
               ? props.color
               : props.status === 'planned'
-                ? props.plannedColor
+                ? props.color // Before was decided here: "? props.plannedColor"
                 : undefined,
         }}
         onClick={() => {
