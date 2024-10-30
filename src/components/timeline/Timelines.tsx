@@ -45,9 +45,7 @@ export const Timelines: FC<{
     endDate,
     numDaysBefore,
     dataCalendar1,
-    nowDate,
-    dataCalendar1.color,
-    dataCalendar1.plannedColor
+    nowDate
   )
   const calendarLines: CalendarLineProps[] = [{ cells: calendarCells }]
   const { firstLocalDate, lastLocalDate } =

@@ -7,11 +7,34 @@ import {
 } from '../../lib/utils'
 import { CalendarCellProps, CalendarLineProps } from './Calendar'
 
-export type CalDayInternal = {
+export type AllDaysElem = {
   day: TDay
   isPlanned?: boolean
   color: string // TODO: Remove double color
   plannedColor: string
+}
+
+export function addCalDaysFromCalendar(
+  allDays: AllDaysElem[],
+  calendar: TCalendar
+) {
+  allDays.push(
+    ...calendar.days.map(day => ({
+      day,
+      color: calendar.color,
+      plannedColor: calendar.plannedColor,
+    }))
+  )
+  if (calendar.plannedDays && calendar.plannedDays.length) {
+    allDays.push(
+      ...calendar.plannedDays.map(day => ({
+        day,
+        isPlanned: true,
+        color: calendar.color,
+        plannedColor: calendar.plannedColor,
+      }))
+    )
+  }
 }
 
 export function mapDataToCalendarLines(
@@ -43,45 +66,26 @@ export function mapDataToCalendarLines(
   }
 
   // All "TDays" to evaluate
-  const calendarDays: CalDayInternal[] = []
-  // ...from "main" calendar
-  calendarDays.push(
-    ...calendar.days.map(day => ({
-      day,
-      color: calendar.color,
-      plannedColor: calendar.plannedColor,
-    }))
-  )
-  if (calendar.plannedDays && calendar.plannedDays.length) {
-    calendarDays.push(
-      ...calendar.plannedDays.map(day => ({
-        day,
-        isPlanned: true,
-        color: calendar.color,
-        plannedColor: calendar.plannedColor,
-      }))
-    )
-  }
+  const allDays: AllDaysElem[] = []
+  addCalDaysFromCalendar(allDays, calendar)
 
-  if (calendarDays.length === 0) {
+  if (allDays.length === 0) {
     // Given no dates.
     return result
   }
 
-  // From "calendarDays", skipping all days that are before "fromLocalDate"
+  // From "allDays", skipping all days that are before "fromLocalDate"
   const fromLocalDate = getLocalDayByDate(fromDate)
   let iNextCalendarDay = 0
   let curCalendarDay =
-    iNextCalendarDay < calendarDays.length
-      ? calendarDays[iNextCalendarDay++]
-      : undefined
+    iNextCalendarDay < allDays.length ? allDays[iNextCalendarDay++] : undefined
 
   while (
     !!curCalendarDay &&
-    iNextCalendarDay < calendarDays.length &&
+    iNextCalendarDay < allDays.length &&
     !localDatesLTE(fromLocalDate, curCalendarDay.day.date)
   ) {
-    curCalendarDay = calendarDays[iNextCalendarDay++]
+    curCalendarDay = allDays[iNextCalendarDay++]
   }
 
   // Filling "result"
@@ -93,7 +97,7 @@ export function mapDataToCalendarLines(
 
     let status: 'planned' | 'done' | 'none' = 'none'
 
-    if (!!curCalendarDay && iNextCalendarDay - 1 < calendarDays.length) {
+    if (!!curCalendarDay && iNextCalendarDay - 1 < allDays.length) {
       if (curLocalDate === curCalendarDay.day.date) {
         // Is it Done or Just Planned?
         if (curCalendarDay.isPlanned) {
@@ -102,7 +106,7 @@ export function mapDataToCalendarLines(
           status = 'done'
         }
 
-        curCalendarDay = calendarDays[iNextCalendarDay++]
+        curCalendarDay = allDays[iNextCalendarDay++]
       }
     }
 

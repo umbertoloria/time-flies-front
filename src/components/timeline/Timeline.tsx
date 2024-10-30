@@ -2,7 +2,8 @@ import { FC } from 'react'
 import { TCalendar } from '../../remote/sdk/types'
 import { CalendarCellProps, CalendarStateless } from '../calendar/Calendar'
 import {
-  CalDayInternal,
+  addCalDaysFromCalendar,
+  AllDaysElem,
   displayDateFromLocalDate,
   getDateWithOffsetDays,
 } from '../calendar/utils'
@@ -16,9 +17,7 @@ export function createCalendarCellPropsList(
   endDate: Date,
   numDaysBefore: number,
   calendar: TCalendar,
-  nowDate: Date,
-  color: string,
-  plannedColor: string
+  nowDate: Date
 ): CalendarCellProps[] {
   // TODO: Improve this algorithm
 
@@ -34,25 +33,8 @@ export function createCalendarCellPropsList(
     const isToday = datesInTheSameDay(curDate, nowDate)
 
     // All "TDays" to evaluate
-    const allDays: CalDayInternal[] = []
-    // ...from "main" calendar
-    allDays.push(
-      ...calendar.days.map(day => ({
-        day,
-        color,
-        plannedColor,
-      }))
-    )
-    if (calendar.plannedDays && calendar.plannedDays.length) {
-      allDays.push(
-        ...calendar.plannedDays.map(day => ({
-          day,
-          isPlanned: true,
-          color,
-          plannedColor,
-        }))
-      )
-    }
+    const allDays: AllDaysElem[] = []
+    addCalDaysFromCalendar(allDays, calendar)
 
     while (
       iDays < allDays.length &&
@@ -69,7 +51,7 @@ export function createCalendarCellPropsList(
           localDate,
           calendarId: calendar.id,
           displayDate: displayDateFromLocalDate(localDate),
-          color: day.isPlanned ? plannedColor : color,
+          color: day.isPlanned ? calendar.plannedColor : calendar.color,
           status: day.isPlanned ? 'planned' : 'done',
           isToday,
         })
@@ -106,15 +88,11 @@ export const Timeline: FC<{
   calendar: TCalendar
   pleaseUpdateCalendar: () => void
 }> = props => {
-  const { color, plannedColor } = props.calendar
-
   const calendarCells = createCalendarCellPropsList(
     props.endDate,
     props.numDaysBefore,
     props.calendar,
-    props.nowDate,
-    color,
-    plannedColor
+    props.nowDate
   )
 
   return (
