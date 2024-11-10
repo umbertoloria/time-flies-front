@@ -8,17 +8,12 @@ import {
   finalizeAllDaysList,
   getDateWithOffsetDays,
 } from '../calendar/utils'
-import {
-  datesInTheSameDay,
-  getLocalDayByDate,
-  localDatesLT,
-} from '../../lib/utils'
+import { getLocalDayByDate, isDateToday, localDatesLT } from '../../lib/utils'
 
 export function createCalendarCellPropsList(
   endDate: Date,
   numDaysBefore: number,
-  calendar: TCalendar,
-  nowDate: Date
+  calendar: TCalendar
 ): CalendarCellProps[] {
   // TODO: Improve this algorithm
 
@@ -31,7 +26,7 @@ export function createCalendarCellPropsList(
     const curDate = getDateWithOffsetDays(endDate, -iCell)
     const localDate = getLocalDayByDate(curDate)
 
-    const isToday = datesInTheSameDay(curDate, nowDate)
+    const isToday = isDateToday(curDate)
 
     // All "TDays" to evaluate
     const allDays: AllDaysElem[] = []
@@ -94,15 +89,13 @@ export function createCalendarCellPropsList(
 export const Timeline: FC<{
   endDate: Date
   numDaysBefore: number
-  nowDate: Date
   calendar: TCalendar
   pleaseUpdateCalendar: () => void
 }> = props => {
   const calendarCells = createCalendarCellPropsList(
     props.endDate,
     props.numDaysBefore,
-    props.calendar,
-    props.nowDate
+    props.calendar
   )
 
   return (

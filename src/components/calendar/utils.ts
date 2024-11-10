@@ -1,10 +1,5 @@
 import { TCalendar, TCalendarCh, TDay } from '../../remote/sdk/types'
-import {
-  datesInTheSameDay,
-  getLocalDayByDate,
-  getNowDate,
-  localDatesLTE,
-} from '../../lib/utils'
+import { getLocalDayByDate, isDateToday, localDatesLTE } from '../../lib/utils'
 import { CalendarCellProps, CalendarLineProps } from './Calendar'
 
 export type AllDaysElem = {
@@ -46,7 +41,6 @@ export function mapDataToCalendarLines(
   // Requirement: "fromDate" *MUST* be a Monday.
 
   const fillingCellsCount = 7 as const // 7 days per week.
-  const nowDate = getNowDate()
 
   const result: CalendarLineProps[] = []
 
@@ -128,7 +122,7 @@ export function mapDataToCalendarLines(
       displayDate: displayDateFromLocalDate(curLocalDate),
       color: color || undefined,
       status,
-      isToday: datesInTheSameDay(curDate, nowDate),
+      isToday: isDateToday(curDate),
       day,
     })
 

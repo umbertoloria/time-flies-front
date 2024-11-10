@@ -1,9 +1,5 @@
 import { FC, useEffect, useState } from 'react'
-import {
-  getDateFromLocalDate,
-  getLocalDayByDate,
-  getNowDate,
-} from '../lib/utils.ts'
+import { getDateFromLocalDate, getTodayLocalDate } from '../lib/utils.ts'
 import { UserLayout } from '../layout/UserLayout.tsx'
 import { readCalendar } from '../remote/remote.ts'
 import { getDateWithOffsetDays } from '../components/calendar/utils.ts'
@@ -69,8 +65,7 @@ export default function HomePage() {
 }
 
 const InnerPage: FC = () => {
-  const nowDate = getNowDate()
-  const nowLocalDate = getLocalDayByDate(nowDate)
+  const todayLocalDate = getTodayLocalDate()
 
   // Calendars
   const [numWeeks] = useState(defaultNumWeeks)
@@ -82,23 +77,23 @@ const InnerPage: FC = () => {
   const [weeks4Before5, setWeeks4Before5] = useState(0)
 
   const fromDate1 = getDateWithOffsetDays(
-    getDateFromLocalDate(nowLocalDate),
+    getDateFromLocalDate(todayLocalDate),
     -7 * (numWeeks - 1 + 4 * weeks4Before1)
   )
   const fromDate2 = getDateWithOffsetDays(
-    getDateFromLocalDate(nowLocalDate),
+    getDateFromLocalDate(todayLocalDate),
     -7 * (numWeeks - 1 + 4 * weeks4Before2)
   )
   const fromDate3 = getDateWithOffsetDays(
-    getDateFromLocalDate(nowLocalDate),
+    getDateFromLocalDate(todayLocalDate),
     -7 * (numWeeks - 1 + 4 * weeks4Before3)
   )
   const fromDate4 = getDateWithOffsetDays(
-    getDateFromLocalDate(nowLocalDate),
+    getDateFromLocalDate(todayLocalDate),
     -7 * (numWeeks - 1 + 4 * weeks4Before4)
   )
   const fromDate5 = getDateWithOffsetDays(
-    getDateFromLocalDate(nowLocalDate),
+    getDateFromLocalDate(todayLocalDate),
     -7 * (numWeeks - 1 + 4 * weeks4Before5)
   )
 
@@ -242,7 +237,6 @@ const InnerPage: FC = () => {
         !!dataCalendar4 &&
         !!dataCalendar5 && (
           <Timelines
-            nowLocalDate={nowLocalDate}
             dataCalendar1={dataCalendar1}
             dataCalendar2={dataCalendar2}
             dataCalendar3={dataCalendar3}

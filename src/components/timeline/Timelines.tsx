@@ -5,10 +5,7 @@ import {
   CalendarTitle,
 } from '../calendar/Calendar.tsx'
 import { TCalendar } from '../../remote/sdk/types'
-import {
-  getDateFromLocalDate,
-  getITMonthFromLocalDate,
-} from '../../lib/utils.ts'
+import { getITMonthFromLocalDate, getTodayDate } from '../../lib/utils.ts'
 import { getFirstAndLastLocalDatesFromCalendarLines } from '../calendar/utils.ts'
 import { createCalendarCellPropsList, Timeline } from './Timeline.tsx'
 
@@ -16,7 +13,6 @@ type TimelinesDataCalendar = TCalendar & {
   loading: boolean
 }
 export const Timelines: FC<{
-  nowLocalDate: string
   dataCalendar1: TimelinesDataCalendar
   dataCalendar2: TimelinesDataCalendar
   dataCalendar3: TimelinesDataCalendar
@@ -24,7 +20,6 @@ export const Timelines: FC<{
   dataCalendar5: TimelinesDataCalendar
   pleaseUpdateCalendar: (calendarId: number) => void
 }> = ({
-  nowLocalDate,
   dataCalendar1,
   dataCalendar2,
   dataCalendar3,
@@ -32,20 +27,18 @@ export const Timelines: FC<{
   dataCalendar5,
   pleaseUpdateCalendar,
 }) => {
-  const nowDate = getDateFromLocalDate(nowLocalDate)
   const [numDaysBefore] = useState(38)
   const [weeks4Before, setWeeks4Before] = useState(0)
   const endDate = (() => {
-    const clone = new Date(nowDate)
-    clone.setDate(clone.getDate() - weeks4Before * 7)
-    return clone
+    const todayDate = getTodayDate()
+    todayDate.setDate(todayDate.getDate() - weeks4Before * 7)
+    return todayDate
   })()
 
   const calendarCells = createCalendarCellPropsList(
     endDate,
     numDaysBefore,
-    dataCalendar1,
-    nowDate
+    dataCalendar1
   )
   const calendarLines: CalendarLineProps[] = [{ cells: calendarCells }]
   const { firstLocalDate, lastLocalDate } =
@@ -76,7 +69,6 @@ export const Timelines: FC<{
             <Timeline
               endDate={endDate}
               numDaysBefore={numDaysBefore}
-              nowDate={nowDate}
               calendar={dataCalendar1}
               pleaseUpdateCalendar={() => {
                 pleaseUpdateCalendar(1)
@@ -92,7 +84,6 @@ export const Timelines: FC<{
             <Timeline
               endDate={endDate}
               numDaysBefore={numDaysBefore}
-              nowDate={nowDate}
               calendar={dataCalendar2}
               pleaseUpdateCalendar={() => {
                 pleaseUpdateCalendar(2)
@@ -108,7 +99,6 @@ export const Timelines: FC<{
             <Timeline
               endDate={endDate}
               numDaysBefore={numDaysBefore}
-              nowDate={nowDate}
               calendar={dataCalendar3}
               pleaseUpdateCalendar={() => {
                 pleaseUpdateCalendar(3)
@@ -124,7 +114,6 @@ export const Timelines: FC<{
             <Timeline
               endDate={endDate}
               numDaysBefore={numDaysBefore}
-              nowDate={nowDate}
               calendar={dataCalendar4}
               pleaseUpdateCalendar={() => {
                 pleaseUpdateCalendar(4)
@@ -140,7 +129,6 @@ export const Timelines: FC<{
             <Timeline
               endDate={endDate}
               numDaysBefore={numDaysBefore}
-              nowDate={nowDate}
               calendar={dataCalendar5}
               pleaseUpdateCalendar={() => {
                 pleaseUpdateCalendar(5)

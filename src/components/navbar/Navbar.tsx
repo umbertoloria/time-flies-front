@@ -37,7 +37,7 @@ export const Navbar = () => {
 const NavbarItem: FC<{
   to?: string
   label: string
-  onClick?: () => any
+  onClick?: () => void
 }> = props => (
   <li className='py-2 px-4'>
     <Link
