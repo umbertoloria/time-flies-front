@@ -1,5 +1,5 @@
 import { TCalendar, TCalendarCh, TDay } from '../../remote/sdk/types'
-import { getLocalDayByDate, isDateToday, localDatesLTE } from '../../lib/utils'
+import { getLocalDayByDate, localDatesLTE } from '../../lib/utils'
 import { CalendarCellProps, CalendarLineProps } from './Calendar'
 
 export type AllDaysElem = {
@@ -122,7 +122,6 @@ export function mapDataToCalendarLines(
       displayDate: displayDateFromLocalDate(curLocalDate),
       color: color || undefined,
       status,
-      isToday: isDateToday(curDate),
       day,
     })
 

@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren, useEffect } from 'react'
 import { TCalendar, TDay } from '../../remote/sdk/types'
-import { getITMonthFromLocalDate } from '../../lib/utils'
+import { getITMonthFromLocalDate, isLocalDateToday } from '../../lib/utils'
 import { DayStatus } from './DayStatus'
 import {
   CalendarUpdatedEventFnType,
@@ -205,25 +205,28 @@ export type CalendarCellProps = {
   displayDate: string
   color?: string
   status: 'none' | 'planned' | 'done'
-  isToday: boolean
   day?: TDay
 }
-const CalendarCell: FC<CalendarCellProps> = props => (
-  <td className='m-0 p-0'>
-    <DayStatus
-      day={props.day}
-      status={
-        props.status === 'planned' || props.status === 'done'
-          ? props.status
-          : undefined
-      }
-      color={props.color}
-      tooltip={props.displayDate}
-      highlightToday={props.isToday}
-      apiData={{
-        calendarId: props.calendarId,
-        localDate: props.localDate,
-      }}
-    />
-  </td>
-)
+const CalendarCell: FC<CalendarCellProps> = props => {
+  const isToday = isLocalDateToday(props.localDate)
+
+  return (
+    <td className='m-0 p-0'>
+      <DayStatus
+        day={props.day}
+        status={
+          props.status === 'planned' || props.status === 'done'
+            ? props.status
+            : undefined
+        }
+        color={props.color}
+        tooltip={props.displayDate}
+        highlightToday={isToday}
+        apiData={{
+          calendarId: props.calendarId,
+          localDate: props.localDate,
+        }}
+      />
+    </td>
+  )
+}

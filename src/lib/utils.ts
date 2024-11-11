@@ -31,9 +31,12 @@ export function datesInTheSameDay(aDate: Date, bDate: Date) {
   return getLocalDayByDate(aDate) === getLocalDayByDate(bDate)
 }
 
-export function isDateToday(aDate: Date) {
-  const todayDate = getTodayDate()
-  return datesInTheSameDay(aDate, todayDate)
+export function isDateToday(date: Date) {
+  return datesInTheSameDay(date, getTodayDate())
+}
+
+export function isLocalDateToday(localDate: string) {
+  return datesInTheSameDay(getDateFromLocalDate(localDate), getTodayDate())
 }
 
 export function getNowDate() {

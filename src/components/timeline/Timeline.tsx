@@ -8,7 +8,7 @@ import {
   finalizeAllDaysList,
   getDateWithOffsetDays,
 } from '../calendar/utils'
-import { getLocalDayByDate, isDateToday, localDatesLT } from '../../lib/utils'
+import { getLocalDayByDate, localDatesLT } from '../../lib/utils'
 
 export function createCalendarCellPropsList(
   endDate: Date,
@@ -25,8 +25,6 @@ export function createCalendarCellPropsList(
   while (iCell >= 0) {
     const curDate = getDateWithOffsetDays(endDate, -iCell)
     const localDate = getLocalDayByDate(curDate)
-
-    const isToday = isDateToday(curDate)
 
     // All "TDays" to evaluate
     const allDays: AllDaysElem[] = []
@@ -55,7 +53,6 @@ export function createCalendarCellPropsList(
           displayDate: displayDateFromLocalDate(localDate),
           color: day.color,
           status: day.isPlanned ? 'planned' : 'done',
-          isToday,
           day: day.day,
         })
       } else {
@@ -65,7 +62,6 @@ export function createCalendarCellPropsList(
           displayDate: displayDateFromLocalDate(localDate),
           // color: undefined,
           status: 'none',
-          isToday,
           // day: undefined,
         })
       }
@@ -76,7 +72,6 @@ export function createCalendarCellPropsList(
         displayDate: displayDateFromLocalDate(localDate),
         // color: undefined,
         status: 'none',
-        isToday,
         // day: undefined,
       })
     }
