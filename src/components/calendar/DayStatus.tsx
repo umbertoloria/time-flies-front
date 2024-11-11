@@ -5,18 +5,20 @@ import {
   useUXDialogForSeeNotes,
 } from '../../context/UXContext.tsx'
 import { TDay } from '../../remote/sdk/types'
+import { isLocalDateToday } from '../../lib/utils.ts'
 
 export const DayStatus: FC<{
   day?: TDay
   status?: 'planned' | 'done'
   color?: string
   tooltip?: string
-  highlightToday?: boolean
   apiData: {
     calendarId: number
     localDate: string
   }
 }> = props => {
+  const isToday = isLocalDateToday(props.apiData.localDate)
+
   const { openDialog: openDialogForInsertNewGoal } =
     useUXDialogForInsertNewGoal()
   const { openDialog: openDialogForSeeNotes } = useUXDialogForSeeNotes()
@@ -26,17 +28,16 @@ export const DayStatus: FC<{
       <div
         className={classNames('rounded-sm w-full h-full', {
           'bg-gray-200': !props.status,
-          'day-status-today':
-            props.highlightToday || typeof props.day?.notes === 'string',
+          'day-status-today': isToday || typeof props.day?.notes === 'string',
           clickable:
-            (props.status !== 'done' && props.highlightToday) ||
+            (props.status !== 'done' && isToday) ||
             typeof props.day?.notes === 'string',
         })}
         style={{
           background: props.color || undefined,
         }}
         onClick={() => {
-          if (props.status !== 'done' && props.highlightToday) {
+          if (props.status !== 'done' && isToday) {
             openDialogForInsertNewGoal(
               props.apiData.calendarId,
               props.apiData.localDate
