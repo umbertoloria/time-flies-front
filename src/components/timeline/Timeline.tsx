@@ -6,9 +6,12 @@ import {
   appendToAllDaysList,
   displayDateFromLocalDate,
   finalizeAllDaysList,
-  getDateWithOffsetDays,
 } from '../calendar/utils'
-import { getLocalDayByDate, localDatesLT } from '../../lib/utils'
+import {
+  getDateWithOffsetDays,
+  getLocalDayByDate,
+  localDatesLT,
+} from '../../lib/utils'
 
 export function createCalendarCellPropsList(
   endDate: Date,

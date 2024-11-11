@@ -11,6 +11,12 @@ function getLocalDate(year: number, month: number, day: number) {
   )
 }
 
+export function getDateWithOffsetDays(fromDate: Date, offset: number) {
+  const result = new Date(fromDate)
+  result.setDate(result.getDate() + offset)
+  return result
+}
+
 export function localDatesLTE(aLocalDate: string, bLocalDate: string) {
   return datesLTE(new Date(aLocalDate), new Date(bLocalDate))
 }
@@ -37,6 +43,11 @@ export function isDateToday(date: Date) {
 
 export function isLocalDateToday(localDate: string) {
   return datesInTheSameDay(getDateFromLocalDate(localDate), getTodayDate())
+}
+
+export function isLocalDateYesterday(localDate: string) {
+  const yesterdayDate = getDateWithOffsetDays(getTodayDate(), -1)
+  return datesInTheSameDay(getDateFromLocalDate(localDate), yesterdayDate)
 }
 
 export function getNowDate() {

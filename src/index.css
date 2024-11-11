@@ -4,13 +4,33 @@
 
 @layer components {
 
+    .clickable {
+        cursor: pointer;
+        /*
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, .3);
+        */
+        border: 4px solid rgba(0, 0, 0, .3);
+        transition: .1s;
+    }
+
+    .clickable:hover {
+        border-width: 6px;
+        /*
+        box-shadow: 0 0 0 4px rgba(0, 0, 0, .4);
+        */
+    }
+
+    .day-status-has-notes {
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, .3);
+    }
+
+    /*
     .day-status-today {
         box-shadow: 0 0 0 3px rgba(0, 0, 0, .3);
-        transition: .3s;
     }
-    .day-status-today.clickable:hover {
-        cursor: pointer;
-        box-shadow: 0 0 0 4px rgba(0, 0, 0, .4);
+    .day-status-yesterday {
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, .3);
     }
+    */
 
 }

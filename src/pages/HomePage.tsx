@@ -1,8 +1,11 @@
 import { FC, useEffect, useState } from 'react'
-import { getDateFromLocalDate, getTodayLocalDate } from '../lib/utils.ts'
+import {
+  getDateFromLocalDate,
+  getDateWithOffsetDays,
+  getTodayLocalDate,
+} from '../lib/utils.ts'
 import { UserLayout } from '../layout/UserLayout.tsx'
 import { readCalendar } from '../remote/remote.ts'
-import { getDateWithOffsetDays } from '../components/calendar/utils.ts'
 import { Calendar } from '../components/calendar/Calendar.tsx'
 import { Timelines } from '../components/timeline/Timelines.tsx'
 

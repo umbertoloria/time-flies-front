@@ -1,5 +1,9 @@
 import { TCalendar, TCalendarCh, TDay } from '../../remote/sdk/types'
-import { getLocalDayByDate, localDatesLTE } from '../../lib/utils'
+import {
+  getDateWithOffsetDays,
+  getLocalDayByDate,
+  localDatesLTE,
+} from '../../lib/utils'
 import { CalendarCellProps, CalendarLineProps } from './Calendar'
 
 export type AllDaysElem = {
@@ -153,12 +157,6 @@ export function getFirstAndLastLocalDatesFromCalendarLines(
     firstLocalDate,
     lastLocalDate,
   }
-}
-
-export function getDateWithOffsetDays(fromDate: Date, offset: number) {
-  const result = new Date(fromDate)
-  result.setDate(result.getDate() + offset)
-  return result
 }
 
 export function displayDateFromLocalDate(localDate: string) {
