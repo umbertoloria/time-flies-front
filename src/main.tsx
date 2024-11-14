@@ -6,7 +6,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import ErrorPage from './error-page.tsx'
 import HomePage from './pages/HomePage.tsx'
 import LoginPage from './pages/LoginPage.tsx'
-import RoutinePage from './pages/RoutinePage.tsx'
+import SchedulePage from './pages/SchedulePage.tsx'
 
 export const baseRoot = '/app/time-flies' as const
 const router = createBrowserRouter(
@@ -25,8 +25,8 @@ const router = createBrowserRouter(
           element: <LoginPage />,
         },
         {
-          path: 'routine',
-          element: <RoutinePage />,
+          path: 'schedule',
+          element: <SchedulePage />,
         },
       ],
     },

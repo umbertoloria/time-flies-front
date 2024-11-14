@@ -13,29 +13,31 @@ const defaultNumWeeks = 4 * 3 // Three months
 const periodRefreshCalendarsInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 
 export const useWrapperForCreateResource = <T,>(
-  id: number,
-  fn: (id: number) => Promise<T>
+  fn: () => Promise<T>
 ): [
   data:
     | undefined
-    | (T & {
+    | {
+        data: T
         loading: boolean
-      }),
+      },
   {
     refetch: () => void
   },
 ] => {
   // TODO: Improve mapping
-  const [data, setData] = useState<T | undefined>(undefined)
+  const [data, setData] = useState<undefined | { data: T; loading: boolean }>(
+    undefined
+  )
 
   const fnfn = () => {
-    setData(data => (data ? { ...data, loading: true } : undefined))
-    fn(id)
+    setData(old => (old ? { ...old, loading: true } : undefined))
+    fn()
       .then(data => {
-        setData({ ...data, loading: false })
+        setData({ data, loading: false })
       })
       .catch(err => {
-        setData(data => (data ? { ...data, loading: false } : undefined))
+        setData(old => (old ? { ...old, loading: false } : undefined))
         console.error(err)
       })
   }
@@ -48,7 +50,7 @@ export const useWrapperForCreateResource = <T,>(
     data
       ? {
           loading: false,
-          ...data,
+          data: data.data,
         }
       : undefined,
     {
@@ -102,15 +104,15 @@ const InnerPage: FC = () => {
 
   // Calendars
   const [dataCalendar1, { refetch: refetchCalendar1 }] =
-    useWrapperForCreateResource(1, readCalendar)
+    useWrapperForCreateResource(() => readCalendar(1))
   const [dataCalendar2, { refetch: refetchCalendar2 }] =
-    useWrapperForCreateResource(2, readCalendar)
+    useWrapperForCreateResource(() => readCalendar(2))
   const [dataCalendar3, { refetch: refetchCalendar3 }] =
-    useWrapperForCreateResource(3, readCalendar)
+    useWrapperForCreateResource(() => readCalendar(3))
   const [dataCalendar4, { refetch: refetchCalendar4 }] =
-    useWrapperForCreateResource(4, readCalendar)
+    useWrapperForCreateResource(() => readCalendar(4))
   const [dataCalendar5, { refetch: refetchCalendar5 }] =
-    useWrapperForCreateResource(5, readCalendar)
+    useWrapperForCreateResource(() => readCalendar(5))
 
   const refreshCalendarIntervalTimer = setInterval(() => {
     refetchCalendar1()
@@ -134,7 +136,7 @@ const InnerPage: FC = () => {
               <Calendar
                 startWeekFromDate={fromDate1}
                 numWeeks={numWeeks}
-                calendar={dataCalendar1}
+                calendar={dataCalendar1.data}
                 pleaseUpdateCalendar={refetchCalendar1}
                 goInThePast={() => {
                   setWeeks4Before1(weeks4Before1 + 1)
@@ -155,7 +157,7 @@ const InnerPage: FC = () => {
               <Calendar
                 startWeekFromDate={fromDate2}
                 numWeeks={numWeeks}
-                calendar={dataCalendar2}
+                calendar={dataCalendar2.data}
                 pleaseUpdateCalendar={refetchCalendar2}
                 goInThePast={() => {
                   setWeeks4Before2(weeks4Before2 + 1)
@@ -176,7 +178,7 @@ const InnerPage: FC = () => {
               <Calendar
                 startWeekFromDate={fromDate3}
                 numWeeks={numWeeks}
-                calendar={dataCalendar3}
+                calendar={dataCalendar3.data}
                 pleaseUpdateCalendar={refetchCalendar3}
                 goInThePast={() => {
                   setWeeks4Before3(weeks4Before3 + 1)
@@ -197,7 +199,7 @@ const InnerPage: FC = () => {
               <Calendar
                 startWeekFromDate={fromDate4}
                 numWeeks={numWeeks}
-                calendar={dataCalendar4}
+                calendar={dataCalendar4.data}
                 pleaseUpdateCalendar={refetchCalendar4}
                 goInThePast={() => {
                   setWeeks4Before4(weeks4Before4 + 1)
@@ -218,7 +220,7 @@ const InnerPage: FC = () => {
               <Calendar
                 startWeekFromDate={fromDate5}
                 numWeeks={numWeeks}
-                calendar={dataCalendar5}
+                calendar={dataCalendar5.data}
                 pleaseUpdateCalendar={refetchCalendar5}
                 goInThePast={() => {
                   setWeeks4Before5(weeks4Before5 + 1)
@@ -240,11 +242,16 @@ const InnerPage: FC = () => {
         !!dataCalendar4 &&
         !!dataCalendar5 && (
           <Timelines
-            dataCalendar1={dataCalendar1}
-            dataCalendar2={dataCalendar2}
-            dataCalendar3={dataCalendar3}
-            dataCalendar4={dataCalendar4}
-            dataCalendar5={dataCalendar5}
+            dataCalendar1={dataCalendar1.data}
+            dataCalendar2={dataCalendar2.data}
+            dataCalendar3={dataCalendar3.data}
+            dataCalendar4={dataCalendar4.data}
+            dataCalendar5={dataCalendar5.data}
+            dataCalendar1Loading={dataCalendar1.loading}
+            dataCalendar2Loading={dataCalendar2.loading}
+            dataCalendar3Loading={dataCalendar3.loading}
+            dataCalendar4Loading={dataCalendar4.loading}
+            dataCalendar5Loading={dataCalendar5.loading}
             pleaseUpdateCalendar={calendarId => {
               // TODO: Improve this
               if (calendarId === 1) {

@@ -9,15 +9,17 @@ import { getITMonthFromLocalDate, getTodayDate } from '../../lib/utils.ts'
 import { getFirstAndLastLocalDatesFromCalendarLines } from '../calendar/utils.ts'
 import { createCalendarCellPropsList, Timeline } from './Timeline.tsx'
 
-type TimelinesDataCalendar = TCalendar & {
-  loading: boolean
-}
 export const Timelines: FC<{
-  dataCalendar1: TimelinesDataCalendar
-  dataCalendar2: TimelinesDataCalendar
-  dataCalendar3: TimelinesDataCalendar
-  dataCalendar4: TimelinesDataCalendar
-  dataCalendar5: TimelinesDataCalendar
+  dataCalendar1: TCalendar
+  dataCalendar2: TCalendar
+  dataCalendar3: TCalendar
+  dataCalendar4: TCalendar
+  dataCalendar5: TCalendar
+  dataCalendar1Loading: boolean
+  dataCalendar2Loading: boolean
+  dataCalendar3Loading: boolean
+  dataCalendar4Loading: boolean
+  dataCalendar5Loading: boolean
   pleaseUpdateCalendar: (calendarId: number) => void
 }> = ({
   dataCalendar1,
@@ -25,6 +27,11 @@ export const Timelines: FC<{
   dataCalendar3,
   dataCalendar4,
   dataCalendar5,
+  dataCalendar1Loading,
+  dataCalendar2Loading,
+  dataCalendar3Loading,
+  dataCalendar4Loading,
+  dataCalendar5Loading,
   pleaseUpdateCalendar,
 }) => {
   const [numDaysBefore] = useState(38)
@@ -64,7 +71,7 @@ export const Timelines: FC<{
       </div>
 
       <div className='overflow-y-auto'>
-        {dataCalendar1?.loading === false ? (
+        {!dataCalendar1Loading ? (
           <>
             <Timeline
               endDate={endDate}
@@ -79,7 +86,7 @@ export const Timelines: FC<{
           <>Searching...</>
         )}
 
-        {dataCalendar2?.loading === false ? (
+        {!dataCalendar2Loading ? (
           <>
             <Timeline
               endDate={endDate}
@@ -94,7 +101,7 @@ export const Timelines: FC<{
           <>Searching...</>
         )}
 
-        {dataCalendar3?.loading === false ? (
+        {!dataCalendar3Loading ? (
           <>
             <Timeline
               endDate={endDate}
@@ -109,7 +116,7 @@ export const Timelines: FC<{
           <>Searching...</>
         )}
 
-        {dataCalendar4?.loading === false ? (
+        {!dataCalendar4Loading ? (
           <>
             <Timeline
               endDate={endDate}
@@ -124,7 +131,7 @@ export const Timelines: FC<{
           <>Searching...</>
         )}
 
-        {dataCalendar5?.loading === false ? (
+        {!dataCalendar5Loading ? (
           <>
             <Timeline
               endDate={endDate}

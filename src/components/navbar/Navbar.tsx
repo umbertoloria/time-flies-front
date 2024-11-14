@@ -10,10 +10,10 @@ export const Navbar = () => {
   return (
     <nav className='bg-gray-200 text-gray-900 px-4'>
       <ul className='w-full flex items-center justify-center'>
-        <NavbarItem to='/' label='Home' />
+        <NavbarItem to='/' label='Dashboard' />
         {user ? (
           <>
-            <NavbarItem to='/routine' label='Routine' />
+            <NavbarItem to='/schedule' label='Schedule' />
             <NavbarItem to='/account' label={user.email} />
             <NavbarItem
               onClick={() => {

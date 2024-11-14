@@ -6,7 +6,7 @@ import { ScheduleContent } from '../components/schedule/ScheduleContent.tsx'
 
 const periodRefreshScheduleInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 
-export default function RoutinePage() {
+export default function SchedulePage() {
   return (
     <UserLayout>
       <InnerPage />
@@ -15,9 +15,9 @@ export default function RoutinePage() {
 }
 
 const InnerPage: FC = () => {
-  // Schedules
+  // Schedule
   const [dataSchedule, { refetch: refreshSchedule }] =
-    useWrapperForCreateResource(1, readSchedule)
+    useWrapperForCreateResource(() => readSchedule('2024-10-10'))
 
   const refreshScheduleIntervalTimer = setInterval(() => {
     refreshSchedule()
@@ -31,7 +31,9 @@ const InnerPage: FC = () => {
   return (
     <section className='p-8'>
       <div className='container w-full'>
-        {!!dataSchedule && <ScheduleContent schedule={dataSchedule} />}
+        {!!dataSchedule?.data && (
+          <ScheduleContent schedule={dataSchedule.data} />
+        )}
       </div>
     </section>
   )
