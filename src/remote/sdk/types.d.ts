@@ -1,6 +1,6 @@
 // Types
-// 2024-10-30T23:54:22Z
-// v2.4
+// 2024-11-14T21:50:38Z
+// v2.5
 
 // Calendar
 export type TCalendar = TCalendarCh & {
@@ -18,6 +18,24 @@ export type TDay = {
   date: string // Es. "2023-01-01"
   intensity?: number
   notes?: string
+}
+
+// Schedule
+export type TSchedule = {
+  groups: TExerciseGroup[]
+}
+export type TExerciseGroup = {
+  name: string
+  exercises: TExercise[]
+}
+export type TExercise = {
+  name: string
+  records?: TExerciseRecord[]
+}
+export type TExerciseRecord = {
+  bpm: number
+  minutes?: number
+  hand?: 'dx' | 'sx'
 }
 
 // Auth

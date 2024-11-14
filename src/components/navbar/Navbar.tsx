@@ -13,6 +13,7 @@ export const Navbar = () => {
         <NavbarItem to='/' label='Home' />
         {user ? (
           <>
+            <NavbarItem to='/routine' label='Routine' />
             <NavbarItem to='/account' label={user.email} />
             <NavbarItem
               onClick={() => {

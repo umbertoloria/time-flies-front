@@ -12,7 +12,7 @@ import { Timelines } from '../components/timeline/Timelines.tsx'
 const defaultNumWeeks = 4 * 3 // Three months
 const periodRefreshCalendarsInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 
-const useWrapperForCreateResource = <T,>(
+export const useWrapperForCreateResource = <T,>(
   id: number,
   fn: (id: number) => Promise<T>
 ): [
