@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { useUXDialogForInsertNewGoal } from '../../context/UXContext.tsx'
 
+// TODO: Use "GenericDialog.tsx" component
 // TODO: Clean "InputDialogInsertNewGoal" component
 export const InputDialogInsertNewGoal: FC = () => {
   const { isOpen, closeDialog, confirmProgressDone } =
