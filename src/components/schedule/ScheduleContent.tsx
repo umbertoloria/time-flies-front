@@ -6,6 +6,13 @@ export const ScheduleContent: FC<{
   // title: string
   schedule: TSchedule
 }> = props => {
+  if (props.schedule.groups.length == 0) {
+    return (
+      <>
+        <p className='text-center'>Nessuna informazione trovata.</p>
+      </>
+    )
+  }
   return (
     <div>
       {/*<span className='text-lg font-bold'>{props.title}</span>*/}
