@@ -54,3 +54,11 @@ export type TAuthUser = {
 export namespace TCalendarSDK {
   export type CheckDateWithSuccessPromiseOutput = 'invalid' | 'ok'
 }
+
+// SDK: Schedule
+export namespace TScheduleSDK {
+  export type ReadScheduleAndAllExerciseGroups = {
+    schedule: TSchedule
+    allExerciseGroups: TExerciseGroup[]
+  }
+}

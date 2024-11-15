@@ -1,9 +1,14 @@
 import { FC, useEffect, useState } from 'react'
 import { UserLayout } from '../layout/UserLayout.tsx'
 import { useWrapperForCreateResource } from './HomePage.tsx'
-import { readSchedule } from '../remote/remote.ts'
+import { readDateSchedule } from '../remote/remote.ts'
 import { ScheduleContent } from '../components/schedule/ScheduleContent.tsx'
-import { getTodayLocalDate } from '../lib/utils.ts'
+import {
+  getTodayLocalDate,
+  isLocalDateToday,
+  isLocalDateYesterday,
+} from '../lib/utils.ts'
+import { ExerciseGroup } from '../components/schedule/ExerciseGroup.tsx'
 
 const periodRefreshScheduleInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 
@@ -16,11 +21,16 @@ export default function SchedulePage() {
 }
 
 const InnerPage: FC = () => {
+  // Input Schedule
   const [inputDateValue, setInputDateValue] = useState(getTodayLocalDate())
+  const canInputThings =
+    isLocalDateToday(inputDateValue) || isLocalDateYesterday(inputDateValue)
 
   // Schedule
   const [dataSchedule, { refetch: refreshSchedule }] =
-    useWrapperForCreateResource(() => readSchedule(inputDateValue))
+    useWrapperForCreateResource(() =>
+      readDateSchedule(inputDateValue, canInputThings)
+    )
   useEffect(() => {
     refreshSchedule()
   }, [inputDateValue])
@@ -52,7 +62,12 @@ const InnerPage: FC = () => {
           </form>
         </div>
         {!!dataSchedule?.data && (
-          <ScheduleContent schedule={dataSchedule.data} />
+          <>
+            <ScheduleContent schedule={dataSchedule.data.schedule} />
+            {dataSchedule.data.allExerciseGroups.map((exerciseGroup, index) => (
+              <ExerciseGroup key={index} exerciseGroup={exerciseGroup} />
+            ))}
+          </>
         )}
       </div>
     </section>

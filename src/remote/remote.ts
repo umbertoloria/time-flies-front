@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { TAuthStatus, TCalendar, TCalendarSDK, TSchedule } from './sdk/types'
+import { TAuthStatus, TCalendar, TCalendarSDK, TScheduleSDK } from './sdk/types'
 
 const backendURL = import.meta.env.VITE_BACKEND_ENDPOINT
 
@@ -71,10 +71,12 @@ function makeFormData(args: Record<string, string>) {
 }
 
 // Exercise
-export const readSchedule = (localDate: string) =>
+export const readDateSchedule = (localDate: string, showAll?: boolean) =>
   api
-    .get(`?a=schedule-read&local-date=${localDate}`)
-    .then<TSchedule>(({ data }) => data)
+    .get(
+      `?a=schedule-read&local-date=${localDate}${showAll ? '&show-all=true' : ''}`
+    )
+    .then<TScheduleSDK.ReadScheduleAndAllExerciseGroups>(({ data }) => data)
 /*.catch<'not-found'>(err => {
   if (err?.response?.status === 404) {
     return 'not-found'
