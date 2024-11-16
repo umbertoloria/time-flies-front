@@ -41,3 +41,17 @@ export function fireEvent(eventName: string, data?: object) {
   })
   window.dispatchEvent(event)
 }
+
+export function createEventsManager(eventName: string) {
+  return {
+    subscribe(listener: () => void) {
+      subscribeEvent(eventName, listener)
+    },
+    unsubscribe(listener: () => void) {
+      unsubscribeEvent(eventName, listener)
+    },
+    fire(data?: object) {
+      fireEvent(eventName, data)
+    },
+  }
+}

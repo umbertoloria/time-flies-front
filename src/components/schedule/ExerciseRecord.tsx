@@ -3,7 +3,7 @@ import { TExerciseRecord } from '../../remote/sdk/types'
 import classNames from 'classnames'
 import { createExerciseRecord } from '../../remote/remote.ts'
 import { useScheduleContext } from './ScheduleContext.tsx'
-import { fireReloadSchedulePageEvent } from './schedule-page-events.ts'
+import { fireReloadSchedulePage } from './event-reload-schedule-page.ts'
 
 const ExerciseRecordBase: FC<
   PropsWithChildren<{
@@ -76,7 +76,7 @@ export const ExerciseRecordRowToAddNew: FC<{
               } else {
                 // Yay!
                 // TODO: Tell user all went OK
-                fireReloadSchedulePageEvent()
+                fireReloadSchedulePage()
               }
               setLoading(false)
             })
