@@ -8,14 +8,19 @@ import {
   isLocalDateToday,
   isLocalDateYesterday,
 } from '../lib/utils.ts'
-import { ExerciseGroup } from '../components/schedule/ExerciseGroup.tsx'
+import {
+  ScheduleProvider,
+  useScheduleContext,
+} from '../components/schedule/ScheduleContext.tsx'
 
 const periodRefreshScheduleInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 
 export default function SchedulePage() {
   return (
     <UserLayout>
-      <InnerPage />
+      <ScheduleProvider>
+        <InnerPage />
+      </ScheduleProvider>
     </UserLayout>
   )
 }
@@ -25,6 +30,8 @@ const InnerPage: FC = () => {
   const [inputDateValue, setInputDateValue] = useState(getTodayLocalDate())
   const canInputThings =
     isLocalDateToday(inputDateValue) || isLocalDateYesterday(inputDateValue)
+
+  const { setSchedule, setExerciseGroup } = useScheduleContext()
 
   // Schedule
   const [dataSchedule, { refetch: refreshSchedule }] =
@@ -42,6 +49,14 @@ const InnerPage: FC = () => {
       clearInterval(refreshScheduleIntervalTimer)
     }
   }, [])
+
+  // Updating Schedule Context
+  useEffect(() => {
+    if (dataSchedule?.data) {
+      setSchedule(dataSchedule.data.schedule)
+      setExerciseGroup(dataSchedule.data.allExerciseGroups)
+    }
+  }, [dataSchedule])
 
   return (
     <section className='p-8'>
@@ -61,14 +76,7 @@ const InnerPage: FC = () => {
             />
           </form>
         </div>
-        {!!dataSchedule?.data && (
-          <>
-            <ScheduleContent schedule={dataSchedule.data.schedule} />
-            {dataSchedule.data.allExerciseGroups.map((exerciseGroup, index) => (
-              <ExerciseGroup key={index} exerciseGroup={exerciseGroup} />
-            ))}
-          </>
-        )}
+        <ScheduleContent />
       </div>
     </section>
   )
