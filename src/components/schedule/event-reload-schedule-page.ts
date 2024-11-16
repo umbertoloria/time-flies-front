@@ -4,4 +4,4 @@ export const {
   subscribe: subscribeReloadSchedulePage,
   unsubscribe: unsubscribeReloadSchedulePage,
   fire: fireReloadSchedulePage,
-} = createEventsManager('ReloadSchedulePage' as const)
+} = createEventsManager<undefined>('ReloadSchedulePage' as const)

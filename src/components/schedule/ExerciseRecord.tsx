@@ -76,7 +76,7 @@ export const ExerciseRecordRowToAddNew: FC<{
               } else {
                 // Yay!
                 // TODO: Tell user all went OK
-                fireReloadSchedulePage()
+                fireReloadSchedulePage(undefined)
               }
               setLoading(false)
             })

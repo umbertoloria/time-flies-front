@@ -35,14 +35,14 @@ export function unsubscribeEvent(eventName: string, listener: () => void) {
   window.removeEventListener(eventName, listener)
 }
 
-export function fireEvent(eventName: string, data?: object) {
-  const event = new CustomEvent(eventName, {
+export function fireEvent<T>(eventName: string, data: T) {
+  const event = new CustomEvent<T>(eventName, {
     detail: data,
   })
   window.dispatchEvent(event)
 }
 
-export function createEventsManager(eventName: string) {
+export function createEventsManager<T>(eventName: string) {
   return {
     subscribe(listener: () => void) {
       subscribeEvent(eventName, listener)
@@ -50,7 +50,7 @@ export function createEventsManager(eventName: string) {
     unsubscribe(listener: () => void) {
       unsubscribeEvent(eventName, listener)
     },
-    fire(data?: object) {
+    fire(data: T) {
       fireEvent(eventName, data)
     },
   }
