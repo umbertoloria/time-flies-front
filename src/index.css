@@ -32,5 +32,14 @@
         box-shadow: 0 0 0 3px rgba(0, 0, 0, .3);
     }
     */
+    .btn-primary {
+        @apply py-1 px-2 bg-blue-600 text-white text-sm font-semibold rounded-md shadow-md transition-all
+        hover:bg-blue-700
+        focus:outline-none focus:ring focus:ring-blue-400 focus:ring-opacity-75;
+    }
+
+    .exercise-record {
+        @apply bg-gray-200 px-1 py-1 rounded-md flex flex-wrap gap-2 items-center;
+    }
 
 }

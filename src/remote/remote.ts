@@ -83,3 +83,27 @@ export const readDateSchedule = (localDate: string, showAll?: boolean) =>
   }
   throw err
 })*/
+
+export const createExerciseRecord = (
+  exerciseId: number,
+  localDate: string,
+  params: {
+    bpm: number
+  }
+) =>
+  api
+    .post(
+      `?a=exercise-record-create`,
+      makeFormData({
+        'exercise-id': `${exerciseId}`,
+        'local-date': localDate,
+        bpm: `${params.bpm}`,
+      })
+    )
+    .then<'ok'>(() => 'ok')
+    .catch(err => {
+      if (err.response?.data === 'invalid-bpm') {
+        return 'invalid-bpm'
+      }
+      throw err
+    })

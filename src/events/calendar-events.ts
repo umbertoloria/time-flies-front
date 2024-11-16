@@ -24,3 +24,20 @@ export const unsubscribeToCalendarUpdates = (
   // @ts-ignore
   window.removeEventListener(CalendarUpdatedEventName, fn)
 }
+
+// GENERIC
+// TODO: Use more these generic functions
+export function subscribeEvent(eventName: string, listener: () => void) {
+  window.addEventListener(eventName, listener)
+}
+
+export function unsubscribeEvent(eventName: string, listener: () => void) {
+  window.removeEventListener(eventName, listener)
+}
+
+export function fireEvent(eventName: string, data?: object) {
+  const event = new CustomEvent(eventName, {
+    detail: data,
+  })
+  window.dispatchEvent(event)
+}

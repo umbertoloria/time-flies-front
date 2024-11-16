@@ -12,6 +12,10 @@ import {
   ScheduleProvider,
   useScheduleContext,
 } from '../components/schedule/ScheduleContext.tsx'
+import {
+  subscribeReloadSchedulePage,
+  unsubscribeReloadSchedulePage,
+} from '../components/schedule/schedule-page-events.ts'
 
 const periodRefreshScheduleInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 
@@ -45,18 +49,25 @@ const InnerPage: FC = () => {
     refreshSchedule()
   }, periodRefreshScheduleInMillis)
   useEffect(() => {
+    const handleReloadPage = () => {
+      refreshSchedule()
+    }
+
+    subscribeReloadSchedulePage(handleReloadPage)
     return () => {
       clearInterval(refreshScheduleIntervalTimer)
+      unsubscribeReloadSchedulePage(handleReloadPage)
     }
   }, [])
 
   // Updating Schedule Context
   useEffect(() => {
+    setInputDateValue(inputDateValue)
     if (dataSchedule?.data) {
       setSchedule(dataSchedule.data.schedule)
       setExerciseGroup(dataSchedule.data.allExerciseGroups)
     }
-  }, [dataSchedule])
+  }, [inputDateValue, dataSchedule])
 
   return (
     <section className='p-8'>
@@ -76,7 +87,7 @@ const InnerPage: FC = () => {
             />
           </form>
         </div>
-        <ScheduleContent />
+        <ScheduleContent canInputThings={canInputThings} />
       </div>
     </section>
   )
