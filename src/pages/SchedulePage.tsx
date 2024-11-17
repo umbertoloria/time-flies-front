@@ -13,9 +13,11 @@ import {
   useScheduleContext,
 } from '../components/schedule/ScheduleContext.tsx'
 import {
+  CustomEventTypeReloadSchedulePage,
   subscribeReloadSchedulePage,
   unsubscribeReloadSchedulePage,
 } from '../components/schedule/event-reload-schedule-page.ts'
+import { CustomEventFnType } from '../events/calendar-events.ts'
 
 const periodRefreshScheduleInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 
@@ -49,7 +51,9 @@ const InnerPage: FC = () => {
     refreshSchedule()
   }, periodRefreshScheduleInMillis)
   useEffect(() => {
-    const handleReloadPage = () => {
+    const handleReloadPage: CustomEventFnType<
+      CustomEventTypeReloadSchedulePage
+    > = () => {
       refreshSchedule()
     }
 

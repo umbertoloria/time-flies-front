@@ -27,15 +27,22 @@ export const unsubscribeToCalendarUpdates = (
 
 // GENERIC
 // TODO: Use more these generic functions
-export function subscribeEvent(eventName: string, listener: () => void) {
+export type CustomEventFnType<T> = (event: CustomEvent<T>) => void
+
+function subscribeEvent<T>(eventName: string, listener: CustomEventFnType<T>) {
+  // @ts-ignore
   window.addEventListener(eventName, listener)
 }
 
-export function unsubscribeEvent(eventName: string, listener: () => void) {
+function unsubscribeEvent<T>(
+  eventName: string,
+  listener: CustomEventFnType<T>
+) {
+  // @ts-ignore
   window.removeEventListener(eventName, listener)
 }
 
-export function fireEvent<T>(eventName: string, data: T) {
+function fireEvent<T>(eventName: string, data: T) {
   const event = new CustomEvent<T>(eventName, {
     detail: data,
   })
@@ -44,10 +51,10 @@ export function fireEvent<T>(eventName: string, data: T) {
 
 export function createEventsManager<T>(eventName: string) {
   return {
-    subscribe(listener: () => void) {
+    subscribe(listener: CustomEventFnType<T>) {
       subscribeEvent(eventName, listener)
     },
-    unsubscribe(listener: () => void) {
+    unsubscribe(listener: CustomEventFnType<T>) {
       unsubscribeEvent(eventName, listener)
     },
     fire(data: T) {
