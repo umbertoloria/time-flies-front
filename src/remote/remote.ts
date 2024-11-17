@@ -61,11 +61,13 @@ export const authLogout = () =>
       throw err
     })
 
-function makeFormData(args: Record<string, string>) {
+function makeFormData(args: Record<string, string | undefined>) {
   const formData = new FormData()
   for (const key in args) {
     const value = args[key]
-    formData.set(key, value)
+    if (value !== undefined) {
+      formData.set(key, value)
+    }
   }
   return formData
 }
@@ -89,6 +91,8 @@ export const createExerciseRecord = (
   localDate: string,
   params: {
     bpm: number
+    minutes?: number
+    hand?: 'dx' | 'sx'
   }
 ) =>
   api
@@ -98,6 +102,9 @@ export const createExerciseRecord = (
         'exercise-id': `${exerciseId}`,
         'local-date': localDate,
         bpm: `${params.bpm}`,
+        minutes:
+          typeof params.minutes == 'number' ? `${params.minutes}` : undefined,
+        hand: params.hand ? `${params.hand}` : undefined,
       })
     )
     .then<'ok'>(() => 'ok')

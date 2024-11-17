@@ -41,9 +41,12 @@ export const ExerciseRecordRowToAddNew: FC<{
   const [bpm, setBpm] = useState(60)
   const [minutes, setMinutes] = useState<undefined | number>(undefined)
   const isMinutesInputFilled = typeof minutes === 'number'
+  const [hand, setHand] = useState<undefined | 'dx' | 'sx'>(undefined)
+  const isHandInputFilled = hand == 'dx' || hand == 'sx'
   const clearInput = () => {
     setBpm(60)
     setMinutes(undefined)
+    setHand(undefined)
   }
 
   return (
@@ -106,7 +109,43 @@ export const ExerciseRecordRowToAddNew: FC<{
           }}
           disabled={isLoading || !isMinutesInputFilled}
         />
-        {' minuti'}
+        {' min'}
+      </ColouredLabel>
+
+      {/* Minutes */}
+      <ColouredLabel blurText={!isHandInputFilled}>
+        <input
+          type='checkbox'
+          className='inline'
+          onChange={event => {
+            const checked = event.currentTarget.checked
+            if (checked) {
+              setHand('sx')
+            } else {
+              setHand(undefined)
+            }
+          }}
+          checked={hand !== undefined}
+        />
+        <select
+          className='inline'
+          value={hand == 'dx' || hand == 'sx' ? hand : undefined}
+          onChange={event => {
+            if (isLoading) {
+              return
+            }
+            const newHand = event.currentTarget.value
+            if (newHand == 'dx' || newHand == 'sx') {
+              setHand(newHand)
+            } else {
+              setHand(undefined)
+            }
+          }}
+          disabled={isLoading || !isHandInputFilled}
+        >
+          <option value='dx'>Destra</option>
+          <option value='sx'>Sinistra</option>
+        </select>
       </ColouredLabel>
 
       <button
@@ -116,6 +155,8 @@ export const ExerciseRecordRowToAddNew: FC<{
           // TODO: Validate params
           createExerciseRecord(props.exerciseId, localDate, {
             bpm,
+            minutes: typeof minutes === 'number' ? minutes : undefined,
+            hand: typeof hand == 'string' ? hand : undefined,
           })
             .then(response => {
               if (response === 'invalid-bpm') {
@@ -162,7 +203,7 @@ export const ExerciseRecordContent: FC<{
         <>
           {!!props.record.hand && (
             <ColouredLabel>
-              {props.record.hand == 'sx' ? 'Mano sinistra' : 'Mano destra'}
+              {props.record.hand == 'sx' ? 'Sinistra' : 'Destra'}
             </ColouredLabel>
           )}
         </>
