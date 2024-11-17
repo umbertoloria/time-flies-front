@@ -1,6 +1,11 @@
 import { FC, PropsWithChildren, useEffect } from 'react'
 import { TCalendar } from '../../remote/sdk/types'
-import { getITMonthFromLocalDate } from '../../lib/utils'
+import {
+  getDateWithOffsetDays,
+  getITMonthFromLocalDate,
+  getLocalDayByDate,
+  localDatesLTE,
+} from '../../lib/utils'
 import { DayStatus, DayStatusDayData } from './DayStatus'
 import { CustomEventFnType } from '../../events/event-builder.ts'
 import {
@@ -9,10 +14,119 @@ import {
   unsubscribeToCalendarUpdates,
 } from './event-calendar-updated.ts'
 import {
+  AllDaysElem,
+  appendToAllDaysList,
+  displayDateFromLocalDate,
+  finalizeAllDaysList,
   getFirstAndLastLocalDatesFromCalendarLines,
-  mapDataToCalendarLines,
   moveDateToWeekStart,
 } from './utils'
+
+function makeCalendarLinesAndDataFromCalendar(
+  calendar: TCalendar,
+  fromDate: Date,
+  weeksToShow: number
+): {
+  calendarLines: CalendarLineProps[]
+  calendarData: CalendarDataProps
+} {
+  // Requirement: "fromDate" *MUST* be a Monday.
+
+  const fillingCellsCount = 7 as const // 7 days per week.
+
+  const calendarLines: CalendarLineProps[] = []
+  const calendarData: CalendarDataProps = {
+    idForUpdate: calendar.id,
+    color: calendar.color,
+    name: calendar.name,
+  }
+
+  function appendCell(cellToAdd: CalendarCellProps) {
+    if (calendarLines.length === 0) {
+      calendarLines.push({
+        cells: [],
+      })
+    }
+    let cells = calendarLines[calendarLines.length - 1].cells
+    if (cells.length === fillingCellsCount) {
+      calendarLines.push({
+        cells: [],
+      })
+      cells = calendarLines[calendarLines.length - 1].cells
+    }
+    cells.push(cellToAdd)
+  }
+
+  // All "TDays" to evaluate
+  const allDays: AllDaysElem[] = []
+  appendToAllDaysList(allDays, calendar)
+  if (calendar.children && calendar.children.length) {
+    for (const childCalendar of calendar.children) {
+      appendToAllDaysList(allDays, childCalendar)
+    }
+  }
+  finalizeAllDaysList(allDays)
+
+  if (allDays.length === 0) {
+    // Given no dates.
+    return { calendarLines, calendarData }
+  }
+
+  // From "allDays", skipping all days that are before "fromLocalDate"
+  const fromLocalDate = getLocalDayByDate(fromDate)
+  let iNextCalendarDay = 0
+  let curCalendarDay =
+    iNextCalendarDay < allDays.length ? allDays[iNextCalendarDay++] : undefined
+
+  while (
+    !!curCalendarDay &&
+    iNextCalendarDay < allDays.length &&
+    !localDatesLTE(fromLocalDate, curCalendarDay.dayData.date)
+  ) {
+    curCalendarDay = allDays[iNextCalendarDay++]
+  }
+
+  // Filling "calendarLines"
+  let dayOffset = 0
+  const daysToShow = weeksToShow * 7
+  while (dayOffset < daysToShow) {
+    const curDate = getDateWithOffsetDays(fromDate, dayOffset)
+    const curLocalDate = getLocalDayByDate(curDate)
+
+    let color: undefined | string = undefined
+    let status: 'planned' | 'done' | 'none' = 'none'
+    let dayData: undefined | DayStatusDayData = undefined
+
+    if (!!curCalendarDay && iNextCalendarDay - 1 < allDays.length) {
+      if (curLocalDate === curCalendarDay.dayData.date) {
+        color = curCalendarDay.color
+
+        // Is it Done or Just Planned?
+        if (curCalendarDay.isPlanned) {
+          status = 'planned'
+        } else {
+          status = 'done'
+        }
+
+        dayData = curCalendarDay.dayData
+        curCalendarDay = allDays[iNextCalendarDay++]
+      }
+    }
+
+    appendCell({
+      localDate: curLocalDate,
+      calendarId: calendar.id,
+      displayDate: displayDateFromLocalDate(curLocalDate),
+      color: color || undefined,
+      status,
+      dayData,
+    })
+
+    ++dayOffset
+  }
+
+  return { calendarLines, calendarData }
+}
 
 export const Calendar: FC<{
   startWeekFromDate: Date
@@ -22,7 +136,7 @@ export const Calendar: FC<{
   goInThePast: () => void
   goInTheFuture: () => void
 }> = props => {
-  const calendarLines = mapDataToCalendarLines(
+  const { calendarLines, calendarData } = makeCalendarLinesAndDataFromCalendar(
     props.calendar,
     moveDateToWeekStart(props.startWeekFromDate),
     props.numWeeks
@@ -32,11 +146,7 @@ export const Calendar: FC<{
     <>
       <CalendarStateless
         calendarLines={calendarLines}
-        calendarData={{
-          idForUpdate: props.calendar.id,
-          color: props.calendar.color,
-          name: props.calendar.name,
-        }}
+        calendarData={calendarData}
         placeTableHeadWithWeekDays
         pleaseUpdateCalendar={props.pleaseUpdateCalendar}
         goInThePast={props.goInThePast}
@@ -46,13 +156,14 @@ export const Calendar: FC<{
   )
 }
 
+export type CalendarDataProps = {
+  idForUpdate?: number
+  color: string
+  name: string
+}
 export const CalendarStateless: FC<{
   calendarLines: CalendarLineProps[]
-  calendarData?: {
-    idForUpdate?: number
-    color: string
-    name: string
-  }
+  calendarData?: CalendarDataProps
   placeTableHeadWithWeekDays?: boolean
   pleaseUpdateCalendar: () => void
   goInThePast?: () => void
