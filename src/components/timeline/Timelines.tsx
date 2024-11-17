@@ -3,7 +3,8 @@ import { CalendarArrowControl, CalendarTitle } from '../calendar/Calendar.tsx'
 import { TCalendar } from '../../remote/sdk/types'
 import { getITMonthFromLocalDate, getTodayDate } from '../../lib/utils.ts'
 import { getFirstAndLastLocalDatesFromDayStatusRows } from '../calendar/utils.ts'
-import { createDayStatusPropsList, Timeline } from './Timeline.tsx'
+import { Timeline } from './Timeline.tsx'
+import { createDayStatusesFromTCalendar } from './timeline-utils.ts'
 
 export const Timelines: FC<{
   dataCalendar1: TCalendar
@@ -38,7 +39,7 @@ export const Timelines: FC<{
     return todayDate
   })()
 
-  const dayStatuses = createDayStatusPropsList(
+  const dayStatuses = createDayStatusesFromTCalendar(
     endDate,
     numDaysBefore,
     dataCalendar1

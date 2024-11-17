@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import { UserLayout } from '../layout/UserLayout.tsx'
-import { useWrapperForCreateResource } from './HomePage.tsx'
+import { useWrapperForCreateResource } from '../lib/remote-resources.ts'
 import { readDateSchedule } from '../remote/remote.ts'
 import { ScheduleContent } from '../components/schedule/ScheduleContent.tsx'
 import {
