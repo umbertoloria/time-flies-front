@@ -3,7 +3,8 @@ import { TCalendar, TDay } from '../../remote/sdk/types'
 import { getITMonthFromLocalDate } from '../../lib/utils'
 import { DayStatus } from './DayStatus'
 import {
-  CalendarUpdatedEventFnType,
+  CustomEventFnType,
+  CustomEventTypeCalendarUpdated,
   subscribeToCalendarUpdates,
   unsubscribeToCalendarUpdates,
 } from '../../events/calendar-events.ts'
@@ -55,7 +56,9 @@ export const CalendarStateless: FC<{
   const lastMonthLang = getITMonthFromLocalDate(lastLocalDate)
 
   useEffect(() => {
-    const listener: CalendarUpdatedEventFnType = event => {
+    const listener: CustomEventFnType<
+      CustomEventTypeCalendarUpdated
+    > = event => {
       const { calendarId } = event.detail
       if (props.calendar && props.pleaseUpdateCalendar) {
         if (calendarId === props.calendar.id) {

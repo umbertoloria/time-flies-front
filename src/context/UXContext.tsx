@@ -116,7 +116,7 @@ export const UXProvider: FC<PropsWithChildren> = props => {
               .then(() => {
                 // Yay!
                 // TODO: Tell user all went OK
-                fireEventCalendarUpdated(calendarId)
+                fireEventCalendarUpdated({ calendarId })
                 setDialogForInsertNewGoal({
                   isOpen: false,
                   // data: undefined,
