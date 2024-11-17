@@ -31,8 +31,12 @@ export const Calendar: FC<{
   return (
     <>
       <CalendarStateless
-        calendar={props.calendar}
         calendarLines={calendarLines}
+        calendarData={{
+          idForUpdate: props.calendar.id,
+          color: props.calendar.color,
+          name: props.calendar.name,
+        }}
         placeTableHeadWithWeekDays
         pleaseUpdateCalendar={props.pleaseUpdateCalendar}
         goInThePast={props.goInThePast}
@@ -43,8 +47,12 @@ export const Calendar: FC<{
 }
 
 export const CalendarStateless: FC<{
-  calendar?: TCalendar
   calendarLines: CalendarLineProps[]
+  calendarData?: {
+    idForUpdate?: number
+    color: string
+    name: string
+  }
   placeTableHeadWithWeekDays?: boolean
   pleaseUpdateCalendar: () => void
   goInThePast?: () => void
@@ -60,10 +68,12 @@ export const CalendarStateless: FC<{
       CustomEventTypeCalendarUpdated
     > = event => {
       const { calendarId } = event.detail
-      if (props.calendar && props.pleaseUpdateCalendar) {
-        if (calendarId === props.calendar.id) {
-          props.pleaseUpdateCalendar()
-        }
+      if (
+        props.pleaseUpdateCalendar &&
+        props.calendarData?.idForUpdate &&
+        calendarId === props.calendarData.idForUpdate
+      ) {
+        props.pleaseUpdateCalendar()
       }
     }
     subscribeToCalendarUpdates(listener)
@@ -74,11 +84,11 @@ export const CalendarStateless: FC<{
 
   return (
     <div>
-      {!!props.calendar && !!props.goInThePast && !!props.goInTheFuture && (
+      {!!props.calendarData && !!props.goInThePast && !!props.goInTheFuture && (
         <>
           <CalendarTitle
-            textColor={props.calendar.color}
-            label={props.calendar.name}
+            textColor={props.calendarData.color}
+            label={props.calendarData.name}
           >
             <CalendarArrowControl
               firstMonthLang={firstMonthLang}
