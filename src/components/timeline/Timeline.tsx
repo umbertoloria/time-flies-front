@@ -2,9 +2,9 @@ import { FC } from 'react'
 import { TCalendar } from '../../remote/sdk/types'
 import { CalendarStateless } from '../calendar/Calendar'
 import {
-  AllDaysElem,
-  appendToAllDaysList,
-  finalizeAllDaysList,
+  appendLogicDaysFromTCalendarCh,
+  finalizeLogicDays,
+  LogicDay,
 } from '../calendar/utils'
 import {
   getDateWithOffsetDays,
@@ -27,24 +27,24 @@ export function createDayStatusPropsList(
     const localDate = getLocalDayByDate(curDate)
 
     // All "TDays" to evaluate
-    const allDays: AllDaysElem[] = []
-    appendToAllDaysList(allDays, calendar)
+    const logicDays: LogicDay[] = []
+    appendLogicDaysFromTCalendarCh(logicDays, calendar)
     if (calendar.children && calendar.children.length) {
       for (const childCalendar of calendar.children) {
-        appendToAllDaysList(allDays, childCalendar)
+        appendLogicDaysFromTCalendarCh(logicDays, childCalendar)
       }
     }
-    finalizeAllDaysList(allDays)
+    finalizeLogicDays(logicDays)
 
     while (
-      iDays < allDays.length &&
-      localDatesLT(allDays[iDays].dayData.date, localDate)
+      iDays < logicDays.length &&
+      localDatesLT(logicDays[iDays].dayData.date, localDate)
     ) {
       ++iDays
     }
 
-    if (iDays < allDays.length) {
-      const day = allDays[iDays]
+    if (iDays < logicDays.length) {
+      const day = logicDays[iDays]
 
       if (day.dayData.date === localDate) {
         dayStatusPropsList.push({

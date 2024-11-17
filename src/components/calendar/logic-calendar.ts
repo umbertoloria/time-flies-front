@@ -1,9 +1,9 @@
 import { CalendarDataProps } from './Calendar.tsx'
 import { TCalendar } from '../../remote/sdk/types'
 import {
-  AllDaysElem,
-  appendToAllDaysList,
-  finalizeAllDaysList,
+  appendLogicDaysFromTCalendarCh,
+  finalizeLogicDays,
+  LogicDay,
 } from './utils.ts'
 
 export type LogicCalendar = {
@@ -12,22 +12,22 @@ export type LogicCalendar = {
   apiCalendar?: {
     id: number
   }
-  allDays: AllDaysElem[]
+  logicDays: LogicDay[]
 }
 
 export const createLogicCalendarFromTCalendar = (
   calendar: TCalendar
 ): LogicCalendar => {
-  const allDays: AllDaysElem[] = []
+  const logicDays: LogicDay[] = []
 
   // All "TDays" to evaluate
-  appendToAllDaysList(allDays, calendar)
+  appendLogicDaysFromTCalendarCh(logicDays, calendar)
   if (calendar.children && calendar.children.length) {
     for (const childCalendar of calendar.children) {
-      appendToAllDaysList(allDays, childCalendar)
+      appendLogicDaysFromTCalendarCh(logicDays, childCalendar)
     }
   }
-  finalizeAllDaysList(allDays)
+  finalizeLogicDays(logicDays)
 
   return {
     color: calendar.color,
@@ -35,7 +35,7 @@ export const createLogicCalendarFromTCalendar = (
     apiCalendar: {
       id: calendar.id,
     },
-    allDays,
+    logicDays,
   }
 }
 

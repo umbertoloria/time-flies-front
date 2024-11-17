@@ -2,18 +2,18 @@ import { TCalendarCh } from '../../remote/sdk/types'
 import { DayStatusRow } from './Calendar'
 import { DayStatusDayData } from './DayStatus.tsx'
 
-export type AllDaysElem = {
+export type LogicDay = {
   dayData: DayStatusDayData
   isPlanned?: boolean
   color: string
   onClick?: () => void
 }
 
-export function appendToAllDaysList(
-  allDays: AllDaysElem[],
+export function appendLogicDaysFromTCalendarCh(
+  logicDays: LogicDay[],
   calendar: TCalendarCh
 ) {
-  allDays.push(
+  logicDays.push(
     ...calendar.days.map(day => ({
       dayData: {
         date: day.date,
@@ -23,7 +23,7 @@ export function appendToAllDaysList(
     }))
   )
   if (calendar.plannedDays && calendar.plannedDays.length) {
-    allDays.push(
+    logicDays.push(
       ...calendar.plannedDays.map(day => ({
         dayData: {
           date: day.date,
@@ -36,8 +36,8 @@ export function appendToAllDaysList(
   }
 }
 
-export function finalizeAllDaysList(allDays: AllDaysElem[]) {
-  allDays.sort((a, b) =>
+export function finalizeLogicDays(logicDays: LogicDay[]) {
+  logicDays.sort((a, b) =>
     a.dayData.date.localeCompare(b.dayData.date) < 0 ? -1 : 1
   )
 }

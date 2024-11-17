@@ -43,27 +43,27 @@ function makeDayStatusRowsFromLogicCalendar(
     }
     cells.push(dayStatusProps)
   }
-  const { allDays: calendarDays } = logicCalendar
+  const { logicDays } = logicCalendar
 
-  if (calendarDays.length === 0) {
+  if (logicDays.length === 0) {
     // Given no dates.
     return dayStatusRows
   }
 
-  // From "calendarDays", skipping all days that are before "fromLocalDate"
+  // From "logicDays", skipping all days that are before "fromLocalDate"
   const fromLocalDate = getLocalDayByDate(fromDate)
   let iNextCalendarDay = 0
   let curCalendarDay =
-    iNextCalendarDay < calendarDays.length
-      ? calendarDays[iNextCalendarDay++]
+    iNextCalendarDay < logicDays.length
+      ? logicDays[iNextCalendarDay++]
       : undefined
 
   while (
     !!curCalendarDay &&
-    iNextCalendarDay < calendarDays.length &&
+    iNextCalendarDay < logicDays.length &&
     !localDatesLTE(fromLocalDate, curCalendarDay.dayData.date)
   ) {
-    curCalendarDay = calendarDays[iNextCalendarDay++]
+    curCalendarDay = logicDays[iNextCalendarDay++]
   }
 
   // Filling "dayStatusRows"
@@ -82,7 +82,7 @@ function makeDayStatusRowsFromLogicCalendar(
     }
     let onClick: undefined | (() => void) = undefined
 
-    if (!!curCalendarDay && iNextCalendarDay - 1 < calendarDays.length) {
+    if (!!curCalendarDay && iNextCalendarDay - 1 < logicDays.length) {
       if (curLocalDate === curCalendarDay.dayData.date) {
         color = curCalendarDay.color
 
@@ -95,7 +95,7 @@ function makeDayStatusRowsFromLogicCalendar(
 
         dayData = curCalendarDay.dayData
         onClick = curCalendarDay.onClick
-        curCalendarDay = calendarDays[iNextCalendarDay++]
+        curCalendarDay = logicDays[iNextCalendarDay++]
       }
     }
 
