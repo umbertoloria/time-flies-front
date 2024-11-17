@@ -6,7 +6,10 @@ import {
 } from '../lib/utils.ts'
 import { UserLayout } from '../layout/UserLayout.tsx'
 import { readCalendar } from '../remote/remote.ts'
-import { Calendar, defaultNumWeeks } from '../components/calendar/Calendar.tsx'
+import {
+  CalendarForLogicCalendar,
+  defaultNumWeeks,
+} from '../components/calendar/Calendar.tsx'
 import { Timelines } from '../components/timeline/Timelines.tsx'
 import { createLogicCalendarFromTCalendar } from '../components/calendar/logic-calendar.ts'
 
@@ -133,7 +136,7 @@ const InnerPage: FC = () => {
         {dataCalendar1?.loading === false ? (
           <>
             <div>
-              <Calendar
+              <CalendarForLogicCalendar
                 startWeekFromDate={fromDate1}
                 numWeeks={numWeeks}
                 logicCalendar={createLogicCalendarFromTCalendar(
@@ -156,7 +159,7 @@ const InnerPage: FC = () => {
         {dataCalendar2?.loading === false ? (
           <>
             <div>
-              <Calendar
+              <CalendarForLogicCalendar
                 startWeekFromDate={fromDate2}
                 numWeeks={numWeeks}
                 logicCalendar={createLogicCalendarFromTCalendar(
@@ -179,7 +182,7 @@ const InnerPage: FC = () => {
         {dataCalendar3?.loading === false ? (
           <>
             <div>
-              <Calendar
+              <CalendarForLogicCalendar
                 startWeekFromDate={fromDate3}
                 numWeeks={numWeeks}
                 logicCalendar={createLogicCalendarFromTCalendar(
@@ -202,7 +205,7 @@ const InnerPage: FC = () => {
         {dataCalendar4?.loading === false ? (
           <>
             <div>
-              <Calendar
+              <CalendarForLogicCalendar
                 startWeekFromDate={fromDate4}
                 numWeeks={numWeeks}
                 logicCalendar={createLogicCalendarFromTCalendar(
@@ -225,7 +228,7 @@ const InnerPage: FC = () => {
         {dataCalendar5?.loading === false ? (
           <>
             <div>
-              <Calendar
+              <CalendarForLogicCalendar
                 startWeekFromDate={fromDate5}
                 numWeeks={numWeeks}
                 logicCalendar={createLogicCalendarFromTCalendar(

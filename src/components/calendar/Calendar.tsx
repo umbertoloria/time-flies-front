@@ -19,14 +19,11 @@ import {
 } from './utils'
 import { getCalendarDataProps, LogicCalendar } from './logic-calendar.ts'
 
-function makeCalendarLinesAndDataFromCalendar(
-  lc: LogicCalendar,
+function makeCalendarLinesFromLogicCalendar(
+  logicCalendar: LogicCalendar,
   fromDate: Date,
   weeksToShow: number
-): {
-  calendarLines: CalendarLineProps[]
-  calendarData: CalendarDataProps
-} {
+): CalendarLineProps[] {
   // Requirement: "fromDate" *MUST* be a Monday.
 
   const fillingCellsCount = 7 as const // 7 days per week.
@@ -47,26 +44,27 @@ function makeCalendarLinesAndDataFromCalendar(
     }
     cells.push(cellToAdd)
   }
-  const calendarData = getCalendarDataProps(lc)
-  const { allDays: allDays } = lc
+  const { allDays: calendarDays } = logicCalendar
 
-  if (allDays.length === 0) {
+  if (calendarDays.length === 0) {
     // Given no dates.
-    return { calendarLines, calendarData }
+    return calendarLines
   }
 
-  // From "allDays", skipping all days that are before "fromLocalDate"
+  // From "calendarDays", skipping all days that are before "fromLocalDate"
   const fromLocalDate = getLocalDayByDate(fromDate)
   let iNextCalendarDay = 0
   let curCalendarDay =
-    iNextCalendarDay < allDays.length ? allDays[iNextCalendarDay++] : undefined
+    iNextCalendarDay < calendarDays.length
+      ? calendarDays[iNextCalendarDay++]
+      : undefined
 
   while (
     !!curCalendarDay &&
-    iNextCalendarDay < allDays.length &&
+    iNextCalendarDay < calendarDays.length &&
     !localDatesLTE(fromLocalDate, curCalendarDay.dayData.date)
   ) {
-    curCalendarDay = allDays[iNextCalendarDay++]
+    curCalendarDay = calendarDays[iNextCalendarDay++]
   }
 
   // Filling "calendarLines"
@@ -85,7 +83,7 @@ function makeCalendarLinesAndDataFromCalendar(
     }
     let onClick: undefined | (() => void) = undefined
 
-    if (!!curCalendarDay && iNextCalendarDay - 1 < allDays.length) {
+    if (!!curCalendarDay && iNextCalendarDay - 1 < calendarDays.length) {
       if (curLocalDate === curCalendarDay.dayData.date) {
         color = curCalendarDay.color
 
@@ -98,15 +96,15 @@ function makeCalendarLinesAndDataFromCalendar(
 
         dayData = curCalendarDay.dayData
         onClick = curCalendarDay.onClick
-        curCalendarDay = allDays[iNextCalendarDay++]
+        curCalendarDay = calendarDays[iNextCalendarDay++]
       }
     }
 
     appendCell({
       dayData,
-      apiData: lc.apiCalendar
+      apiData: logicCalendar.apiCalendar
         ? {
-            calendarId: lc.apiCalendar.id,
+            calendarId: logicCalendar.apiCalendar.id,
           }
         : undefined,
       displayDate: displayDateFromLocalDate(curLocalDate),
@@ -118,11 +116,11 @@ function makeCalendarLinesAndDataFromCalendar(
     ++dayOffset
   }
 
-  return { calendarLines, calendarData }
+  return calendarLines
 }
 
 export const defaultNumWeeks = 4 * 3 // Three months
-export const Calendar: FC<{
+export const CalendarForLogicCalendar: FC<{
   startWeekFromDate: Date
   numWeeks: number
   logicCalendar: LogicCalendar
@@ -130,23 +128,19 @@ export const Calendar: FC<{
   goInThePast: () => void
   goInTheFuture: () => void
 }> = props => {
-  const { calendarLines, calendarData } = makeCalendarLinesAndDataFromCalendar(
-    props.logicCalendar,
-    moveDateToWeekStart(props.startWeekFromDate),
-    props.numWeeks
-  )
-
   return (
-    <>
-      <CalendarStateless
-        calendarLines={calendarLines}
-        calendarData={calendarData}
-        placeTableHeadWithWeekDays
-        pleaseUpdateCalendar={props.pleaseUpdateCalendar}
-        goInThePast={props.goInThePast}
-        goInTheFuture={props.goInTheFuture}
-      />
-    </>
+    <CalendarStateless
+      calendarLines={makeCalendarLinesFromLogicCalendar(
+        props.logicCalendar,
+        moveDateToWeekStart(props.startWeekFromDate),
+        props.numWeeks
+      )}
+      calendarData={getCalendarDataProps(props.logicCalendar)}
+      placeTableHeadWithWeekDays
+      pleaseUpdateCalendar={props.pleaseUpdateCalendar}
+      goInThePast={props.goInThePast}
+      goInTheFuture={props.goInTheFuture}
+    />
   )
 }
 
