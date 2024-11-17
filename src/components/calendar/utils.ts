@@ -45,6 +45,7 @@ export function finalizeLogicDays(logicDays: LogicDay[]) {
 export function getFirstAndLastLocalDatesFromDayStatusRows(
   dayStatusRows: DayStatusRow[]
 ) {
+  // Note: Param "dayStatusRows" is expected to be *NON-EMPTY*.
   // Calculate "firstLocalDate" and "lastLocalDate"
   let i = 0
   const firstLocalDate = dayStatusRows[i].dayStatuses[0].dayData.date

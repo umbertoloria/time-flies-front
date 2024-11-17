@@ -12,24 +12,20 @@ export const ScheduleContent: FC<{
   return (
     <>
       {schedule.groups.length === 0 ? (
-        <>
-          <p className='text-center'>Nessuna informazione trovata.</p>
-        </>
+        <>{/*<p className='text-center'>Nessuna informazione trovata.</p>*/}</>
       ) : (
-        <>
+        <div>
+          {/*<span className='text-lg font-bold'>{props.title}</span>*/}
           <div>
-            {/*<span className='text-lg font-bold'>{props.title}</span>*/}
-            <div className='mt-2'>
-              {schedule.groups.map((exerciseGroup, index) => (
-                <ExerciseGroup
-                  key={index}
-                  exerciseGroup={exerciseGroup}
-                  addRecords={props.canInputThings}
-                />
-              ))}
-            </div>
+            {schedule.groups.map((exerciseGroup, index) => (
+              <ExerciseGroup
+                key={index}
+                exerciseGroup={exerciseGroup}
+                addRecords={props.canInputThings}
+              />
+            ))}
           </div>
-        </>
+        </div>
       )}
       {!!allExerciseGroup && (
         <>

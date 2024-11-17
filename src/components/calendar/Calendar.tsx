@@ -16,7 +16,7 @@ import {
   getFirstAndLastLocalDatesFromDayStatusRows,
   moveDateToWeekStart,
 } from './utils'
-import { getCalendarDataProps, LogicCalendar } from './logic-calendar.ts'
+import { LogicCalendar } from './logic-calendar.ts'
 
 function makeDayStatusRowsFromLogicCalendar(
   logicCalendar: LogicCalendar,
@@ -133,7 +133,11 @@ export const CalendarForLogicCalendar: FC<{
         moveDateToWeekStart(props.startWeekFromDate),
         props.numWeeks
       )}
-      calendarData={getCalendarDataProps(props.logicCalendar)}
+      calendarData={{
+        idForUpdate: props.logicCalendar.apiCalendar?.id,
+        color: props.logicCalendar.color,
+        name: props.logicCalendar.name,
+      }}
       placeTableHeadWithWeekDays
       pleaseUpdateCalendar={props.pleaseUpdateCalendar}
       goInThePast={props.goInThePast}

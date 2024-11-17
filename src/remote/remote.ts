@@ -86,6 +86,11 @@ export const readDateSchedule = (localDate: string, showAll?: boolean) =>
   throw err
 })*/
 
+export const readDaysWithExerciseRecords = () =>
+  api.get('?a=days-with-exercise-records').then<{
+    dates: string[]
+  }>(({ data }) => data)
+
 export const createExerciseRecord = (
   exerciseId: number,
   localDate: string,

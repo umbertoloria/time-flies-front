@@ -1,4 +1,3 @@
-import { CalendarDataProps } from './Calendar.tsx'
 import { TCalendar } from '../../remote/sdk/types'
 import {
   appendLogicDaysFromTCalendarCh,
@@ -38,9 +37,3 @@ export const createLogicCalendarFromTCalendar = (
     logicDays,
   }
 }
-
-export const getCalendarDataProps = (lc: LogicCalendar): CalendarDataProps => ({
-  idForUpdate: lc.apiCalendar?.id,
-  color: lc.color,
-  name: lc.name,
-})
