@@ -1,8 +1,8 @@
-import { createEventsManager } from '../../events/calendar-events.ts'
+import { buildCustomEvent } from '../../events/event-builder.ts'
 
 export type CustomEventTypeReloadSchedulePage = undefined
 export const {
   subscribe: subscribeReloadSchedulePage,
   unsubscribe: unsubscribeReloadSchedulePage,
   fire: fireReloadSchedulePage,
-} = createEventsManager<CustomEventTypeReloadSchedulePage>('ReloadSchedulePage')
+} = buildCustomEvent<CustomEventTypeReloadSchedulePage>('ReloadSchedulePage')

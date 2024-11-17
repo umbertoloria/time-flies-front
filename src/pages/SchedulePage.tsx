@@ -17,7 +17,7 @@ import {
   subscribeReloadSchedulePage,
   unsubscribeReloadSchedulePage,
 } from '../components/schedule/event-reload-schedule-page.ts'
-import { CustomEventFnType } from '../events/calendar-events.ts'
+import { CustomEventFnType } from '../events/event-builder.ts'
 
 const periodRefreshScheduleInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 

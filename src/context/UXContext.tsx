@@ -7,7 +7,7 @@ import {
 } from 'react'
 import { InputDialogInsertNewGoal } from '../components/calendar/InputDialogInsertNewGoal.tsx'
 import { checkDateWithSuccess } from '../remote/remote.ts'
-import { fireEventCalendarUpdated } from '../events/calendar-events.ts'
+import { fireEventCalendarUpdated } from '../components/calendar/event-calendar-updated.ts'
 import { InputDialogSeeNotes } from '../components/calendar/InputDialogSeeNotes.tsx'
 
 type UXContextTypeDialogForInsertNewGoal = {

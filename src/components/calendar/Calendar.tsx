@@ -2,12 +2,12 @@ import { FC, PropsWithChildren, useEffect } from 'react'
 import { TCalendar, TDay } from '../../remote/sdk/types'
 import { getITMonthFromLocalDate } from '../../lib/utils'
 import { DayStatus } from './DayStatus'
+import { CustomEventFnType } from '../../events/event-builder.ts'
 import {
-  CustomEventFnType,
   CustomEventTypeCalendarUpdated,
   subscribeToCalendarUpdates,
   unsubscribeToCalendarUpdates,
-} from '../../events/calendar-events.ts'
+} from './event-calendar-updated.ts'
 import {
   getFirstAndLastLocalDatesFromCalendarLines,
   mapDataToCalendarLines,
