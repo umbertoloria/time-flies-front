@@ -41,7 +41,7 @@ export function createCalendarCellPropsList(
 
     while (
       iDays < allDays.length &&
-      localDatesLT(allDays[iDays].day.date, localDate)
+      localDatesLT(allDays[iDays].dayData.date, localDate)
     ) {
       ++iDays
     }
@@ -49,14 +49,14 @@ export function createCalendarCellPropsList(
     if (iDays < allDays.length) {
       const day = allDays[iDays]
 
-      if (day.day.date === localDate) {
+      if (day.dayData.date === localDate) {
         cells.push({
           localDate,
           calendarId: calendar.id,
           displayDate: displayDateFromLocalDate(localDate),
           color: day.color,
           status: day.isPlanned ? 'planned' : 'done',
-          day: day.day,
+          dayData: day.dayData,
         })
       } else {
         cells.push({

@@ -4,11 +4,14 @@ import {
   useUXDialogForInsertNewGoal,
   useUXDialogForSeeNotes,
 } from '../../context/UXContext.tsx'
-import { TDay } from '../../remote/sdk/types'
 import { isLocalDateToday, isLocalDateYesterday } from '../../lib/utils.ts'
 
+export type DayStatusDayData = {
+  date: string // Es. "2023-01-01"
+  notes?: string
+}
 export const DayStatus: FC<{
-  day?: TDay
+  dayData?: DayStatusDayData
   status?: 'planned' | 'done'
   color?: string
   tooltip?: string
@@ -21,7 +24,7 @@ export const DayStatus: FC<{
   const isYesterday = isLocalDateYesterday(props.apiData.localDate)
 
   const canSetAsChecked = props.status !== 'done' && (isYesterday || isToday)
-  const hasNotes = typeof props.day?.notes === 'string'
+  const hasNotes = typeof props.dayData?.notes === 'string'
 
   const isClickable = canSetAsChecked || hasNotes
 
@@ -49,8 +52,8 @@ export const DayStatus: FC<{
               props.apiData.calendarId,
               props.apiData.localDate
             )
-          } else if (hasNotes && !!props.day?.notes) {
-            openDialogForSeeNotes(props.day.notes)
+          } else if (hasNotes && !!props.dayData?.notes) {
+            openDialogForSeeNotes(props.dayData.notes)
           }
         }}
       />

@@ -1,13 +1,14 @@
-import { TCalendar, TCalendarCh, TDay } from '../../remote/sdk/types'
+import { TCalendar, TCalendarCh } from '../../remote/sdk/types'
 import {
   getDateWithOffsetDays,
   getLocalDayByDate,
   localDatesLTE,
 } from '../../lib/utils'
 import { CalendarCellProps, CalendarLineProps } from './Calendar'
+import { DayStatusDayData } from './DayStatus.tsx'
 
 export type AllDaysElem = {
-  day: TDay
+  dayData: DayStatusDayData
   isPlanned?: boolean
   color: string
 }
@@ -18,14 +19,20 @@ export function appendToAllDaysList(
 ) {
   allDays.push(
     ...calendar.days.map(day => ({
-      day,
+      dayData: {
+        date: day.date,
+        notes: day.notes,
+      },
       color: calendar.color,
     }))
   )
   if (calendar.plannedDays && calendar.plannedDays.length) {
     allDays.push(
       ...calendar.plannedDays.map(day => ({
-        day,
+        dayData: {
+          date: day.date,
+          notes: day.notes,
+        },
         isPlanned: true,
         color: calendar.plannedColor,
       }))
@@ -34,7 +41,9 @@ export function appendToAllDaysList(
 }
 
 export function finalizeAllDaysList(allDays: AllDaysElem[]) {
-  allDays.sort((a, b) => (a.day.date.localeCompare(b.day.date) < 0 ? -1 : 1))
+  allDays.sort((a, b) =>
+    a.dayData.date.localeCompare(b.dayData.date) < 0 ? -1 : 1
+  )
 }
 
 export function mapDataToCalendarLines(
@@ -88,7 +97,7 @@ export function mapDataToCalendarLines(
   while (
     !!curCalendarDay &&
     iNextCalendarDay < allDays.length &&
-    !localDatesLTE(fromLocalDate, curCalendarDay.day.date)
+    !localDatesLTE(fromLocalDate, curCalendarDay.dayData.date)
   ) {
     curCalendarDay = allDays[iNextCalendarDay++]
   }
@@ -102,10 +111,10 @@ export function mapDataToCalendarLines(
 
     let color: undefined | string = undefined
     let status: 'planned' | 'done' | 'none' = 'none'
-    let day: undefined | TDay = undefined
+    let dayData: undefined | DayStatusDayData = undefined
 
     if (!!curCalendarDay && iNextCalendarDay - 1 < allDays.length) {
-      if (curLocalDate === curCalendarDay.day.date) {
+      if (curLocalDate === curCalendarDay.dayData.date) {
         color = curCalendarDay.color
 
         // Is it Done or Just Planned?
@@ -115,7 +124,7 @@ export function mapDataToCalendarLines(
           status = 'done'
         }
 
-        day = curCalendarDay.day
+        dayData = curCalendarDay.dayData
         curCalendarDay = allDays[iNextCalendarDay++]
       }
     }
@@ -126,7 +135,7 @@ export function mapDataToCalendarLines(
       displayDate: displayDateFromLocalDate(curLocalDate),
       color: color || undefined,
       status,
-      day,
+      dayData,
     })
 
     ++dayOffset

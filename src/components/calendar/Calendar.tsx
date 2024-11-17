@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren, useEffect } from 'react'
-import { TCalendar, TDay } from '../../remote/sdk/types'
+import { TCalendar } from '../../remote/sdk/types'
 import { getITMonthFromLocalDate } from '../../lib/utils'
-import { DayStatus } from './DayStatus'
+import { DayStatus, DayStatusDayData } from './DayStatus'
 import { CustomEventFnType } from '../../events/event-builder.ts'
 import {
   CustomEventTypeCalendarUpdated,
@@ -218,12 +218,12 @@ export type CalendarCellProps = {
   displayDate: string
   color?: string
   status: 'none' | 'planned' | 'done'
-  day?: TDay
+  dayData?: DayStatusDayData
 }
 const CalendarCell: FC<CalendarCellProps> = props => (
   <td className='m-0 p-0'>
     <DayStatus
-      day={props.day}
+      dayData={props.dayData}
       status={
         props.status === 'planned' || props.status === 'done'
           ? props.status
