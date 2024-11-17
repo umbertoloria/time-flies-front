@@ -51,31 +51,40 @@ export function createCalendarCellPropsList(
 
       if (day.dayData.date === localDate) {
         cells.push({
-          localDate,
-          calendarId: calendar.id,
+          dayData: day.dayData,
+          apiData: {
+            calendarId: calendar.id,
+          },
           displayDate: displayDateFromLocalDate(localDate),
           color: day.color,
           status: day.isPlanned ? 'planned' : 'done',
-          dayData: day.dayData,
         })
       } else {
         cells.push({
-          localDate,
-          calendarId: calendar.id,
+          dayData: {
+            // "Fake"
+            date: localDate,
+          },
+          apiData: {
+            calendarId: calendar.id,
+          },
           displayDate: displayDateFromLocalDate(localDate),
           // color: undefined,
           status: 'none',
-          // day: undefined,
         })
       }
     } else {
       cells.push({
-        localDate,
-        calendarId: calendar.id,
+        dayData: {
+          // "Fake"
+          date: localDate,
+        },
+        apiData: {
+          calendarId: calendar.id,
+        },
         displayDate: displayDateFromLocalDate(localDate),
         // color: undefined,
         status: 'none',
-        // day: undefined,
       })
     }
 

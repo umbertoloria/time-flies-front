@@ -46,7 +46,7 @@ export function getFirstAndLastLocalDatesFromCalendarLines(
 ) {
   // Calculate "firstLocalDate" and "lastLocalDate"
   let i = 0
-  const firstLocalDate = calendarLines[i].cells[0].localDate
+  const firstLocalDate = calendarLines[i].cells[0].dayData.date
   let j = 1
   let lastLocalDate = firstLocalDate
   while (i < calendarLines.length) {
@@ -54,7 +54,7 @@ export function getFirstAndLastLocalDatesFromCalendarLines(
     j = 0
     while (j < calendarLine.cells.length) {
       const cell = calendarLine.cells[j]
-      lastLocalDate = cell.localDate
+      lastLocalDate = cell.dayData.date
       ++j
     }
     ++i

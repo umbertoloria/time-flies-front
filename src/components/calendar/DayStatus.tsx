@@ -11,19 +11,19 @@ export type DayStatusDayData = {
   notes?: string
 }
 export const DayStatus: FC<{
-  dayData?: DayStatusDayData
+  dayData: DayStatusDayData
   status?: 'planned' | 'done'
   color?: string
   tooltip?: string
-  apiData: {
+  apiData?: {
     calendarId: number
-    localDate: string
   }
 }> = props => {
-  const isToday = isLocalDateToday(props.apiData.localDate)
-  const isYesterday = isLocalDateYesterday(props.apiData.localDate)
+  const isToday = isLocalDateToday(props.dayData.date)
+  const isYesterday = isLocalDateYesterday(props.dayData.date)
 
-  const canSetAsChecked = props.status !== 'done' && (isYesterday || isToday)
+  const canSetAsChecked =
+    props.status !== 'done' && (isYesterday || isToday) && props.apiData
   const hasNotes = typeof props.dayData?.notes === 'string'
 
   const isClickable = canSetAsChecked || hasNotes
@@ -47,10 +47,10 @@ export const DayStatus: FC<{
           background: props.color || undefined,
         }}
         onClick={() => {
-          if (canSetAsChecked) {
+          if (canSetAsChecked && props.apiData) {
             openDialogForInsertNewGoal(
               props.apiData.calendarId,
-              props.apiData.localDate
+              props.dayData.date
             )
           } else if (hasNotes && !!props.dayData?.notes) {
             openDialogForSeeNotes(props.dayData.notes)

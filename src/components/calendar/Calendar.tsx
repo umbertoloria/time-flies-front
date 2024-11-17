@@ -14,16 +14,18 @@ import {
   unsubscribeToCalendarUpdates,
 } from './event-calendar-updated.ts'
 import {
-  AllDaysElem,
-  appendToAllDaysList,
   displayDateFromLocalDate,
-  finalizeAllDaysList,
   getFirstAndLastLocalDatesFromCalendarLines,
   moveDateToWeekStart,
 } from './utils'
+import {
+  createLogicCalendarFromTCalendar,
+  getCalendarDataProps,
+  LogicCalendar,
+} from './logic-calendar.ts'
 
 function makeCalendarLinesAndDataFromCalendar(
-  calendar: TCalendar,
+  lc: LogicCalendar,
   fromDate: Date,
   weeksToShow: number
 ): {
@@ -35,13 +37,7 @@ function makeCalendarLinesAndDataFromCalendar(
   const fillingCellsCount = 7 as const // 7 days per week.
 
   const calendarLines: CalendarLineProps[] = []
-  const calendarData: CalendarDataProps = {
-    idForUpdate: calendar.id,
-    color: calendar.color,
-    name: calendar.name,
-  }
-
-  function appendCell(cellToAdd: CalendarCellProps) {
+  const appendCell = (cellToAdd: CalendarCellProps) => {
     if (calendarLines.length === 0) {
       calendarLines.push({
         cells: [],
@@ -56,16 +52,8 @@ function makeCalendarLinesAndDataFromCalendar(
     }
     cells.push(cellToAdd)
   }
-
-  // All "TDays" to evaluate
-  const allDays: AllDaysElem[] = []
-  appendToAllDaysList(allDays, calendar)
-  if (calendar.children && calendar.children.length) {
-    for (const childCalendar of calendar.children) {
-      appendToAllDaysList(allDays, childCalendar)
-    }
-  }
-  finalizeAllDaysList(allDays)
+  const calendarData = getCalendarDataProps(lc)
+  const { allDays: allDays } = lc
 
   if (allDays.length === 0) {
     // Given no dates.
@@ -95,7 +83,11 @@ function makeCalendarLinesAndDataFromCalendar(
 
     let color: undefined | string = undefined
     let status: 'planned' | 'done' | 'none' = 'none'
-    let dayData: undefined | DayStatusDayData = undefined
+    let dayData: DayStatusDayData = {
+      // "Fake"
+      date: curLocalDate,
+      notes: undefined,
+    }
 
     if (!!curCalendarDay && iNextCalendarDay - 1 < allDays.length) {
       if (curLocalDate === curCalendarDay.dayData.date) {
@@ -114,12 +106,15 @@ function makeCalendarLinesAndDataFromCalendar(
     }
 
     appendCell({
-      localDate: curLocalDate,
-      calendarId: calendar.id,
+      dayData,
+      apiData: lc.apiCalendar
+        ? {
+            calendarId: lc.apiCalendar.id,
+          }
+        : undefined,
       displayDate: displayDateFromLocalDate(curLocalDate),
       color: color || undefined,
       status,
-      dayData,
     })
 
     ++dayOffset
@@ -136,8 +131,9 @@ export const Calendar: FC<{
   goInThePast: () => void
   goInTheFuture: () => void
 }> = props => {
+  const lc = createLogicCalendarFromTCalendar(props.calendar)
   const { calendarLines, calendarData } = makeCalendarLinesAndDataFromCalendar(
-    props.calendar,
+    lc,
     moveDateToWeekStart(props.startWeekFromDate),
     props.numWeeks
   )
@@ -324,12 +320,13 @@ const CalendarLine: FC<CalendarLineProps> = props => (
 )
 
 export type CalendarCellProps = {
-  localDate: string
-  calendarId: number
+  dayData: DayStatusDayData
+  apiData?: {
+    calendarId: number
+  }
   displayDate: string
   color?: string
   status: 'none' | 'planned' | 'done'
-  dayData?: DayStatusDayData
 }
 const CalendarCell: FC<CalendarCellProps> = props => (
   <td className='m-0 p-0'>
@@ -342,10 +339,13 @@ const CalendarCell: FC<CalendarCellProps> = props => (
       }
       color={props.color}
       tooltip={props.displayDate}
-      apiData={{
-        calendarId: props.calendarId,
-        localDate: props.localDate,
-      }}
+      apiData={
+        props.apiData
+          ? {
+              calendarId: props.apiData.calendarId,
+            }
+          : undefined
+      }
     />
   </td>
 )
