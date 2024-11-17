@@ -5,21 +5,22 @@ import {
   useUXDialogForSeeNotes,
 } from '../../context/UXContext.tsx'
 import { isLocalDateToday, isLocalDateYesterday } from '../../lib/utils.ts'
+import { displayDateFromLocalDate } from './utils.ts'
 
 export type DayStatusDayData = {
   date: string // Es. "2023-01-01"
   notes?: string
 }
-export const DayStatus: FC<{
+export type DayStatusProps = {
   dayData: DayStatusDayData
   status?: 'planned' | 'done'
   color?: string
-  tooltip?: string
   apiData?: {
     calendarId: number
   }
   onClick?: () => void
-}> = props => {
+}
+export const DayStatus: FC<DayStatusProps> = props => {
   const isToday = isLocalDateToday(props.dayData.date)
   const isYesterday = isLocalDateYesterday(props.dayData.date)
 
@@ -33,8 +34,13 @@ export const DayStatus: FC<{
     useUXDialogForInsertNewGoal()
   const { openDialog: openDialogForSeeNotes } = useUXDialogForSeeNotes()
 
+  const displayDate = displayDateFromLocalDate(props.dayData.date)
+
   return (
-    <div className='w-10 h-9 p-1' title={props.tooltip || undefined}>
+    <div
+      className='w-10 h-9 p-1'
+      title={displayDate} // As tooltip.
+    >
       <div
         className={classNames('rounded-sm w-full h-full', {
           'bg-gray-200': !props.color && !isClickable,

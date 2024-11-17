@@ -1,10 +1,9 @@
 import { FC } from 'react'
 import { TCalendar } from '../../remote/sdk/types'
-import { CalendarCellProps, CalendarStateless } from '../calendar/Calendar'
+import { CalendarStateless } from '../calendar/Calendar'
 import {
   AllDaysElem,
   appendToAllDaysList,
-  displayDateFromLocalDate,
   finalizeAllDaysList,
 } from '../calendar/utils'
 import {
@@ -12,18 +11,16 @@ import {
   getLocalDayByDate,
   localDatesLT,
 } from '../../lib/utils'
+import { DayStatusProps } from '../calendar/DayStatus.tsx'
 
-export function createCalendarCellPropsList(
+export function createDayStatusPropsList(
   endDate: Date,
   numDaysBefore: number,
   calendar: TCalendar
-): CalendarCellProps[] {
+): DayStatusProps[] {
   // TODO: Improve this algorithm
-
-  // Calculating cells
   let iDays = 0
-
-  const cells: CalendarCellProps[] = []
+  const dayStatusPropsList: DayStatusProps[] = []
   let iCell = numDaysBefore
   while (iCell >= 0) {
     const curDate = getDateWithOffsetDays(endDate, -iCell)
@@ -50,17 +47,16 @@ export function createCalendarCellPropsList(
       const day = allDays[iDays]
 
       if (day.dayData.date === localDate) {
-        cells.push({
+        dayStatusPropsList.push({
           dayData: day.dayData,
           apiData: {
             calendarId: calendar.id,
           },
-          displayDate: displayDateFromLocalDate(localDate),
           color: day.color,
           status: day.isPlanned ? 'planned' : 'done',
         })
       } else {
-        cells.push({
+        dayStatusPropsList.push({
           dayData: {
             // "Fake"
             date: localDate,
@@ -68,13 +64,12 @@ export function createCalendarCellPropsList(
           apiData: {
             calendarId: calendar.id,
           },
-          displayDate: displayDateFromLocalDate(localDate),
           // color: undefined,
-          status: 'none',
+          // status: undefined,
         })
       }
     } else {
-      cells.push({
+      dayStatusPropsList.push({
         dayData: {
           // "Fake"
           date: localDate,
@@ -82,15 +77,14 @@ export function createCalendarCellPropsList(
         apiData: {
           calendarId: calendar.id,
         },
-        displayDate: displayDateFromLocalDate(localDate),
         // color: undefined,
-        status: 'none',
+        // status: undefined,
       })
     }
 
     --iCell
   }
-  return cells
+  return dayStatusPropsList
 }
 
 export const Timeline: FC<{
@@ -99,7 +93,7 @@ export const Timeline: FC<{
   calendar: TCalendar
   pleaseUpdateCalendar: () => void
 }> = props => {
-  const calendarCells = createCalendarCellPropsList(
+  const dayStatuses = createDayStatusPropsList(
     props.endDate,
     props.numDaysBefore,
     props.calendar
@@ -108,7 +102,7 @@ export const Timeline: FC<{
   return (
     <>
       <CalendarStateless
-        calendarLines={[{ cells: calendarCells }]}
+        dayStatusRows={[{ dayStatuses }]}
         pleaseUpdateCalendar={props.pleaseUpdateCalendar}
       />
     </>

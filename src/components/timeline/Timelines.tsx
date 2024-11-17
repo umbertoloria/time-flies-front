@@ -1,13 +1,9 @@
 import { FC, useState } from 'react'
-import {
-  CalendarArrowControl,
-  CalendarLineProps,
-  CalendarTitle,
-} from '../calendar/Calendar.tsx'
+import { CalendarArrowControl, CalendarTitle } from '../calendar/Calendar.tsx'
 import { TCalendar } from '../../remote/sdk/types'
 import { getITMonthFromLocalDate, getTodayDate } from '../../lib/utils.ts'
-import { getFirstAndLastLocalDatesFromCalendarLines } from '../calendar/utils.ts'
-import { createCalendarCellPropsList, Timeline } from './Timeline.tsx'
+import { getFirstAndLastLocalDatesFromDayStatusRows } from '../calendar/utils.ts'
+import { createDayStatusPropsList, Timeline } from './Timeline.tsx'
 
 export const Timelines: FC<{
   dataCalendar1: TCalendar
@@ -42,14 +38,13 @@ export const Timelines: FC<{
     return todayDate
   })()
 
-  const calendarCells = createCalendarCellPropsList(
+  const dayStatuses = createDayStatusPropsList(
     endDate,
     numDaysBefore,
     dataCalendar1
   )
-  const calendarLines: CalendarLineProps[] = [{ cells: calendarCells }]
   const { firstLocalDate, lastLocalDate } =
-    getFirstAndLastLocalDatesFromCalendarLines(calendarLines)
+    getFirstAndLastLocalDatesFromDayStatusRows([{ dayStatuses }])
   const firstMonthLang = getITMonthFromLocalDate(firstLocalDate)
   const lastMonthLang = getITMonthFromLocalDate(lastLocalDate)
 

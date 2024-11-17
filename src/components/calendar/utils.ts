@@ -1,5 +1,5 @@
 import { TCalendarCh } from '../../remote/sdk/types'
-import { CalendarLineProps } from './Calendar'
+import { DayStatusRow } from './Calendar'
 import { DayStatusDayData } from './DayStatus.tsx'
 
 export type AllDaysElem = {
@@ -42,19 +42,19 @@ export function finalizeAllDaysList(allDays: AllDaysElem[]) {
   )
 }
 
-export function getFirstAndLastLocalDatesFromCalendarLines(
-  calendarLines: CalendarLineProps[]
+export function getFirstAndLastLocalDatesFromDayStatusRows(
+  dayStatusRows: DayStatusRow[]
 ) {
   // Calculate "firstLocalDate" and "lastLocalDate"
   let i = 0
-  const firstLocalDate = calendarLines[i].cells[0].dayData.date
+  const firstLocalDate = dayStatusRows[i].dayStatuses[0].dayData.date
   let j = 1
   let lastLocalDate = firstLocalDate
-  while (i < calendarLines.length) {
-    const calendarLine = calendarLines[i]
+  while (i < dayStatusRows.length) {
+    const dayStatusRow = dayStatusRows[i]
     j = 0
-    while (j < calendarLine.cells.length) {
-      const cell = calendarLine.cells[j]
+    while (j < dayStatusRow.dayStatuses.length) {
+      const cell = dayStatusRow.dayStatuses[j]
       lastLocalDate = cell.dayData.date
       ++j
     }

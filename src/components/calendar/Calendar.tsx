@@ -5,7 +5,7 @@ import {
   getLocalDayByDate,
   localDatesLTE,
 } from '../../lib/utils'
-import { DayStatus, DayStatusDayData } from './DayStatus'
+import { DayStatus, DayStatusDayData, DayStatusProps } from './DayStatus'
 import { CustomEventFnType } from '../../events/event-builder.ts'
 import {
   CustomEventTypeCalendarUpdated,
@@ -13,42 +13,41 @@ import {
   unsubscribeToCalendarUpdates,
 } from './event-calendar-updated.ts'
 import {
-  displayDateFromLocalDate,
-  getFirstAndLastLocalDatesFromCalendarLines,
+  getFirstAndLastLocalDatesFromDayStatusRows,
   moveDateToWeekStart,
 } from './utils'
 import { getCalendarDataProps, LogicCalendar } from './logic-calendar.ts'
 
-function makeCalendarLinesFromLogicCalendar(
+function makeDayStatusRowsFromLogicCalendar(
   logicCalendar: LogicCalendar,
   fromDate: Date,
   weeksToShow: number
-): CalendarLineProps[] {
+): DayStatusRow[] {
   // Requirement: "fromDate" *MUST* be a Monday.
 
   const fillingCellsCount = 7 as const // 7 days per week.
 
-  const calendarLines: CalendarLineProps[] = []
-  const appendCell = (cellToAdd: CalendarCellProps) => {
-    if (calendarLines.length === 0) {
-      calendarLines.push({
-        cells: [],
+  const dayStatusRows: DayStatusRow[] = []
+  const appendCell = (dayStatusProps: DayStatusProps) => {
+    if (dayStatusRows.length === 0) {
+      dayStatusRows.push({
+        dayStatuses: [],
       })
     }
-    let cells = calendarLines[calendarLines.length - 1].cells
+    let cells = dayStatusRows[dayStatusRows.length - 1].dayStatuses
     if (cells.length === fillingCellsCount) {
-      calendarLines.push({
-        cells: [],
+      dayStatusRows.push({
+        dayStatuses: [],
       })
-      cells = calendarLines[calendarLines.length - 1].cells
+      cells = dayStatusRows[dayStatusRows.length - 1].dayStatuses
     }
-    cells.push(cellToAdd)
+    cells.push(dayStatusProps)
   }
   const { allDays: calendarDays } = logicCalendar
 
   if (calendarDays.length === 0) {
     // Given no dates.
-    return calendarLines
+    return dayStatusRows
   }
 
   // From "calendarDays", skipping all days that are before "fromLocalDate"
@@ -67,7 +66,7 @@ function makeCalendarLinesFromLogicCalendar(
     curCalendarDay = calendarDays[iNextCalendarDay++]
   }
 
-  // Filling "calendarLines"
+  // Filling "dayStatusRows"
   let dayOffset = 0
   const daysToShow = weeksToShow * 7
   while (dayOffset < daysToShow) {
@@ -75,7 +74,7 @@ function makeCalendarLinesFromLogicCalendar(
     const curLocalDate = getLocalDayByDate(curDate)
 
     let color: undefined | string = undefined
-    let status: 'planned' | 'done' | 'none' = 'none'
+    let status: 'planned' | 'done' | undefined = undefined
     let dayData: DayStatusDayData = {
       // "Fake"
       date: curLocalDate,
@@ -107,7 +106,6 @@ function makeCalendarLinesFromLogicCalendar(
             calendarId: logicCalendar.apiCalendar.id,
           }
         : undefined,
-      displayDate: displayDateFromLocalDate(curLocalDate),
       color: color || undefined,
       status,
       onClick,
@@ -116,7 +114,7 @@ function makeCalendarLinesFromLogicCalendar(
     ++dayOffset
   }
 
-  return calendarLines
+  return dayStatusRows
 }
 
 export const defaultNumWeeks = 4 * 3 // Three months
@@ -130,7 +128,7 @@ export const CalendarForLogicCalendar: FC<{
 }> = props => {
   return (
     <CalendarStateless
-      calendarLines={makeCalendarLinesFromLogicCalendar(
+      dayStatusRows={makeDayStatusRowsFromLogicCalendar(
         props.logicCalendar,
         moveDateToWeekStart(props.startWeekFromDate),
         props.numWeeks
@@ -150,7 +148,7 @@ export type CalendarDataProps = {
   name: string
 }
 export const CalendarStateless: FC<{
-  calendarLines: CalendarLineProps[]
+  dayStatusRows: DayStatusRow[]
   calendarData?: CalendarDataProps
   placeTableHeadWithWeekDays?: boolean
   pleaseUpdateCalendar: () => void
@@ -158,7 +156,7 @@ export const CalendarStateless: FC<{
   goInTheFuture?: () => void
 }> = props => {
   const { firstLocalDate, lastLocalDate } =
-    getFirstAndLastLocalDatesFromCalendarLines(props.calendarLines)
+    getFirstAndLastLocalDatesFromDayStatusRows(props.dayStatusRows)
   const firstMonthLang = getITMonthFromLocalDate(firstLocalDate)
   const lastMonthLang = getITMonthFromLocalDate(lastLocalDate)
 
@@ -201,8 +199,14 @@ export const CalendarStateless: FC<{
       <table className='m-auto text-gray-700'>
         <tbody>
           {!!props.placeTableHeadWithWeekDays && <CalendarHead />}
-          {props.calendarLines.map((calendarLine, index) => (
-            <CalendarLine key={index} {...calendarLine} />
+          {props.dayStatusRows.map((dayStatusRow, index) => (
+            <tr key={index}>
+              {dayStatusRow.dayStatuses.map((cell, index) => (
+                <td key={index} className='m-0 p-0'>
+                  <DayStatus {...cell} />
+                </td>
+              ))}
+            </tr>
           ))}
         </tbody>
       </table>
@@ -300,46 +304,6 @@ const CalendarHead: FC = () => (
   </tr>
 )
 
-export type CalendarLineProps = {
-  cells: CalendarCellProps[]
+export type DayStatusRow = {
+  dayStatuses: DayStatusProps[]
 }
-const CalendarLine: FC<CalendarLineProps> = props => (
-  <tr>
-    {props.cells.map((cell, index) => (
-      <CalendarCell key={index} {...cell} />
-    ))}
-  </tr>
-)
-
-export type CalendarCellProps = {
-  dayData: DayStatusDayData
-  apiData?: {
-    calendarId: number
-  }
-  displayDate: string
-  color?: string
-  status: 'none' | 'planned' | 'done'
-  onClick?: () => void
-}
-const CalendarCell: FC<CalendarCellProps> = props => (
-  <td className='m-0 p-0'>
-    <DayStatus
-      dayData={props.dayData}
-      status={
-        props.status === 'planned' || props.status === 'done'
-          ? props.status
-          : undefined
-      }
-      color={props.color}
-      tooltip={props.displayDate}
-      apiData={
-        props.apiData
-          ? {
-              calendarId: props.apiData.calendarId,
-            }
-          : undefined
-      }
-      onClick={props.onClick}
-    />
-  </td>
-)
