@@ -6,6 +6,7 @@ export type AllDaysElem = {
   dayData: DayStatusDayData
   isPlanned?: boolean
   color: string
+  onClick?: () => void
 }
 
 export function appendToAllDaysList(

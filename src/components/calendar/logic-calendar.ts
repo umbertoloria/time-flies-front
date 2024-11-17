@@ -15,32 +15,32 @@ export type LogicCalendar = {
   allDays: AllDaysElem[]
 }
 
-export function createLogicCalendarFromTCalendar(c: TCalendar): LogicCalendar {
+export const createLogicCalendarFromTCalendar = (
+  calendar: TCalendar
+): LogicCalendar => {
   const allDays: AllDaysElem[] = []
 
   // All "TDays" to evaluate
-  appendToAllDaysList(allDays, c)
-  if (c.children && c.children.length) {
-    for (const childCalendar of c.children) {
+  appendToAllDaysList(allDays, calendar)
+  if (calendar.children && calendar.children.length) {
+    for (const childCalendar of calendar.children) {
       appendToAllDaysList(allDays, childCalendar)
     }
   }
   finalizeAllDaysList(allDays)
 
   return {
-    color: c.color,
-    name: c.name,
+    color: calendar.color,
+    name: calendar.name,
     apiCalendar: {
-      id: c.id,
+      id: calendar.id,
     },
     allDays,
   }
 }
 
-export function getCalendarDataProps(lc: LogicCalendar): CalendarDataProps {
-  return {
-    idForUpdate: lc.apiCalendar?.id,
-    color: lc.color,
-    name: lc.name,
-  }
-}
+export const getCalendarDataProps = (lc: LogicCalendar): CalendarDataProps => ({
+  idForUpdate: lc.apiCalendar?.id,
+  color: lc.color,
+  name: lc.name,
+})

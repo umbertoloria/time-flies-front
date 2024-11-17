@@ -1,5 +1,4 @@
 import { FC, PropsWithChildren, useEffect } from 'react'
-import { TCalendar } from '../../remote/sdk/types'
 import {
   getDateWithOffsetDays,
   getITMonthFromLocalDate,
@@ -18,11 +17,7 @@ import {
   getFirstAndLastLocalDatesFromCalendarLines,
   moveDateToWeekStart,
 } from './utils'
-import {
-  createLogicCalendarFromTCalendar,
-  getCalendarDataProps,
-  LogicCalendar,
-} from './logic-calendar.ts'
+import { getCalendarDataProps, LogicCalendar } from './logic-calendar.ts'
 
 function makeCalendarLinesAndDataFromCalendar(
   lc: LogicCalendar,
@@ -88,6 +83,7 @@ function makeCalendarLinesAndDataFromCalendar(
       date: curLocalDate,
       notes: undefined,
     }
+    let onClick: undefined | (() => void) = undefined
 
     if (!!curCalendarDay && iNextCalendarDay - 1 < allDays.length) {
       if (curLocalDate === curCalendarDay.dayData.date) {
@@ -101,6 +97,7 @@ function makeCalendarLinesAndDataFromCalendar(
         }
 
         dayData = curCalendarDay.dayData
+        onClick = curCalendarDay.onClick
         curCalendarDay = allDays[iNextCalendarDay++]
       }
     }
@@ -115,6 +112,7 @@ function makeCalendarLinesAndDataFromCalendar(
       displayDate: displayDateFromLocalDate(curLocalDate),
       color: color || undefined,
       status,
+      onClick,
     })
 
     ++dayOffset
@@ -123,17 +121,17 @@ function makeCalendarLinesAndDataFromCalendar(
   return { calendarLines, calendarData }
 }
 
+export const defaultNumWeeks = 4 * 3 // Three months
 export const Calendar: FC<{
   startWeekFromDate: Date
   numWeeks: number
-  calendar: TCalendar
+  logicCalendar: LogicCalendar
   pleaseUpdateCalendar: () => void
   goInThePast: () => void
   goInTheFuture: () => void
 }> = props => {
-  const lc = createLogicCalendarFromTCalendar(props.calendar)
   const { calendarLines, calendarData } = makeCalendarLinesAndDataFromCalendar(
-    lc,
+    props.logicCalendar,
     moveDateToWeekStart(props.startWeekFromDate),
     props.numWeeks
   )
@@ -327,6 +325,7 @@ export type CalendarCellProps = {
   displayDate: string
   color?: string
   status: 'none' | 'planned' | 'done'
+  onClick?: () => void
 }
 const CalendarCell: FC<CalendarCellProps> = props => (
   <td className='m-0 p-0'>
@@ -346,6 +345,7 @@ const CalendarCell: FC<CalendarCellProps> = props => (
             }
           : undefined
       }
+      onClick={props.onClick}
     />
   </td>
 )

@@ -18,6 +18,7 @@ export const DayStatus: FC<{
   apiData?: {
     calendarId: number
   }
+  onClick?: () => void
 }> = props => {
   const isToday = isLocalDateToday(props.dayData.date)
   const isYesterday = isLocalDateYesterday(props.dayData.date)
@@ -26,7 +27,7 @@ export const DayStatus: FC<{
     props.status !== 'done' && (isYesterday || isToday) && props.apiData
   const hasNotes = typeof props.dayData?.notes === 'string'
 
-  const isClickable = canSetAsChecked || hasNotes
+  const isClickable = props.onClick || canSetAsChecked || hasNotes
 
   const { openDialog: openDialogForInsertNewGoal } =
     useUXDialogForInsertNewGoal()
@@ -47,7 +48,9 @@ export const DayStatus: FC<{
           background: props.color || undefined,
         }}
         onClick={() => {
-          if (canSetAsChecked && props.apiData) {
+          if (props.onClick) {
+            props.onClick()
+          } else if (canSetAsChecked && props.apiData) {
             openDialogForInsertNewGoal(
               props.apiData.calendarId,
               props.dayData.date

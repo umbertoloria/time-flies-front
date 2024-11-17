@@ -6,10 +6,10 @@ import {
 } from '../lib/utils.ts'
 import { UserLayout } from '../layout/UserLayout.tsx'
 import { readCalendar } from '../remote/remote.ts'
-import { Calendar } from '../components/calendar/Calendar.tsx'
+import { Calendar, defaultNumWeeks } from '../components/calendar/Calendar.tsx'
 import { Timelines } from '../components/timeline/Timelines.tsx'
+import { createLogicCalendarFromTCalendar } from '../components/calendar/logic-calendar.ts'
 
-const defaultNumWeeks = 4 * 3 // Three months
 const periodRefreshCalendarsInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 
 export const useWrapperForCreateResource = <T,>(
@@ -136,7 +136,9 @@ const InnerPage: FC = () => {
               <Calendar
                 startWeekFromDate={fromDate1}
                 numWeeks={numWeeks}
-                calendar={dataCalendar1.data}
+                logicCalendar={createLogicCalendarFromTCalendar(
+                  dataCalendar1.data
+                )}
                 pleaseUpdateCalendar={refetchCalendar1}
                 goInThePast={() => {
                   setWeeks4Before1(weeks4Before1 + 1)
@@ -157,7 +159,9 @@ const InnerPage: FC = () => {
               <Calendar
                 startWeekFromDate={fromDate2}
                 numWeeks={numWeeks}
-                calendar={dataCalendar2.data}
+                logicCalendar={createLogicCalendarFromTCalendar(
+                  dataCalendar2.data
+                )}
                 pleaseUpdateCalendar={refetchCalendar2}
                 goInThePast={() => {
                   setWeeks4Before2(weeks4Before2 + 1)
@@ -178,7 +182,9 @@ const InnerPage: FC = () => {
               <Calendar
                 startWeekFromDate={fromDate3}
                 numWeeks={numWeeks}
-                calendar={dataCalendar3.data}
+                logicCalendar={createLogicCalendarFromTCalendar(
+                  dataCalendar3.data
+                )}
                 pleaseUpdateCalendar={refetchCalendar3}
                 goInThePast={() => {
                   setWeeks4Before3(weeks4Before3 + 1)
@@ -199,7 +205,9 @@ const InnerPage: FC = () => {
               <Calendar
                 startWeekFromDate={fromDate4}
                 numWeeks={numWeeks}
-                calendar={dataCalendar4.data}
+                logicCalendar={createLogicCalendarFromTCalendar(
+                  dataCalendar4.data
+                )}
                 pleaseUpdateCalendar={refetchCalendar4}
                 goInThePast={() => {
                   setWeeks4Before4(weeks4Before4 + 1)
@@ -220,7 +228,9 @@ const InnerPage: FC = () => {
               <Calendar
                 startWeekFromDate={fromDate5}
                 numWeeks={numWeeks}
-                calendar={dataCalendar5.data}
+                logicCalendar={createLogicCalendarFromTCalendar(
+                  dataCalendar5.data
+                )}
                 pleaseUpdateCalendar={refetchCalendar5}
                 goInThePast={() => {
                   setWeeks4Before5(weeks4Before5 + 1)
