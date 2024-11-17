@@ -104,6 +104,8 @@ export const createExerciseRecord = (
     .catch(err => {
       if (err.response?.data === 'invalid-bpm') {
         return 'invalid-bpm'
+      } else if (err.response?.data === 'invalid-minutes') {
+        return 'invalid-minutes'
       }
       throw err
     })
