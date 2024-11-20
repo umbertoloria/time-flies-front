@@ -4,6 +4,10 @@ import classNames from 'classnames'
 import { createExerciseRecord } from '../../remote/remote.ts'
 import { useScheduleContext } from './ScheduleContext.tsx'
 import { fireReloadSchedulePage } from './event-reload-schedule-page.ts'
+import {
+  displayDuration,
+  estimate_record_duration_minutes,
+} from './estimations.ts'
 
 const ExerciseRecordBase: FC<
   PropsWithChildren<{
@@ -208,11 +212,26 @@ export const ExerciseRecordContent: FC<{
           )}
         </>
       )}
+
+      {/* Bar num and Time Signature */}
+      {props.record.bars_num !== undefined && (
+        <ColouredLabel>{`${props.record.bars_num} battute`}</ColouredLabel>
+      )}
+      {/* Calculation of duration */}
+      {props.record.bars_num !== undefined &&
+        props.record.ts_above !== undefined &&
+        props.record.ts_below !== undefined && (
+          <>
+            <ColouredLabel>
+              {displayDuration(estimate_record_duration_minutes(props.record))}
+            </ColouredLabel>
+          </>
+        )}
     </>
   )
 }
 
-const ColouredLabel: FC<
+export const ColouredLabel: FC<
   PropsWithChildren<{
     bold?: boolean
     blurText?: boolean

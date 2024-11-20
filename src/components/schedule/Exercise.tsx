@@ -1,14 +1,37 @@
 import { FC } from 'react'
 import { TExercise, TExerciseRecord } from '../../remote/sdk/types'
-import { ExerciseRecord, ExerciseRecordRowToAddNew } from './ExerciseRecord.tsx'
+import {
+  ColouredLabel,
+  ExerciseRecord,
+  ExerciseRecordRowToAddNew,
+} from './ExerciseRecord.tsx'
+import {
+  displayDuration,
+  estimate_record_list_duration_minutes,
+} from './estimations.ts'
 
 export const Exercise: FC<{
   exercise: TExercise
   addRecords?: boolean
 }> = props => {
+  let total_estimation: number | undefined = undefined
+  if (props.exercise.records && props.exercise.records.length) {
+    total_estimation = estimate_record_list_duration_minutes(
+      props.exercise.records
+    )
+  }
+
   return (
     <div className='border-2 border-gray-200 rounded-md p-2 pt-1 bg-gray-100'>
-      <span className='text-lg font-bold'>{props.exercise.name}</span>
+      <span className='text-lg font-bold'>
+        {props.exercise.name}
+        {!!total_estimation && (
+          <>
+            {' '}
+            <ColouredLabel>{displayDuration(total_estimation)}</ColouredLabel>
+          </>
+        )}
+      </span>
       {(!!props.exercise.records || props.addRecords) && (
         <ExerciseRecordsList
           exerciseId={props.exercise.id}

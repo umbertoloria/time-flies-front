@@ -1,5 +1,5 @@
 // Types
-// 2024-11-14T22:27:22Z
+// 2024-11-20T00:06:09Z
 // v2.6
 
 // Calendar
@@ -39,6 +39,9 @@ export type TExerciseRecord = {
   bpm: number
   minutes?: number
   hand?: 'dx' | 'sx'
+  bars_num?: number
+  ts_above?: number
+  ts_below?: number
 }
 
 // Auth
