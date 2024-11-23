@@ -1,6 +1,6 @@
 // Types
-// 2024-11-20T00:06:09Z
-// v2.6
+// 2024-11-23T14:36:49Z
+// v2.7
 
 // Calendar
 export type TCalendar = TCalendarCh & {
@@ -32,6 +32,12 @@ export type TExerciseGroup = {
 export type TExercise = {
   id: number
   name: string
+  gc?: {
+    bass: string // Es. "xx-x----"
+    ghost: string // Es. "-xx-xx-x"
+    hhr: string // Es, "W-vvW-vv"
+    cymbal: 'hh' | 'ride' // Es. "hh" | "ride"
+  }
   records?: TExerciseRecord[]
 }
 export type TExerciseRecord = {

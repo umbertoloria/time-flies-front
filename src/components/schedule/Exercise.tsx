@@ -23,15 +23,32 @@ export const Exercise: FC<{
 
   return (
     <div className='border-2 border-gray-200 rounded-md p-2 pt-1 bg-gray-100'>
-      <span className='text-lg font-bold'>
-        {props.exercise.name}
+      <div className='text-lg max-w-80'>
+        {props.exercise.gc ? (
+          <>
+            <ColouredLabel>
+              {'Bass: '}
+              {props.exercise.gc.bass}
+            </ColouredLabel>{' '}
+            <ColouredLabel>
+              {'Ghost: '}
+              {props.exercise.gc.ghost}
+            </ColouredLabel>{' '}
+            <ColouredLabel>
+              {props.exercise.gc.cymbal === 'ride' ? 'Ride: ' : 'HH: '}
+              {props.exercise.gc.hhr}
+            </ColouredLabel>
+          </>
+        ) : (
+          <span className='font-bold'>{props.exercise.name}</span>
+        )}
         {!!total_estimation && (
           <>
             {' '}
             <ColouredLabel>{displayDuration(total_estimation)}</ColouredLabel>
           </>
         )}
-      </span>
+      </div>
       {(!!props.exercise.records || props.addRecords) && (
         <ExerciseRecordsList
           exerciseId={props.exercise.id}
