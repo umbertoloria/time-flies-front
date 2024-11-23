@@ -22,6 +22,7 @@ type UXContextTypeDialogForSeeNotes = {
 export type GrooverData = {
   bass: string
   ghost: string
+  hhr: string
 }
 const UXContext = createContext<{
   dialogForInsertNewGoal: {

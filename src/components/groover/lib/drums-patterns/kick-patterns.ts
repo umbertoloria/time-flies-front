@@ -1,3 +1,4 @@
+/*
 export const KICK_PATTERN_24_I____I____: string = '    ' as const
 export const KICK_PATTERN_24_IK___I____: string = 'o   ' as const
 export const KICK_PATTERN_24_I__K_I____: string = '  o ' as const
@@ -70,3 +71,4 @@ export const createKickPatternFrom14BackBeatChaffeeBank = (
   // 7
   return ' ooo'
 }
+*/

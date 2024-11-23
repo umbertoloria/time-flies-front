@@ -42,18 +42,19 @@ export const Exercise: FC<{
               {props.exercise.gc.hhr}
             </ColouredLabel>
             <button
-              className='btn-primary'
+              className='btn-primary ml-2'
               onClick={() => {
                 if (props.exercise.gc) {
-                  // TODO: Send right data
                   openDialog({
                     bass: props.exercise.gc.bass,
                     ghost: props.exercise.gc.ghost,
+                    hhr: props.exercise.gc.hhr,
                   })
                 }
               }}
             >
-              {'Open'}
+              {/* // TODO: Icons in this project */}
+              {'I'}
             </button>
           </>
         ) : (

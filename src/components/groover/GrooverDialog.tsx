@@ -3,9 +3,7 @@ import { useGrooverDialog } from '../../context/UXContext.tsx'
 import { GenericDialog } from '../calendar/GenericDialog.tsx'
 import { createSheet } from './lib/builder.ts'
 import { renderNewScoreInApp } from './lib/render.ts'
-import { KICK_PATTERN_24_I____I___K } from './lib/drums-patterns/kick-patterns.ts'
-import { SNARE_PATTERN_24_BACKBEAT } from './lib/drums-patterns/snare-patterns.ts'
-import { TOP_PATTERN_HH_IX_X_X_X_X_X_X_X_ } from './lib/drums-patterns/top-patterns.ts'
+import { mergeSnareAndGhostsTogether } from './lib/drums-patterns/snare-patterns.ts'
 
 export const GrooverDialog: FC = () => {
   const { isOpen, data, closeDialog } = useGrooverDialog()
@@ -15,14 +13,10 @@ export const GrooverDialog: FC = () => {
       return
     }
     createSheet({
-      topPattern: TOP_PATTERN_HH_IX_X_X_X_X_X_X_X_,
-      snarePattern: SNARE_PATTERN_24_BACKBEAT,
-      kickPattern: KICK_PATTERN_24_I____I___K,
-    })
-      .then(xmlScore => renderNewScoreInApp(xmlScore))
-      .catch(err => {
-        console.error(err)
-      })
+      topPattern__: data.hhr,
+      snarePattern: mergeSnareAndGhostsTogether('    W       W   ', data.ghost),
+      kickPattern_: data.bass,
+    }).then(xmlScore => renderNewScoreInApp(xmlScore))
   }, [isOpen, data])
 
   if (!isOpen) {

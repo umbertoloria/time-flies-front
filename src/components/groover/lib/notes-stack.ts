@@ -1,4 +1,5 @@
 import { createStack } from './stack.ts'
+import { isJumpNoteChar } from './builder.ts'
 
 export type NotesStack = {
   type: 'note' | 'rest'
@@ -11,7 +12,7 @@ export const getNotesStacksList = (layers: string[]) => {
   const stackOfStacks = createStack<NotesStack>()
   for (let i = 0; i < layerLength; ++i) {
     const symbols: string[] = layers.map(layer => layer[i])
-    if (symbols.some(symbol => symbol !== ' ')) {
+    if (symbols.some(symbol => !isJumpNoteChar(symbol))) {
       // Note on at least one
       stackOfStacks.push({
         type: 'note',

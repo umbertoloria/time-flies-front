@@ -5,21 +5,20 @@ import {
 } from './window-of-16ths.ts'
 import { baseRoot } from '../../../main.tsx'
 
-type ICreateSheet = {
-  topPattern: string
-  snarePattern: string
-  kickPattern: string
-}
 export const createSheet = async ({
-  topPattern,
+  topPattern__,
   snarePattern,
-  kickPattern,
-}: ICreateSheet): Promise<string> => {
+  kickPattern_,
+}: {
+  topPattern__: string
+  snarePattern: string
+  kickPattern_: string
+}): Promise<string> => {
   // Generate XML Notes
   const xmlFirstVoiceNotes: string[] = []
   const xmlSecondVoiceNotes: string[] = []
 
-  const hhStacks = getNotesStacksList([topPattern, snarePattern])
+  const hhStacks = getNotesStacksList([topPattern__, snarePattern])
 
   const hhAndSnWindowsOf16ths = buildWindowsOf16ths(hhStacks)
   const hhAndSnIteratorUponWindowsOf16ths = createIteratorUponWindowsOf16ths(
@@ -48,7 +47,7 @@ export const createSheet = async ({
       return undefined
     })()
 
-    if (hhSymbol !== ' ') {
+    if (!isJumpNoteChar(hhSymbol)) {
       xmlFirstVoiceNotes.push(
         createHHNote({
           durationNotEighth: (() => {
@@ -70,10 +69,10 @@ export const createSheet = async ({
         })
       )
     }
-    if (snSymbol !== ' ') {
+    if (!isJumpNoteChar(snSymbol)) {
       xmlFirstVoiceNotes.push(
         createSnareNoteMaybeBelowHH({
-          isBelowHH: hhSymbol !== ' ',
+          isBelowHH: !isJumpNoteChar(hhSymbol),
           ghost: snSymbol === '.',
           isHalfEighth: item.num16 === 1 ? true : undefined,
           grouping,
@@ -84,7 +83,7 @@ export const createSheet = async ({
     hhAndSnIteratorUponWindowsOf16ths.pickNextWindow()
   }
 
-  const kkStacks = getNotesStacksList([kickPattern])
+  const kkStacks = getNotesStacksList([kickPattern_])
   const kkWindowsOf16ths = buildWindowsOf16ths(kkStacks, true)
   const kkIteratorUponWindowsOf16ths =
     createIteratorUponWindowsOf16ths(kkWindowsOf16ths)
@@ -139,6 +138,10 @@ export const createSheet = async ({
 }
 
 // Note Template builders
+export const isJumpNoteChar = (char: string) => {
+  return char === ' ' || char === '-'
+}
+
 const createHHNote = (args: {
   durationNotEighth?: '16th' | 'quarter'
   grouping?: 'begin' | 'continue' | 'end'
@@ -255,7 +258,7 @@ const createNote = (args: {
              return ''
            })()}
            ${(() => {
-             if (!!args.grouping) {
+             if (args.grouping) {
                return `<beam number="1">${args.grouping}</beam>`
              }
              return ''

@@ -1,3 +1,6 @@
+import { isJumpNoteChar } from '../builder.ts'
+
+/*
 export const SNARE_PATTERN_24_BACKBEAT: string = '    o   ' as const
 export const SNARE_PATTERN_44_BACKBEAT: string =
   `${SNARE_PATTERN_24_BACKBEAT}${SNARE_PATTERN_24_BACKBEAT}` as const
@@ -32,31 +35,31 @@ export const createSnarePattern44 = (args: {
 }) => {
   return mergeSnareAndGhostsTogether(args.snare, args.ghost)
 }
+*/
 
 export const mergeSnareAndGhostsTogether = (snare: string, ghosts: string) => {
   let result = ''
   let i = 0
-  let j = 0
   while (i < snare.length) {
     const sn = snare[i]
     const gh = ghosts[i]
     let finalCh = sn
-    if (finalCh === ' ') {
+    if (isJumpNoteChar(finalCh)) {
       finalCh = gh
     }
     result += finalCh
     ++i
-    ++j
   }
   return result
 }
-
+/*
 export const doublePattern = (pattern: string) => `${pattern}${pattern}`
 
 export const makeGhostActualSnare = (ghosts: string) => {
   let result = ''
-  for (let symbol of ghosts) {
+  for (const symbol of ghosts) {
     result += symbol === '.' ? 'o' : symbol
   }
   return result
 }
+*/
