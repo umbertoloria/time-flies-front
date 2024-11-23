@@ -9,6 +9,7 @@ import {
   displayDuration,
   estimate_record_list_duration_minutes,
 } from './estimations.ts'
+import { useGrooverDialog } from '../../context/UXContext.tsx'
 
 export const Exercise: FC<{
   exercise: TExercise
@@ -20,6 +21,8 @@ export const Exercise: FC<{
       props.exercise.records
     )
   }
+
+  const { openDialog } = useGrooverDialog()
 
   return (
     <div className='border-2 border-gray-200 rounded-md p-2 pt-1 bg-gray-100'>
@@ -38,6 +41,20 @@ export const Exercise: FC<{
               {props.exercise.gc.cymbal === 'ride' ? 'Ride: ' : 'HH: '}
               {props.exercise.gc.hhr}
             </ColouredLabel>
+            <button
+              className='btn-primary'
+              onClick={() => {
+                if (props.exercise.gc) {
+                  // TODO: Send right data
+                  openDialog({
+                    bass: props.exercise.gc.bass,
+                    ghost: props.exercise.gc.ghost,
+                  })
+                }
+              }}
+            >
+              {'Open'}
+            </button>
           </>
         ) : (
           <span className='font-bold'>{props.exercise.name}</span>

@@ -9,6 +9,7 @@ import { InputDialogInsertNewGoal } from '../components/calendar/InputDialogInse
 import { checkDateWithSuccess } from '../remote/remote.ts'
 import { fireEventCalendarUpdated } from '../components/calendar/event-calendar-updated.ts'
 import { InputDialogSeeNotes } from '../components/calendar/InputDialogSeeNotes.tsx'
+import { GrooverDialog } from '../components/groover/GrooverDialog.tsx'
 
 type UXContextTypeDialogForInsertNewGoal = {
   calendarId: number
@@ -17,6 +18,10 @@ type UXContextTypeDialogForInsertNewGoal = {
 }
 type UXContextTypeDialogForSeeNotes = {
   notes: string
+}
+export type GrooverData = {
+  bass: string
+  ghost: string
 }
 const UXContext = createContext<{
   dialogForInsertNewGoal: {
@@ -30,6 +35,12 @@ const UXContext = createContext<{
     isOpen: boolean
     data?: UXContextTypeDialogForSeeNotes
     openDialog: (notes: string) => void
+    closeDialog: () => void
+  }
+  dialogForGroover: {
+    isOpen: boolean
+    data?: GrooverData
+    openDialog: (data: GrooverData) => void
     closeDialog: () => void
   }
 }>({
@@ -46,6 +57,12 @@ const UXContext = createContext<{
     openDialog() {},
     closeDialog() {},
   },
+  dialogForGroover: {
+    isOpen: false,
+    // data: undefined,
+    openDialog() {},
+    closeDialog() {},
+  },
 })
 
 export const UXProvider: FC<PropsWithChildren> = props => {
@@ -57,6 +74,11 @@ export const UXProvider: FC<PropsWithChildren> = props => {
   const [dialogForSeeNotes, setDialogForSeeNotes] = useState<{
     isOpen: boolean
     data?: UXContextTypeDialogForSeeNotes
+  }>({ isOpen: false })
+
+  const [dialogForGroover, setDialogForGroover] = useState<{
+    isOpen: boolean
+    data?: GrooverData
   }>({ isOpen: false })
 
   return (
@@ -162,10 +184,22 @@ export const UXProvider: FC<PropsWithChildren> = props => {
             })
           },
         },
+        dialogForGroover: {
+          isOpen: dialogForGroover.isOpen,
+          data: dialogForGroover.data,
+          openDialog(data) {
+            setDialogForGroover({ isOpen: true, data })
+          },
+          closeDialog() {
+            // Deleting the old Groover data.
+            setDialogForGroover({ isOpen: false, data: undefined })
+          },
+        },
       }}
     >
       <InputDialogInsertNewGoal />
       <InputDialogSeeNotes />
+      <GrooverDialog />
       {props.children}
     </UXContext.Provider>
   )
@@ -181,4 +215,8 @@ export const useUXDialogForInsertNewGoal = () => {
 export const useUXDialogForSeeNotes = () => {
   const uxContext = useUXContext()
   return uxContext.dialogForSeeNotes
+}
+export const useGrooverDialog = () => {
+  const uxContext = useUXContext()
+  return uxContext.dialogForGroover
 }
