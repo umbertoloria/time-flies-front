@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { TAuthStatus, TCalendar, TCalendarSDK, TScheduleSDK } from './sdk/types'
+import { TAuthStatus, TCalendar, TScheduleSDK } from './sdk/types'
 
 const backendURL = import.meta.env.VITE_BACKEND_ENDPOINT
 
@@ -33,8 +33,8 @@ function makeFormData(args: Record<string, string | undefined>) {
 export const getSDK = () => {
   return {
     // Auth
-    authStatus: () =>
-      api.get('?a=status').then<TAuthStatus>(({ data }) => data),
+    authStatus: (): Promise<TAuthStatus> =>
+      api.get('?a=status').then(({ data }) => data),
     /*// Debug only.
       export const authStatus = (): Promise<TAuthStatus> =>
         Promise.resolve({
@@ -43,21 +43,21 @@ export const getSDK = () => {
             email: 'test@test.com',
           },
         })*/
-    authLogin: (email: string, password: string) =>
+    authLogin: (email: string, password: string): Promise<'ok' | 'invalid'> =>
       api
         .post('?a=login', makeFormData({ email, password }))
         .then<'ok'>(() => 'ok')
-        .catch(err => {
+        .catch<'invalid'>(err => {
           if (err.response?.data === 'invalid') {
             return 'invalid'
           }
           throw err
         }),
-    authLogout: () =>
+    authLogout: (): Promise<'ok' | 'invalid'> =>
       api
         .get('?a=logout')
         .then<'ok'>(() => 'ok')
-        .catch(err => {
+        .catch<'invalid'>(err => {
           if (err.response?.data === 'invalid') {
             return 'invalid'
           }
@@ -65,19 +65,19 @@ export const getSDK = () => {
         }),
 
     // Calendar
-    readCalendar: (id: number) =>
-      api.get(`?a=calendar-read&id=${id}`).then<TCalendar>(({ data }) => data),
+    readCalendar: (id: number): Promise<TCalendar> =>
+      api.get(`?a=calendar-read&id=${id}`).then(({ data }) => data),
     checkDateWithSuccess: (
       id: number,
       localDate: string
-    ): Promise<TCalendarSDK.CheckDateWithSuccessPromiseOutput> =>
+    ): Promise<'ok' | 'invalid'> =>
       api
         .post(
           '?a=calendar-date-create',
           makeFormData({ id: `${id}`, 'local-date': localDate })
         )
         .then<'ok'>(() => 'ok')
-        .catch(err => {
+        .catch<'invalid'>(err => {
           if (err.response?.data === 'invalid') {
             return 'invalid'
           }
@@ -85,7 +85,10 @@ export const getSDK = () => {
         }),
 
     // Schedule
-    readDateSchedule: (localDate: string, showAll?: boolean) =>
+    readDateSchedule: (
+      localDate: string,
+      showAll?: boolean
+    ): Promise<TScheduleSDK.ReadScheduleAndAllExerciseGroups> =>
       api
         .get(
           `?a=schedule-read&local-date=${localDate}${showAll ? '&show-all=true' : ''}`
@@ -96,13 +99,10 @@ export const getSDK = () => {
           }
           throw err
         })*/
-        .then<TScheduleSDK.ReadScheduleAndAllExerciseGroups>(
-          ({ data }) => data
-        ),
-    readDaysWithExerciseRecords: () =>
-      api.get('?a=days-with-exercise-records').then<{
-        dates: string[]
-      }>(({ data }) => data),
+        .then(({ data }) => data),
+    readDaysWithExerciseRecords: (): Promise<{
+      dates: string[]
+    }> => api.get('?a=days-with-exercise-records').then(({ data }) => data),
     createExerciseRecord: (
       exerciseId: number,
       localDate: string,
@@ -111,7 +111,7 @@ export const getSDK = () => {
         minutes?: number
         hand?: 'dx' | 'sx'
       }
-    ) =>
+    ): Promise<'ok' | 'invalid-bpm' | 'invalid-minutes'> =>
       api
         .post(
           `?a=exercise-record-create`,
@@ -127,7 +127,7 @@ export const getSDK = () => {
           })
         )
         .then<'ok'>(() => 'ok')
-        .catch(err => {
+        .catch<'invalid-bpm' | 'invalid-minutes'>(err => {
           if (err.response?.data === 'invalid-bpm') {
             return 'invalid-bpm'
           } else if (err.response?.data === 'invalid-minutes') {

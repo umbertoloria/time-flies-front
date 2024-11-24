@@ -59,11 +59,6 @@ export type TAuthUser = {
   email: string
 }
 
-// SDK: Calendar
-export namespace TCalendarSDK {
-  export type CheckDateWithSuccessPromiseOutput = 'invalid' | 'ok'
-}
-
 // SDK: Schedule
 export namespace TScheduleSDK {
   export type ReadScheduleAndAllExerciseGroups = {
