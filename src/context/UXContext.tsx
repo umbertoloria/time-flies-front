@@ -10,6 +10,8 @@ import { getSDK } from '../remote/remote.ts'
 import { fireEventCalendarUpdated } from '../components/calendar/event-calendar-updated.ts'
 import { InputDialogSeeNotes } from '../components/calendar/InputDialogSeeNotes.tsx'
 import { GrooverDialog } from '../components/groover/GrooverDialog.tsx'
+import { InputDialogCheckPlannedEvent } from '../components/calendar/InputDialogCheckPlannedEvent.tsx'
+import { fireEventStreamlineUpdated } from '../components/streamline/event-streamline-updated.ts'
 
 type UXContextTypeDialogForInsertNewGoal = {
   calendarId: number
@@ -23,6 +25,11 @@ export type GrooverData = {
   bass: string
   ghost: string
   hhr: string
+}
+type UXContextTypeDialogForCheckPlannedEvent = {
+  calendarId: number
+  eventId: number
+  loading: boolean
 }
 const UXContext = createContext<{
   dialogForInsertNewGoal: {
@@ -44,6 +51,13 @@ const UXContext = createContext<{
     openDialog: (data: GrooverData) => void
     closeDialog: () => void
   }
+  dialogForCheckPlannedEvent: {
+    isOpen: boolean
+    data?: UXContextTypeDialogForCheckPlannedEvent
+    openDialog: (calendarId: number, eventId: number) => void
+    closeDialog: () => void
+    confirmProgressDone: () => void
+  }
 }>({
   dialogForInsertNewGoal: {
     isOpen: false,
@@ -64,9 +78,16 @@ const UXContext = createContext<{
     openDialog() {},
     closeDialog() {},
   },
+  dialogForCheckPlannedEvent: {
+    isOpen: false,
+    // data: undefined,
+    openDialog() {},
+    closeDialog() {},
+    confirmProgressDone() {},
+  },
 })
 
-const { checkDateWithSuccess } = getSDK()
+const { checkDateWithSuccess, checkPlannedEventWithSuccess } = getSDK()
 export const UXProvider: FC<PropsWithChildren> = props => {
   const [dialogForInsertNewGoal, setDialogForInsertNewGoal] = useState<{
     isOpen: boolean
@@ -81,6 +102,11 @@ export const UXProvider: FC<PropsWithChildren> = props => {
   const [dialogForGroover, setDialogForGroover] = useState<{
     isOpen: boolean
     data?: GrooverData
+  }>({ isOpen: false })
+
+  const [dialogForCheckPlannedEvent, setDialogForCheckPlannedEvent] = useState<{
+    isOpen: boolean
+    data?: UXContextTypeDialogForCheckPlannedEvent
   }>({ isOpen: false })
 
   return (
@@ -197,11 +223,86 @@ export const UXProvider: FC<PropsWithChildren> = props => {
             setDialogForGroover({ isOpen: false, data: undefined })
           },
         },
+        dialogForCheckPlannedEvent: {
+          isOpen: dialogForCheckPlannedEvent.isOpen,
+          data: dialogForCheckPlannedEvent.data,
+          openDialog(calendarId, eventId) {
+            if (
+              dialogForCheckPlannedEvent.isOpen ||
+              dialogForCheckPlannedEvent.data?.loading
+            ) {
+              return
+            }
+            setDialogForCheckPlannedEvent({
+              ...dialogForCheckPlannedEvent,
+              isOpen: true,
+              data: {
+                calendarId,
+                eventId,
+                loading: false,
+              },
+            })
+          },
+          closeDialog() {
+            if (
+              !dialogForCheckPlannedEvent.isOpen ||
+              dialogForCheckPlannedEvent.data?.loading
+            ) {
+              return
+            }
+            setDialogForCheckPlannedEvent({
+              ...dialogForCheckPlannedEvent,
+              isOpen: false,
+            })
+          },
+          confirmProgressDone() {
+            if (
+              !dialogForCheckPlannedEvent.isOpen ||
+              !dialogForCheckPlannedEvent.data ||
+              dialogForCheckPlannedEvent.data.loading
+            ) {
+              return
+            }
+            const { calendarId, eventId } = dialogForCheckPlannedEvent.data
+            setDialogForCheckPlannedEvent({
+              isOpen: true,
+              data: {
+                calendarId,
+                eventId,
+                loading: true,
+              },
+            })
+            // TODO: De-couple this component from this logic
+            checkPlannedEventWithSuccess(calendarId, eventId)
+              .then(() => {
+                // Yay!
+                fireEventStreamlineUpdated(undefined)
+                setDialogForCheckPlannedEvent({
+                  isOpen: false,
+                  // data: undefined,
+                })
+              })
+              .catch(err => {
+                console.error(err)
+                // TODO: Tell user all went KO
+                alert('Errore avvenuto')
+                setDialogForCheckPlannedEvent({
+                  isOpen: true,
+                  data: {
+                    calendarId,
+                    eventId,
+                    loading: false,
+                  },
+                })
+              })
+          },
+        },
       }}
     >
       <InputDialogInsertNewGoal />
       <InputDialogSeeNotes />
       <GrooverDialog />
+      <InputDialogCheckPlannedEvent />
       {props.children}
     </UXContext.Provider>
   )
@@ -221,4 +322,8 @@ export const useUXDialogForSeeNotes = () => {
 export const useGrooverDialog = () => {
   const uxContext = useUXContext()
   return uxContext.dialogForGroover
+}
+export const useUXDialogForCheckPlannedEvent = () => {
+  const uxContext = useUXContext()
+  return uxContext.dialogForCheckPlannedEvent
 }

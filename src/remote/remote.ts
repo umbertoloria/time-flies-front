@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { TAuthStatus, TCalendar, TScheduleSDK } from './sdk/types'
+import { TAuthStatus, TCalendar, TCalendarSDK, TScheduleSDK } from './sdk/types'
 import { getTodayLocalDate } from '../lib/utils.ts'
 
 const backendURL = import.meta.env.VITE_BACKEND_ENDPOINT
@@ -60,9 +60,9 @@ export const getSDK = () => {
             }),
 
     // Calendar
-    readCalendar: (id: number): Promise<TCalendar> =>
+    readCalendar: (id: number): Promise<TCalendar | 'unable'> =>
       debugMode
-        ? ((): Promise<TCalendar> => {
+        ? (() => {
             if (id === 1) {
               return Promise.resolve<TCalendar>({
                 id: 1,
@@ -94,7 +94,12 @@ export const getSDK = () => {
             }
             return Promise.reject(new Error('Calendar not found (debug mode)'))
           })()
-        : api.get(`?a=calendar-read&id=${id}`).then(({ data }) => data),
+        : api
+            .get(`?a=calendar-read&id=${id}`)
+            .then(({ data }) => data)
+            .catch(() => {
+              return 'unable'
+            }),
     checkDateWithSuccess: (
       id: number,
       localDate: string
@@ -204,6 +209,55 @@ throw err
                 return 'invalid-bpm'
               } else if (err.response?.data === 'invalid-minutes') {
                 return 'invalid-minutes'
+              }
+              throw err
+            }),
+    readStreamline: (): Promise<TCalendarSDK.ReadPlannedEvents | 'unable'> =>
+      debugMode
+        ? Promise.resolve({
+            events: [
+              {
+                id: 1,
+                date: getTodayLocalDate(),
+                calendar: {
+                  id: 1,
+                  name: 'Debug calendar 1',
+                  color: '#f77',
+                },
+              },
+              {
+                id: 2,
+                date: getTodayLocalDate(),
+                calendar: {
+                  id: 2,
+                  name: 'Debug calendar 2',
+                  color: '#77f',
+                },
+              },
+            ],
+          })
+        : api
+            .get('?a=planned-event-read')
+            .then(({ data }) => data)
+            .catch<'unable'>(() => 'unable'),
+    checkPlannedEventWithSuccess: (
+      calendarId: number,
+      eventId: number
+    ): Promise<'ok' | 'invalid'> =>
+      debugMode
+        ? Promise.resolve('ok')
+        : api
+            .post(
+              '?a=planned-event-set-as-done',
+              makeFormData({
+                calendar_id: `${calendarId}`,
+                event_id: `${eventId}`,
+              })
+            )
+            .then<'ok'>(() => 'ok')
+            .catch<'invalid'>(err => {
+              if (err.response?.data === 'invalid') {
+                return 'invalid'
               }
               throw err
             }),

@@ -13,6 +13,8 @@ import {
 import { Timelines } from '../components/timeline/Timelines.tsx'
 import { createLogicCalendarFromTCalendar } from '../components/calendar/logic-calendar.ts'
 import { useWrapperForCreateResource } from '../lib/remote-resources.ts'
+import { Streamline } from '../components/streamline/Streamline.tsx'
+import { TCalendar } from '../remote/sdk/types'
 
 const periodRefreshCalendarsInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 
@@ -59,16 +61,18 @@ const InnerPage: FC = () => {
   )
 
   // Calendars
+  const safeCalendar = (data: TCalendar | 'unable') =>
+    data === 'unable' ? undefined : data
   const [dataCalendar1, { refetch: refetchCalendar1 }] =
-    useWrapperForCreateResource(() => readCalendar(1))
+    useWrapperForCreateResource(() => readCalendar(1).then(safeCalendar))
   const [dataCalendar2, { refetch: refetchCalendar2 }] =
-    useWrapperForCreateResource(() => readCalendar(2))
+    useWrapperForCreateResource(() => readCalendar(2).then(safeCalendar))
   const [dataCalendar3, { refetch: refetchCalendar3 }] =
-    useWrapperForCreateResource(() => readCalendar(3))
+    useWrapperForCreateResource(() => readCalendar(3).then(safeCalendar))
   const [dataCalendar4, { refetch: refetchCalendar4 }] =
-    useWrapperForCreateResource(() => readCalendar(4))
+    useWrapperForCreateResource(() => readCalendar(4).then(safeCalendar))
   const [dataCalendar5, { refetch: refetchCalendar5 }] =
-    useWrapperForCreateResource(() => readCalendar(5))
+    useWrapperForCreateResource(() => readCalendar(5).then(safeCalendar))
 
   const refreshCalendarIntervalTimer = setInterval(() => {
     refetchCalendar1()
@@ -86,7 +90,7 @@ const InnerPage: FC = () => {
   return (
     <section className='p-8'>
       <div className='flex flex-wrap justify-center gap-10 w-100'>
-        {dataCalendar1?.loading === false ? (
+        {dataCalendar1?.loading === false && !!dataCalendar1.data ? (
           <>
             <div>
               <CalendarForLogicCalendar
@@ -109,7 +113,7 @@ const InnerPage: FC = () => {
           <>Searching...</>
         )}
 
-        {dataCalendar2?.loading === false ? (
+        {dataCalendar2?.loading === false && !!dataCalendar2.data ? (
           <>
             <div>
               <CalendarForLogicCalendar
@@ -132,7 +136,7 @@ const InnerPage: FC = () => {
           <>Searching...</>
         )}
 
-        {dataCalendar3?.loading === false ? (
+        {dataCalendar3?.loading === false && !!dataCalendar3.data ? (
           <>
             <div>
               <CalendarForLogicCalendar
@@ -155,7 +159,7 @@ const InnerPage: FC = () => {
           <>Searching...</>
         )}
 
-        {dataCalendar4?.loading === false ? (
+        {dataCalendar4?.loading === false && !!dataCalendar4.data ? (
           <>
             <div>
               <CalendarForLogicCalendar
@@ -178,7 +182,7 @@ const InnerPage: FC = () => {
           <>Searching...</>
         )}
 
-        {dataCalendar5?.loading === false ? (
+        {dataCalendar5?.loading === false && !!dataCalendar5.data ? (
           <>
             <div>
               <CalendarForLogicCalendar
@@ -200,13 +204,17 @@ const InnerPage: FC = () => {
         ) : (
           <>Searching...</>
         )}
+
+        <div>
+          <Streamline />
+        </div>
       </div>
 
-      {!!dataCalendar1 &&
-        !!dataCalendar2 &&
-        !!dataCalendar3 &&
-        !!dataCalendar4 &&
-        !!dataCalendar5 && (
+      {!!dataCalendar1?.data &&
+        !!dataCalendar2?.data &&
+        !!dataCalendar3?.data &&
+        !!dataCalendar4?.data &&
+        !!dataCalendar5?.data && (
           <Timelines
             dataCalendar1={dataCalendar1.data}
             dataCalendar2={dataCalendar2.data}
