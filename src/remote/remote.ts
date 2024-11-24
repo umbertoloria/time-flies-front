@@ -20,67 +20,8 @@ function makeFormData(args: Record<string, string | undefined>) {
 }
 
 // Auth
-const authStatus = () =>
-  api.get('?a=status').then<TAuthStatus>(({ data }) => data)
-/*// Debug only.
-export const authStatus = (): Promise<TAuthStatus> =>
-  Promise.resolve({
-    user: {
-      id: 1,
-      email: 'test@test.com',
-    },
-  })*/
-
-const authLogin = (email: string, password: string) =>
-  api
-    .post('?a=login', makeFormData({ email, password }))
-    .then<'ok'>(() => 'ok')
-    .catch(err => {
-      if (err.response?.data === 'invalid') {
-        return 'invalid'
-      }
-      throw err
-    })
-
-const authLogout = () =>
-  api
-    .get('?a=logout')
-    .then<'ok'>(() => 'ok')
-    .catch(err => {
-      if (err.response?.data === 'invalid') {
-        return 'invalid'
-      }
-      throw err
-    })
-
 // Calendar
-const readCalendar = (id: number) =>
-  api.get(`?a=calendar-read&id=${id}`).then<TCalendar>(({ data }) => data)
-
-const checkDateWithSuccess = (
-  id: number,
-  localDate: string
-): Promise<TCalendarSDK.CheckDateWithSuccessPromiseOutput> =>
-  api
-    .post(
-      '?a=calendar-date-create',
-      makeFormData({ id: `${id}`, 'local-date': localDate })
-    )
-    .then<'ok'>(() => 'ok')
-    .catch(err => {
-      if (err.response?.data === 'invalid') {
-        return 'invalid'
-      }
-      throw err
-    })
-
 // Exercise
-const readDateSchedule = (localDate: string, showAll?: boolean) =>
-  api
-    .get(
-      `?a=schedule-read&local-date=${localDate}${showAll ? '&show-all=true' : ''}`
-    )
-    .then<TScheduleSDK.ReadScheduleAndAllExerciseGroups>(({ data }) => data)
 /*.catch<'not-found'>(err => {
   if (err?.response?.status === 404) {
     return 'not-found'
@@ -88,57 +29,111 @@ const readDateSchedule = (localDate: string, showAll?: boolean) =>
   throw err
 })*/
 
-const readDaysWithExerciseRecords = () =>
-  api.get('?a=days-with-exercise-records').then<{
-    dates: string[]
-  }>(({ data }) => data)
-
-const createExerciseRecord = (
-  exerciseId: number,
-  localDate: string,
-  params: {
-    bpm: number
-    minutes?: number
-    hand?: 'dx' | 'sx'
-  }
-) =>
-  api
-    .post(
-      `?a=exercise-record-create`,
-      makeFormData({
-        'exercise-id': `${exerciseId}`,
-        'local-date': localDate,
-        bpm: `${params.bpm}`,
-        minutes:
-          typeof params.minutes == 'number' ? `${params.minutes}` : undefined,
-        hand: params.hand ? `${params.hand}` : undefined,
-      })
-    )
-    .then<'ok'>(() => 'ok')
-    .catch(err => {
-      if (err.response?.data === 'invalid-bpm') {
-        return 'invalid-bpm'
-      } else if (err.response?.data === 'invalid-minutes') {
-        return 'invalid-minutes'
-      }
-      throw err
-    })
-
 // API SDK
 export const getSDK = () => {
   return {
     // Auth
-    authStatus,
-    authLogin,
-    authLogout,
+    authStatus: () =>
+      api.get('?a=status').then<TAuthStatus>(({ data }) => data),
+    /*// Debug only.
+      export const authStatus = (): Promise<TAuthStatus> =>
+        Promise.resolve({
+          user: {
+            id: 1,
+            email: 'test@test.com',
+          },
+        })*/
+    authLogin: (email: string, password: string) =>
+      api
+        .post('?a=login', makeFormData({ email, password }))
+        .then<'ok'>(() => 'ok')
+        .catch(err => {
+          if (err.response?.data === 'invalid') {
+            return 'invalid'
+          }
+          throw err
+        }),
+    authLogout: () =>
+      api
+        .get('?a=logout')
+        .then<'ok'>(() => 'ok')
+        .catch(err => {
+          if (err.response?.data === 'invalid') {
+            return 'invalid'
+          }
+          throw err
+        }),
 
     // Calendar
-    readCalendar,
-    checkDateWithSuccess,
+    readCalendar: (id: number) =>
+      api.get(`?a=calendar-read&id=${id}`).then<TCalendar>(({ data }) => data),
+    checkDateWithSuccess: (
+      id: number,
+      localDate: string
+    ): Promise<TCalendarSDK.CheckDateWithSuccessPromiseOutput> =>
+      api
+        .post(
+          '?a=calendar-date-create',
+          makeFormData({ id: `${id}`, 'local-date': localDate })
+        )
+        .then<'ok'>(() => 'ok')
+        .catch(err => {
+          if (err.response?.data === 'invalid') {
+            return 'invalid'
+          }
+          throw err
+        }),
 
     // Schedule
-    readDateSchedule,
-    readDaysWithExerciseRecords,
-    createExerciseRecord,
+    readDateSchedule: (localDate: string, showAll?: boolean) =>
+      api
+        .get(
+          `?a=schedule-read&local-date=${localDate}${showAll ? '&show-all=true' : ''}`
+        )
+        /*.catch<'not-found'>(err => {
+          if (err?.response?.status === 404) {
+            return 'not-found'
+          }
+          throw err
+        })*/
+        .then<TScheduleSDK.ReadScheduleAndAllExerciseGroups>(
+          ({ data }) => data
+        ),
+    readDaysWithExerciseRecords: () =>
+      api.get('?a=days-with-exercise-records').then<{
+        dates: string[]
+      }>(({ data }) => data),
+    createExerciseRecord: (
+      exerciseId: number,
+      localDate: string,
+      params: {
+        bpm: number
+        minutes?: number
+        hand?: 'dx' | 'sx'
+      }
+    ) =>
+      api
+        .post(
+          `?a=exercise-record-create`,
+          makeFormData({
+            'exercise-id': `${exerciseId}`,
+            'local-date': localDate,
+            bpm: `${params.bpm}`,
+            minutes:
+              typeof params.minutes == 'number'
+                ? `${params.minutes}`
+                : undefined,
+            hand: params.hand ? `${params.hand}` : undefined,
+          })
+        )
+        .then<'ok'>(() => 'ok')
+        .catch(err => {
+          if (err.response?.data === 'invalid-bpm') {
+            return 'invalid-bpm'
+          } else if (err.response?.data === 'invalid-minutes') {
+            return 'invalid-minutes'
+          }
+          throw err
+        }),
   }
 }
