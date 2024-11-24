@@ -1,15 +1,22 @@
 import { FC, PropsWithChildren } from 'react'
+import classNames from 'classnames'
 
 export const GenericDialog: FC<
   PropsWithChildren<{
     onClose: () => void
     labelOnClose: string
     title: string
+    large?: boolean
   }>
 > = props => {
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-gray-900 bg-opacity-50'>
-      <div className='relative w-full max-w-2xl max-h-full'>
+      <div
+        className={classNames('relative w-full max-h-full', {
+          'max-w-md': !props.large,
+          'max-w-2xl': props.large,
+        })}
+      >
         <div className='relative bg-white rounded-lg shadow dark:bg-gray-700'>
           <div className='flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600'>
             <h3 className='text-xl font-medium text-gray-900 dark:text-white'>
