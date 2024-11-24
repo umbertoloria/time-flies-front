@@ -32,7 +32,7 @@ export const GenericDialog: FC<
                   </svg>*/}
             </button>
           </div>
-          <div className='p-4'>{props.children}</div>
+          {props.children}
         </div>
       </div>
     </div>

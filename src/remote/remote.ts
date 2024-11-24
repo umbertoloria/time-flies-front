@@ -3,7 +3,6 @@ import { TAuthStatus, TCalendar, TScheduleSDK } from './sdk/types'
 import { getTodayLocalDate } from '../lib/utils.ts'
 
 const backendURL = import.meta.env.VITE_BACKEND_ENDPOINT
-
 const api = axios.create({
   baseURL: backendURL,
   withCredentials: true,
@@ -20,17 +19,6 @@ function makeFormData(args: Record<string, string | undefined>) {
   return formData
 }
 
-// Auth
-// Calendar
-// Exercise
-/*.catch<'not-found'>(err => {
-  if (err?.response?.status === 404) {
-    return 'not-found'
-  }
-  throw err
-})*/
-
-// API SDK
 // Debug only.
 // const debugMode = true as const
 const debugMode = false as const
@@ -74,19 +62,38 @@ export const getSDK = () => {
     // Calendar
     readCalendar: (id: number): Promise<TCalendar> =>
       debugMode
-        ? Promise.resolve({
-            id: 1,
-            name: 'Debug calendar',
-            color: '#f77',
-            plannedColor: '#fee',
-            days: [
-              {
-                date: getTodayLocalDate(),
-                notes: 'Debug notes',
-              },
-            ],
-            plannedDays: [],
-          })
+        ? ((): Promise<TCalendar> => {
+            if (id === 1) {
+              return Promise.resolve<TCalendar>({
+                id: 1,
+                name: 'Debug calendar 1',
+                color: '#f77',
+                plannedColor: '#fee',
+                days: [
+                  {
+                    date: getTodayLocalDate(),
+                    notes: 'Debug notes',
+                  },
+                ],
+                plannedDays: [],
+              })
+            } else if (id === 2) {
+              return Promise.resolve<TCalendar>({
+                id: 2,
+                name: 'Debug calendar 2',
+                color: '#77f',
+                plannedColor: '#eef',
+                days: [
+                  {
+                    date: getTodayLocalDate(),
+                    notes: 'Debug notes',
+                  },
+                ],
+                plannedDays: [],
+              })
+            }
+            return Promise.reject(new Error('Calendar not found (debug mode)'))
+          })()
         : api.get(`?a=calendar-read&id=${id}`).then(({ data }) => data),
     checkDateWithSuccess: (
       id: number,

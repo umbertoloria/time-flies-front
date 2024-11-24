@@ -5,7 +5,7 @@ import {
   displayDuration,
   estimate_exercise_group_duration_minutes,
 } from './estimations.ts'
-import { ColouredLabel } from './ExerciseRecord.tsx'
+import { ColouredLabel } from '../coloured/ColouredLabel.tsx'
 
 export const ExerciseGroup: FC<{
   exerciseGroup: TExerciseGroup

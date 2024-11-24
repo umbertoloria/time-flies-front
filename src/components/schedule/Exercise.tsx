@@ -1,15 +1,12 @@
 import { FC } from 'react'
 import { TExercise, TExerciseRecord } from '../../remote/sdk/types'
-import {
-  ColouredLabel,
-  ExerciseRecord,
-  ExerciseRecordRowToAddNew,
-} from './ExerciseRecord.tsx'
+import { ExerciseRecord, ExerciseRecordRowToAddNew } from './ExerciseRecord.tsx'
 import {
   displayDuration,
   estimate_record_list_duration_minutes,
 } from './estimations.ts'
 import { useGrooverDialog } from '../../context/UXContext.tsx'
+import { ColouredLabel } from '../coloured/ColouredLabel.tsx'
 
 export const Exercise: FC<{
   exercise: TExercise
