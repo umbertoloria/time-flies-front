@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren, useState } from 'react'
 import { TExerciseRecord } from '../../remote/sdk/types'
 import classNames from 'classnames'
-import { createExerciseRecord } from '../../remote/remote.ts'
+import { getSDK } from '../../remote/remote.ts'
 import { useScheduleContext } from './ScheduleContext.tsx'
 import { fireReloadSchedulePage } from './event-reload-schedule-page.ts'
 import {
@@ -35,6 +35,7 @@ export const ExerciseRecord: FC<{
   )
 }
 
+const { createExerciseRecord } = getSDK()
 export const ExerciseRecordRowToAddNew: FC<{
   exerciseId: number
 }> = props => {

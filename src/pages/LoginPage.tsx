@@ -1,4 +1,4 @@
-import { authLogin } from '../remote/remote.ts'
+import { getSDK } from '../remote/remote.ts'
 import classNames from 'classnames'
 import { baseRoot } from '../main.tsx'
 
@@ -10,6 +10,7 @@ export default function LoginPage() {
   )
 }
 
+const { authLogin } = getSDK()
 const Login = () => {
   const urlParams = new URLSearchParams(window.location.search)
   const isFailed = typeof urlParams.get('failed') === 'string'

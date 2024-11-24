@@ -6,7 +6,7 @@ import {
   useState,
 } from 'react'
 import { InputDialogInsertNewGoal } from '../components/calendar/InputDialogInsertNewGoal.tsx'
-import { checkDateWithSuccess } from '../remote/remote.ts'
+import { getSDK } from '../remote/remote.ts'
 import { fireEventCalendarUpdated } from '../components/calendar/event-calendar-updated.ts'
 import { InputDialogSeeNotes } from '../components/calendar/InputDialogSeeNotes.tsx'
 import { GrooverDialog } from '../components/groover/GrooverDialog.tsx'
@@ -66,6 +66,7 @@ const UXContext = createContext<{
   },
 })
 
+const { checkDateWithSuccess } = getSDK()
 export const UXProvider: FC<PropsWithChildren> = props => {
   const [dialogForInsertNewGoal, setDialogForInsertNewGoal] = useState<{
     isOpen: boolean

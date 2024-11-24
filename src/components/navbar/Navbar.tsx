@@ -1,9 +1,10 @@
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.tsx'
-import { authLogout } from '../../remote/remote'
+import { getSDK } from '../../remote/remote'
 import { baseRoot } from '../../main.tsx'
 
+const { authLogout } = getSDK()
 export const Navbar = () => {
   const { user } = useAuth()
 

@@ -1,10 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 import { UserLayout } from '../layout/UserLayout.tsx'
 import { useWrapperForCreateResource } from '../lib/remote-resources.ts'
-import {
-  readDateSchedule,
-  readDaysWithExerciseRecords,
-} from '../remote/remote.ts'
+import { getSDK } from '../remote/remote.ts'
 import { ScheduleContent } from '../components/schedule/ScheduleContent.tsx'
 import {
   getTodayLocalDate,
@@ -36,6 +33,7 @@ export default function SchedulePage() {
   )
 }
 
+const { readDateSchedule, readDaysWithExerciseRecords } = getSDK()
 const InnerPage: FC = () => {
   // Input Schedule
   const [inputDateValue, setInputDateValue] = useState(getTodayLocalDate())

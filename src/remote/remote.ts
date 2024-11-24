@@ -8,7 +8,19 @@ const api = axios.create({
   withCredentials: true,
 })
 
-export const authStatus = () =>
+function makeFormData(args: Record<string, string | undefined>) {
+  const formData = new FormData()
+  for (const key in args) {
+    const value = args[key]
+    if (value !== undefined) {
+      formData.set(key, value)
+    }
+  }
+  return formData
+}
+
+// Auth
+const authStatus = () =>
   api.get('?a=status').then<TAuthStatus>(({ data }) => data)
 /*// Debug only.
 export const authStatus = (): Promise<TAuthStatus> =>
@@ -19,10 +31,33 @@ export const authStatus = (): Promise<TAuthStatus> =>
     },
   })*/
 
-export const readCalendar = (id: number) =>
+const authLogin = (email: string, password: string) =>
+  api
+    .post('?a=login', makeFormData({ email, password }))
+    .then<'ok'>(() => 'ok')
+    .catch(err => {
+      if (err.response?.data === 'invalid') {
+        return 'invalid'
+      }
+      throw err
+    })
+
+const authLogout = () =>
+  api
+    .get('?a=logout')
+    .then<'ok'>(() => 'ok')
+    .catch(err => {
+      if (err.response?.data === 'invalid') {
+        return 'invalid'
+      }
+      throw err
+    })
+
+// Calendar
+const readCalendar = (id: number) =>
   api.get(`?a=calendar-read&id=${id}`).then<TCalendar>(({ data }) => data)
 
-export const checkDateWithSuccess = (
+const checkDateWithSuccess = (
   id: number,
   localDate: string
 ): Promise<TCalendarSDK.CheckDateWithSuccessPromiseOutput> =>
@@ -39,41 +74,8 @@ export const checkDateWithSuccess = (
       throw err
     })
 
-export const authLogin = (email: string, password: string) =>
-  api
-    .post('?a=login', makeFormData({ email, password }))
-    .then<'ok'>(() => 'ok')
-    .catch(err => {
-      if (err.response?.data === 'invalid') {
-        return 'invalid'
-      }
-      throw err
-    })
-
-export const authLogout = () =>
-  api
-    .get('?a=logout')
-    .then<'ok'>(() => 'ok')
-    .catch(err => {
-      if (err.response?.data === 'invalid') {
-        return 'invalid'
-      }
-      throw err
-    })
-
-function makeFormData(args: Record<string, string | undefined>) {
-  const formData = new FormData()
-  for (const key in args) {
-    const value = args[key]
-    if (value !== undefined) {
-      formData.set(key, value)
-    }
-  }
-  return formData
-}
-
 // Exercise
-export const readDateSchedule = (localDate: string, showAll?: boolean) =>
+const readDateSchedule = (localDate: string, showAll?: boolean) =>
   api
     .get(
       `?a=schedule-read&local-date=${localDate}${showAll ? '&show-all=true' : ''}`
@@ -86,12 +88,12 @@ export const readDateSchedule = (localDate: string, showAll?: boolean) =>
   throw err
 })*/
 
-export const readDaysWithExerciseRecords = () =>
+const readDaysWithExerciseRecords = () =>
   api.get('?a=days-with-exercise-records').then<{
     dates: string[]
   }>(({ data }) => data)
 
-export const createExerciseRecord = (
+const createExerciseRecord = (
   exerciseId: number,
   localDate: string,
   params: {
@@ -121,3 +123,22 @@ export const createExerciseRecord = (
       }
       throw err
     })
+
+// API SDK
+export const getSDK = () => {
+  return {
+    // Auth
+    authStatus,
+    authLogin,
+    authLogout,
+
+    // Calendar
+    readCalendar,
+    checkDateWithSuccess,
+
+    // Schedule
+    readDateSchedule,
+    readDaysWithExerciseRecords,
+    createExerciseRecord,
+  }
+}

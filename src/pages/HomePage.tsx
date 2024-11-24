@@ -5,7 +5,7 @@ import {
   getTodayLocalDate,
 } from '../lib/utils.ts'
 import { UserLayout } from '../layout/UserLayout.tsx'
-import { readCalendar } from '../remote/remote.ts'
+import { getSDK } from '../remote/remote.ts'
 import {
   CalendarForLogicCalendar,
   defaultNumWeeks,
@@ -24,6 +24,7 @@ export default function HomePage() {
   )
 }
 
+const { readCalendar } = getSDK()
 const InnerPage: FC = () => {
   const todayLocalDate = getTodayLocalDate()
 

@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react'
 import { TAuthUser } from '../remote/sdk/types'
-import { authStatus } from '../remote/remote.ts'
+import { getSDK } from '../remote/remote.ts'
 import { useNavigate } from 'react-router-dom'
 
 const AuthContext = createContext<{
@@ -22,6 +22,7 @@ const AuthContext = createContext<{
   },
 })
 
+const { authStatus } = getSDK()
 export const AuthProvider: FC<PropsWithChildren> = props => {
   const navigate = useNavigate()
 
