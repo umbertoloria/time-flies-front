@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import classNames from 'classnames'
 import { useUXDialogForInsertNewGoal } from '../../context/UXContextDialogForInsertNewGoal.tsx'
-import { useUXDialogForSeeNotes } from '../../context/UXContext.tsx'
+import { useUXDialogForSeeNotes } from '../../context/UXContextDialogForSeeNotes.tsx'
 import { isLocalDateToday, isLocalDateYesterday } from '../../lib/utils.ts'
 import { displayDateFromLocalDate } from './utils.ts'
 

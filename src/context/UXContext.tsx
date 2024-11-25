@@ -16,64 +16,13 @@ import {
   useUXContextDialogForInsertNewGoal,
   UXContextDialogForInsertNewGoalMainType,
 } from './UXContextDialogForInsertNewGoal.tsx'
+import {
+  dialogForSeeNotesConst,
+  useUXContextDialogForSeeNotes,
+  UXContextDialogForSeeNotesMainType,
+} from './UXContextDialogForSeeNotes.tsx'
 
 const { checkPlannedEventWithSuccess } = getSDK()
-
-// UX Context: Dialog For See Notes
-type UXContextTypeDialogForSeeNotes = {
-  notes: string
-}
-type UXContextDialogForSeeNotesMainType = {
-  isOpen: boolean
-  data?: UXContextTypeDialogForSeeNotes
-  openDialog: (notes: string) => void
-  closeDialog: () => void
-}
-const dialogForSeeNotesConst: UXContextDialogForSeeNotesMainType = {
-  isOpen: false,
-  // data: undefined,
-  openDialog() {},
-  closeDialog() {},
-} as const
-const useUXContextDialogForSeeNotes = (): {
-  dialogForSeeNotes: UXContextDialogForSeeNotesMainType
-} => {
-  const [dialogForSeeNotes, setDialogForSeeNotes] = useState<{
-    isOpen: boolean
-    data?: UXContextTypeDialogForSeeNotes
-  }>({ isOpen: false })
-  return {
-    dialogForSeeNotes: {
-      isOpen: dialogForSeeNotes.isOpen,
-      data: dialogForSeeNotes.data,
-      openDialog(notes) {
-        if (dialogForSeeNotes.isOpen) {
-          return
-        }
-        setDialogForSeeNotes({
-          ...dialogForSeeNotes,
-          isOpen: true,
-          data: {
-            notes,
-          },
-        })
-      },
-      closeDialog() {
-        if (!dialogForSeeNotes.isOpen || !dialogForSeeNotes.data) {
-          return
-        }
-        setDialogForSeeNotes({
-          ...dialogForSeeNotes,
-          isOpen: false,
-        })
-      },
-    },
-  }
-}
-export const useUXDialogForSeeNotes = () => {
-  const uxContext = useUXContext()
-  return uxContext.dialogForSeeNotes
-}
 
 // UX Context: Dialog For Groover
 type UXContextTypeDialogForGroover = {

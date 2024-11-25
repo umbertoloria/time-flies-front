@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { useUXDialogForSeeNotes } from '../../context/UXContext.tsx'
+import { useUXDialogForSeeNotes } from '../../context/UXContextDialogForSeeNotes.tsx'
 import { GenericDialog } from './GenericDialog.tsx'
 
 export const InputDialogSeeNotes: FC = () => {
