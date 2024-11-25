@@ -60,6 +60,40 @@ export const getSDK = () => {
             }),
 
     // Calendar
+    readAllCalendars: (): Promise<{ calendars: TCalendar[] }> =>
+      debugMode
+        ? Promise.resolve({
+            calendars: [
+              {
+                id: 1,
+                name: 'Debug calendar 1',
+                color: '#f77',
+                plannedColor: '#fee',
+                days: [
+                  {
+                    date: getTodayLocalDate(),
+                    notes: 'Debug notes',
+                  },
+                ],
+                plannedDays: [],
+              },
+              {
+                id: 2,
+                name: 'Debug calendar 2',
+                color: '#77f',
+                plannedColor: '#eef',
+                days: [
+                  {
+                    date: getTodayLocalDate(),
+                    notes: 'Debug notes',
+                  },
+                ],
+                plannedDays: [],
+              },
+            ],
+          })
+        : api.get('?a=calendars-read').then(({ data }) => data),
+    // TODO: All these calendars data may be too much...
     readCalendar: (id: number): Promise<TCalendar | 'unable'> =>
       debugMode
         ? (() => {

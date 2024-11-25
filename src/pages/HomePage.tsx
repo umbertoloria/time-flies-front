@@ -10,11 +10,10 @@ import {
   CalendarForLogicCalendar,
   defaultNumWeeks,
 } from '../components/calendar/Calendar.tsx'
-import { Timelines } from '../components/timeline/Timelines.tsx'
 import { createLogicCalendarFromTCalendar } from '../components/calendar/logic-calendar.ts'
 import { useWrapperForCreateResource } from '../lib/remote-resources.ts'
 import { Streamline } from '../components/streamline/Streamline.tsx'
-import { TCalendar } from '../remote/sdk/types'
+import { Timelines } from '../components/timeline/Timelines.tsx'
 
 const periodRefreshCalendarsInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 
@@ -28,7 +27,7 @@ export default function HomePage() {
 
 const numWeeks = defaultNumWeeks
 
-const { readCalendar } = getSDK()
+const { readAllCalendars } = getSDK()
 const InnerPage: FC = () => {
   const todayLocalDate = getTodayLocalDate()
 
@@ -59,41 +58,13 @@ const InnerPage: FC = () => {
   }
 
   // Calendars
-  const safeCalendar = (data: TCalendar | 'unable') =>
-    data === 'unable' ? undefined : data
-  const [dataCalendar1, { refetch: refetchCalendar1 }] =
-    useWrapperForCreateResource(() => readCalendar(1).then(safeCalendar))
-  const [dataCalendar2, { refetch: refetchCalendar2 }] =
-    useWrapperForCreateResource(() => readCalendar(2).then(safeCalendar))
-  const [dataCalendar3, { refetch: refetchCalendar3 }] =
-    useWrapperForCreateResource(() => readCalendar(3).then(safeCalendar))
-  const [dataCalendar4, { refetch: refetchCalendar4 }] =
-    useWrapperForCreateResource(() => readCalendar(4).then(safeCalendar))
-  const [dataCalendar5, { refetch: refetchCalendar5 }] =
-    useWrapperForCreateResource(() => readCalendar(5).then(safeCalendar))
-
+  const [dataAllCalendars, { refetch: refetchAllCalendars }] =
+    useWrapperForCreateResource(() => readAllCalendars())
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const refetchOneCalendar = (calendarId: number) => {
-    // TODO: Improve this
-    if (calendarId === 1) {
-      refetchCalendar1()
-    } else if (calendarId === 2) {
-      refetchCalendar2()
-    } else if (calendarId === 3) {
-      refetchCalendar3()
-    } else if (calendarId === 4) {
-      refetchCalendar4()
-    } else if (calendarId === 5) {
-      refetchCalendar5()
-    } else {
-      // No support for other calendars...
-    }
-  }
-  const refetchAllCalendars = () => {
-    refetchOneCalendar(1)
-    refetchOneCalendar(2)
-    refetchOneCalendar(3)
-    refetchOneCalendar(4)
-    refetchOneCalendar(5)
+    // TODO: Improve partial loadings
+    refetchAllCalendars()
   }
   const refreshCalendarIntervalTimer = setInterval(() => {
     refetchAllCalendars()
@@ -107,127 +78,25 @@ const InnerPage: FC = () => {
   return (
     <section className='p-8'>
       <div className='flex flex-wrap justify-center gap-10 w-100'>
-        {dataCalendar1?.loading === false && !!dataCalendar1.data ? (
-          <>
-            <div>
+        {!dataAllCalendars?.loading && !!dataAllCalendars?.data ? (
+          dataAllCalendars.data.calendars.map((calendar, index) => (
+            <div key={index}>
               <CalendarForLogicCalendar
-                startWeekFromDate={getFromDateForCalendar(1)}
+                startWeekFromDate={getFromDateForCalendar(calendar.id)}
                 numWeeks={numWeeks}
-                logicCalendar={createLogicCalendarFromTCalendar(
-                  dataCalendar1.data
-                )}
+                logicCalendar={createLogicCalendarFromTCalendar(calendar)}
                 pleaseUpdateCalendar={() => {
-                  refetchOneCalendar(1)
+                  refetchOneCalendar(calendar.id)
                 }}
                 goInThePast={() => {
-                  setWeeks4InThePastForCalendar(1)
+                  setWeeks4InThePastForCalendar(calendar.id)
                 }}
                 goInTheFuture={() => {
-                  setWeeks4InTheFutureForCalendar(1)
+                  setWeeks4InTheFutureForCalendar(calendar.id)
                 }}
               />
             </div>
-          </>
-        ) : (
-          <>Searching...</>
-        )}
-
-        {dataCalendar2?.loading === false && !!dataCalendar2.data ? (
-          <>
-            <div>
-              <CalendarForLogicCalendar
-                startWeekFromDate={getFromDateForCalendar(2)}
-                numWeeks={numWeeks}
-                logicCalendar={createLogicCalendarFromTCalendar(
-                  dataCalendar2.data
-                )}
-                pleaseUpdateCalendar={() => {
-                  refetchOneCalendar(2)
-                }}
-                goInThePast={() => {
-                  setWeeks4InThePastForCalendar(2)
-                }}
-                goInTheFuture={() => {
-                  setWeeks4InTheFutureForCalendar(2)
-                }}
-              />
-            </div>
-          </>
-        ) : (
-          <>Searching...</>
-        )}
-
-        {dataCalendar3?.loading === false && !!dataCalendar3.data ? (
-          <>
-            <div>
-              <CalendarForLogicCalendar
-                startWeekFromDate={getFromDateForCalendar(3)}
-                numWeeks={numWeeks}
-                logicCalendar={createLogicCalendarFromTCalendar(
-                  dataCalendar3.data
-                )}
-                pleaseUpdateCalendar={() => {
-                  refetchOneCalendar(3)
-                }}
-                goInThePast={() => {
-                  setWeeks4InThePastForCalendar(3)
-                }}
-                goInTheFuture={() => {
-                  setWeeks4InTheFutureForCalendar(3)
-                }}
-              />
-            </div>
-          </>
-        ) : (
-          <>Searching...</>
-        )}
-
-        {dataCalendar4?.loading === false && !!dataCalendar4.data ? (
-          <>
-            <div>
-              <CalendarForLogicCalendar
-                startWeekFromDate={getFromDateForCalendar(4)}
-                numWeeks={numWeeks}
-                logicCalendar={createLogicCalendarFromTCalendar(
-                  dataCalendar4.data
-                )}
-                pleaseUpdateCalendar={() => {
-                  refetchOneCalendar(4)
-                }}
-                goInThePast={() => {
-                  setWeeks4InThePastForCalendar(4)
-                }}
-                goInTheFuture={() => {
-                  setWeeks4InTheFutureForCalendar(4)
-                }}
-              />
-            </div>
-          </>
-        ) : (
-          <>Searching...</>
-        )}
-
-        {dataCalendar5?.loading === false && !!dataCalendar5.data ? (
-          <>
-            <div>
-              <CalendarForLogicCalendar
-                startWeekFromDate={getFromDateForCalendar(5)}
-                numWeeks={numWeeks}
-                logicCalendar={createLogicCalendarFromTCalendar(
-                  dataCalendar5.data
-                )}
-                pleaseUpdateCalendar={() => {
-                  refetchOneCalendar(5)
-                }}
-                goInThePast={() => {
-                  setWeeks4InThePastForCalendar(5)
-                }}
-                goInTheFuture={() => {
-                  setWeeks4InTheFutureForCalendar(5)
-                }}
-              />
-            </div>
-          </>
+          ))
         ) : (
           <>Searching...</>
         )}
@@ -237,27 +106,13 @@ const InnerPage: FC = () => {
         </div>
       </div>
 
-      {!!dataCalendar1?.data &&
-        !!dataCalendar2?.data &&
-        !!dataCalendar3?.data &&
-        !!dataCalendar4?.data &&
-        !!dataCalendar5?.data && (
-          <Timelines
-            dataCalendar1={dataCalendar1.data}
-            dataCalendar2={dataCalendar2.data}
-            dataCalendar3={dataCalendar3.data}
-            dataCalendar4={dataCalendar4.data}
-            dataCalendar5={dataCalendar5.data}
-            dataCalendar1Loading={dataCalendar1.loading}
-            dataCalendar2Loading={dataCalendar2.loading}
-            dataCalendar3Loading={dataCalendar3.loading}
-            dataCalendar4Loading={dataCalendar4.loading}
-            dataCalendar5Loading={dataCalendar5.loading}
-            pleaseUpdateCalendar={calendarId => {
-              refetchOneCalendar(calendarId)
-            }}
-          />
-        )}
+      {!!dataAllCalendars?.data && (
+        <Timelines
+          allCalendars={dataAllCalendars.data.calendars}
+          isLoading={dataAllCalendars.loading}
+          pleaseUpdateCalendar={refetchOneCalendar}
+        />
+      )}
     </section>
   )
 }
