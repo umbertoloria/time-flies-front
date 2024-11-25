@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { useUXDialogForInsertNewGoal } from '../../context/UXContext.tsx'
+import { useUXDialogForInsertNewGoal } from '../../context/UXContextDialogForInsertNewGoal.tsx'
 import { GenericDialog } from './GenericDialog.tsx'
 
 export const InputDialogInsertNewGoal: FC = () => {
