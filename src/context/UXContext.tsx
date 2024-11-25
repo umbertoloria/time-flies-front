@@ -181,12 +181,51 @@ export const useUXDialogForSeeNotes = () => {
   return uxContext.dialogForSeeNotes
 }
 
-// UX Context
-export type GrooverData = {
+// UX Context: Dialog For Groover
+type UXContextTypeDialogForGroover = {
   bass: string
   ghost: string
   hhr: string
 }
+type UXContextDialogForGrooverMainType = {
+  isOpen: boolean
+  data?: UXContextTypeDialogForGroover
+  openDialog: (data: UXContextTypeDialogForGroover) => void
+  closeDialog: () => void
+}
+const dialogForGrooverConst: UXContextDialogForGrooverMainType = {
+  isOpen: false,
+  // data: undefined,
+  openDialog() {},
+  closeDialog() {},
+} as const
+const useUXContextDialogForGroover = (): {
+  dialogForGroover: UXContextDialogForGrooverMainType
+} => {
+  const [dialogForGroover, setDialogForGroover] = useState<{
+    isOpen: boolean
+    data?: UXContextTypeDialogForGroover
+  }>({ isOpen: false })
+  return {
+    dialogForGroover: {
+      isOpen: dialogForGroover.isOpen,
+      data: dialogForGroover.data,
+      openDialog(data) {
+        setDialogForGroover({ isOpen: true, data })
+      },
+      closeDialog() {
+        // Deleting the old Groover data.
+        setDialogForGroover({ isOpen: false, data: undefined })
+      },
+    },
+  }
+}
+export const useGrooverDialog = () => {
+  const uxContext = useUXContext()
+  return uxContext.dialogForGroover
+}
+
+// UX Context
 type UXContextTypeDialogForCheckPlannedEvent = {
   calendarId: number
   eventId: number
@@ -195,12 +234,7 @@ type UXContextTypeDialogForCheckPlannedEvent = {
 const UXContext = createContext<{
   dialogForInsertNewGoal: UXContextDialogForInsertNewGoalMainType
   dialogForSeeNotes: UXContextDialogForSeeNotesMainType
-  dialogForGroover: {
-    isOpen: boolean
-    data?: GrooverData
-    openDialog: (data: GrooverData) => void
-    closeDialog: () => void
-  }
+  dialogForGroover: UXContextDialogForGrooverMainType
   dialogForCheckPlannedEvent: {
     isOpen: boolean
     data?: UXContextTypeDialogForCheckPlannedEvent
@@ -211,12 +245,7 @@ const UXContext = createContext<{
 }>({
   dialogForInsertNewGoal: dialogForInsertNewGoalConst,
   dialogForSeeNotes: dialogForSeeNotesConst,
-  dialogForGroover: {
-    isOpen: false,
-    // data: undefined,
-    openDialog() {},
-    closeDialog() {},
-  },
+  dialogForGroover: dialogForGrooverConst,
   dialogForCheckPlannedEvent: {
     isOpen: false,
     // data: undefined,
@@ -229,11 +258,7 @@ const UXContext = createContext<{
 export const UXProvider: FC<PropsWithChildren> = props => {
   const { dialogForInsertNewGoal } = useUXContextDialogForInsertNewGoal()
   const { dialogForSeeNotes } = useUXContextDialogForSeeNotes()
-
-  const [dialogForGroover, setDialogForGroover] = useState<{
-    isOpen: boolean
-    data?: GrooverData
-  }>({ isOpen: false })
+  const { dialogForGroover } = useUXContextDialogForGroover()
 
   const [dialogForCheckPlannedEvent, setDialogForCheckPlannedEvent] = useState<{
     isOpen: boolean
@@ -245,17 +270,7 @@ export const UXProvider: FC<PropsWithChildren> = props => {
       value={{
         dialogForInsertNewGoal,
         dialogForSeeNotes,
-        dialogForGroover: {
-          isOpen: dialogForGroover.isOpen,
-          data: dialogForGroover.data,
-          openDialog(data) {
-            setDialogForGroover({ isOpen: true, data })
-          },
-          closeDialog() {
-            // Deleting the old Groover data.
-            setDialogForGroover({ isOpen: false, data: undefined })
-          },
-        },
+        dialogForGroover,
         dialogForCheckPlannedEvent: {
           isOpen: dialogForCheckPlannedEvent.isOpen,
           data: dialogForCheckPlannedEvent.data,
@@ -343,10 +358,6 @@ export const UXProvider: FC<PropsWithChildren> = props => {
 
 export const useUXContext = () => {
   return useContext(UXContext)
-}
-export const useGrooverDialog = () => {
-  const uxContext = useUXContext()
-  return uxContext.dialogForGroover
 }
 export const useUXDialogForCheckPlannedEvent = () => {
   const uxContext = useUXContext()
