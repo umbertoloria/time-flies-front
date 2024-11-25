@@ -5,7 +5,7 @@ import {
   displayDuration,
   estimate_record_list_duration_minutes,
 } from './estimations.ts'
-import { useUXDialogForGroover } from '../../context/UXContextDialogForGroover.tsx'
+import { useDialogForGroover } from '../../context/dialog-groover/ContextDialogForGroover.tsx'
 import { ColouredLabel } from '../coloured/ColouredLabel.tsx'
 
 export const Exercise: FC<{
@@ -19,7 +19,7 @@ export const Exercise: FC<{
     )
   }
 
-  const { openDialog } = useUXDialogForGroover()
+  const { openDialog } = useDialogForGroover()
 
   return (
     <div className='border-2 border-gray-200 rounded-md p-2 pt-1 bg-gray-100'>

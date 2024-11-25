@@ -1,7 +1,7 @@
 import { createContext, FC, PropsWithChildren, useContext } from 'react'
 import { DialogForInsertNewGoal } from './dialog-insert-new-goal/DialogForInsertNewGoal.tsx'
 import { DialogSeeNotes } from './dialog-see-notes/DialogSeeNotes.tsx'
-import { GrooverDialog } from '../components/groover/GrooverDialog.tsx'
+import { DialogForGroover } from './dialog-groover/DialogForGroover.tsx'
 import { InputDialogCheckPlannedEvent } from '../components/calendar/InputDialogCheckPlannedEvent.tsx'
 import {
   ContextDialogForInsertNewGoal,
@@ -14,10 +14,10 @@ import {
   useUXContextDialogForSeeNotesForUX,
 } from './dialog-see-notes/UXContextDialogForSeeNotes.tsx'
 import {
-  dialogForGrooverConst,
-  useUXContextDialogForGroover,
-  UXContextDialogForGrooverMainType,
-} from './UXContextDialogForGroover.tsx'
+  ContextDialogForGroover,
+  contextDialogForGrooverDataDefault,
+  useContextDialogForGrooverForUX,
+} from './dialog-groover/ContextDialogForGroover.tsx'
 import {
   dialogForCheckPlannedEventConst,
   useUXContextDialogForCheckPlannedEvents,
@@ -27,19 +27,19 @@ import {
 const UXContext = createContext<{
   dialogForInsertNewGoal: ContextDialogForInsertNewGoal
   dialogForSeeNotes: ContextDialogForSeeNotes
-  dialogForGroover: UXContextDialogForGrooverMainType
+  dialogForGroover: ContextDialogForGroover
   dialogForCheckPlannedEvent: UXContextDialogForCheckPlannedEventMainType
 }>({
   dialogForInsertNewGoal: contextDialogForInsertNewGoalDataDefault,
   dialogForSeeNotes: contextDialogForSeeNotesDataDefault,
-  dialogForGroover: dialogForGrooverConst,
+  dialogForGroover: contextDialogForGrooverDataDefault,
   dialogForCheckPlannedEvent: dialogForCheckPlannedEventConst,
 })
 
 export const UXProvider: FC<PropsWithChildren> = props => {
   const { dialogForInsertNewGoal } = useContextDialogForInsertNewGoalForUX()
   const { dialogForSeeNotes } = useUXContextDialogForSeeNotesForUX()
-  const { dialogForGroover } = useUXContextDialogForGroover()
+  const { dialogForGroover } = useContextDialogForGrooverForUX()
   const { dialogForCheckPlannedEvent } =
     useUXContextDialogForCheckPlannedEvents()
 
@@ -54,7 +54,7 @@ export const UXProvider: FC<PropsWithChildren> = props => {
     >
       <DialogForInsertNewGoal />
       <DialogSeeNotes />
-      <GrooverDialog />
+      <DialogForGroover />
       <InputDialogCheckPlannedEvent />
       {props.children}
     </UXContext.Provider>

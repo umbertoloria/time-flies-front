@@ -1,29 +1,30 @@
 import { useState } from 'react'
-import { useUXContext } from './UXContext.tsx'
+import { useUXContext } from '../UXContext.tsx'
 
-type UXContextTypeDialogForGroover = {
+type ContextPartData = {
   bass: string
   ghost: string
   hhr: string
 }
-export type UXContextDialogForGrooverMainType = {
+export type ContextDialogForGroover = {
   isOpen: boolean
-  data?: UXContextTypeDialogForGroover
-  openDialog: (data: UXContextTypeDialogForGroover) => void
+  data?: ContextPartData
+  openDialog: (data: ContextPartData) => void
   closeDialog: () => void
 }
-export const dialogForGrooverConst: UXContextDialogForGrooverMainType = {
+export const contextDialogForGrooverDataDefault: ContextDialogForGroover = {
   isOpen: false,
   // data: undefined,
   openDialog() {},
   closeDialog() {},
 } as const
-export const useUXContextDialogForGroover = (): {
-  dialogForGroover: UXContextDialogForGrooverMainType
+
+export const useContextDialogForGrooverForUX = (): {
+  dialogForGroover: ContextDialogForGroover
 } => {
   const [dialogForGroover, setDialogForGroover] = useState<{
     isOpen: boolean
-    data?: UXContextTypeDialogForGroover
+    data?: ContextPartData
   }>({ isOpen: false })
   return {
     dialogForGroover: {
@@ -39,7 +40,8 @@ export const useUXContextDialogForGroover = (): {
     },
   }
 }
-export const useUXDialogForGroover = () => {
+
+export const useDialogForGroover = () => {
   const uxContext = useUXContext()
   return uxContext.dialogForGroover
 }
