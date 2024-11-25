@@ -13,11 +13,119 @@ import { GrooverDialog } from '../components/groover/GrooverDialog.tsx'
 import { InputDialogCheckPlannedEvent } from '../components/calendar/InputDialogCheckPlannedEvent.tsx'
 import { fireEventStreamlineUpdated } from '../components/streamline/event-streamline-updated.ts'
 
+const { checkDateWithSuccess, checkPlannedEventWithSuccess } = getSDK()
+
+// UX Context: Dialog For Insert New Goal
 type UXContextTypeDialogForInsertNewGoal = {
   calendarId: number
   localDate: string
   loading: boolean
 }
+type UXContextDialogForInsertNewGoalMainType = {
+  isOpen: boolean
+  data?: UXContextTypeDialogForInsertNewGoal
+  openDialog: (calendarId: number, localDate: string) => void
+  closeDialog: () => void
+  confirmProgressDone: () => void
+}
+const dialogForInsertNewGoalConst: UXContextDialogForInsertNewGoalMainType = {
+  isOpen: false,
+  // data: undefined,
+  openDialog() {},
+  closeDialog() {},
+  confirmProgressDone() {},
+} as const
+const useUXContextDialogForInsertNewGoal = (): {
+  dialogForInsertNewGoal: UXContextDialogForInsertNewGoalMainType
+} => {
+  const [dialogForInsertNewGoal, setDialogForInsertNewGoal] = useState<{
+    isOpen: boolean
+    data?: UXContextTypeDialogForInsertNewGoal
+  }>({ isOpen: false })
+  return {
+    dialogForInsertNewGoal: {
+      isOpen: dialogForInsertNewGoal.isOpen,
+      data: dialogForInsertNewGoal.data,
+      openDialog(calendarId, localDate) {
+        if (
+          dialogForInsertNewGoal.isOpen ||
+          dialogForInsertNewGoal.data?.loading
+        ) {
+          return
+        }
+        setDialogForInsertNewGoal({
+          ...dialogForInsertNewGoal,
+          isOpen: true,
+          data: {
+            calendarId,
+            localDate,
+            loading: false,
+          },
+        })
+      },
+      closeDialog() {
+        if (
+          !dialogForInsertNewGoal.isOpen ||
+          dialogForInsertNewGoal.data?.loading
+        ) {
+          return
+        }
+        setDialogForInsertNewGoal({
+          ...dialogForInsertNewGoal,
+          isOpen: false,
+        })
+      },
+      confirmProgressDone() {
+        if (
+          !dialogForInsertNewGoal.isOpen ||
+          !dialogForInsertNewGoal.data ||
+          dialogForInsertNewGoal.data.loading
+        ) {
+          return
+        }
+        const { calendarId, localDate } = dialogForInsertNewGoal.data
+        setDialogForInsertNewGoal({
+          isOpen: true,
+          data: {
+            calendarId,
+            localDate,
+            loading: true,
+          },
+        })
+        // TODO: De-couple this component from this logic
+        checkDateWithSuccess(calendarId, localDate)
+          .then(() => {
+            // Yay!
+            // TODO: Tell user all went OK
+            fireEventCalendarUpdated({ calendarId })
+            setDialogForInsertNewGoal({
+              isOpen: false,
+              // data: undefined,
+            })
+          })
+          .catch(err => {
+            console.error(err)
+            // TODO: Tell user all went KO
+            alert('Errore avvenuto')
+            setDialogForInsertNewGoal({
+              isOpen: true,
+              data: {
+                calendarId,
+                localDate,
+                loading: false,
+              },
+            })
+          })
+      },
+    },
+  }
+}
+export const useUXDialogForInsertNewGoal = () => {
+  const uxContext = useUXContext()
+  return uxContext.dialogForInsertNewGoal
+}
+
+// UX Context
 type UXContextTypeDialogForSeeNotes = {
   notes: string
 }
@@ -32,13 +140,7 @@ type UXContextTypeDialogForCheckPlannedEvent = {
   loading: boolean
 }
 const UXContext = createContext<{
-  dialogForInsertNewGoal: {
-    isOpen: boolean
-    data?: UXContextTypeDialogForInsertNewGoal
-    openDialog: (calendarId: number, localDate: string) => void
-    closeDialog: () => void
-    confirmProgressDone: () => void
-  }
+  dialogForInsertNewGoal: UXContextDialogForInsertNewGoalMainType
   dialogForSeeNotes: {
     isOpen: boolean
     data?: UXContextTypeDialogForSeeNotes
@@ -59,13 +161,7 @@ const UXContext = createContext<{
     confirmProgressDone: () => void
   }
 }>({
-  dialogForInsertNewGoal: {
-    isOpen: false,
-    // data: undefined,
-    openDialog() {},
-    closeDialog() {},
-    confirmProgressDone() {},
-  },
+  dialogForInsertNewGoal: dialogForInsertNewGoalConst,
   dialogForSeeNotes: {
     isOpen: false,
     // data: undefined,
@@ -87,12 +183,8 @@ const UXContext = createContext<{
   },
 })
 
-const { checkDateWithSuccess, checkPlannedEventWithSuccess } = getSDK()
 export const UXProvider: FC<PropsWithChildren> = props => {
-  const [dialogForInsertNewGoal, setDialogForInsertNewGoal] = useState<{
-    isOpen: boolean
-    data?: UXContextTypeDialogForInsertNewGoal
-  }>({ isOpen: false })
+  const { dialogForInsertNewGoal } = useUXContextDialogForInsertNewGoal()
 
   const [dialogForSeeNotes, setDialogForSeeNotes] = useState<{
     isOpen: boolean
@@ -112,81 +204,7 @@ export const UXProvider: FC<PropsWithChildren> = props => {
   return (
     <UXContext.Provider
       value={{
-        dialogForInsertNewGoal: {
-          isOpen: dialogForInsertNewGoal.isOpen,
-          data: dialogForInsertNewGoal.data,
-          openDialog(calendarId, localDate) {
-            if (
-              dialogForInsertNewGoal.isOpen ||
-              dialogForInsertNewGoal.data?.loading
-            ) {
-              return
-            }
-            setDialogForInsertNewGoal({
-              ...dialogForInsertNewGoal,
-              isOpen: true,
-              data: {
-                calendarId,
-                localDate,
-                loading: false,
-              },
-            })
-          },
-          closeDialog() {
-            if (
-              !dialogForInsertNewGoal.isOpen ||
-              dialogForInsertNewGoal.data?.loading
-            ) {
-              return
-            }
-            setDialogForInsertNewGoal({
-              ...dialogForInsertNewGoal,
-              isOpen: false,
-            })
-          },
-          confirmProgressDone() {
-            if (
-              !dialogForInsertNewGoal.isOpen ||
-              !dialogForInsertNewGoal.data ||
-              dialogForInsertNewGoal.data.loading
-            ) {
-              return
-            }
-            const { calendarId, localDate } = dialogForInsertNewGoal.data
-            setDialogForInsertNewGoal({
-              isOpen: true,
-              data: {
-                calendarId,
-                localDate,
-                loading: true,
-              },
-            })
-            // TODO: De-couple this component from this logic
-            checkDateWithSuccess(calendarId, localDate)
-              .then(() => {
-                // Yay!
-                // TODO: Tell user all went OK
-                fireEventCalendarUpdated({ calendarId })
-                setDialogForInsertNewGoal({
-                  isOpen: false,
-                  // data: undefined,
-                })
-              })
-              .catch(err => {
-                console.error(err)
-                // TODO: Tell user all went KO
-                alert('Errore avvenuto')
-                setDialogForInsertNewGoal({
-                  isOpen: true,
-                  data: {
-                    calendarId,
-                    localDate,
-                    loading: false,
-                  },
-                })
-              })
-          },
-        },
+        dialogForInsertNewGoal,
         dialogForSeeNotes: {
           isOpen: dialogForSeeNotes.isOpen,
           data: dialogForSeeNotes.data,
@@ -310,10 +328,6 @@ export const UXProvider: FC<PropsWithChildren> = props => {
 
 export const useUXContext = () => {
   return useContext(UXContext)
-}
-export const useUXDialogForInsertNewGoal = () => {
-  const uxContext = useUXContext()
-  return uxContext.dialogForInsertNewGoal
 }
 export const useUXDialogForSeeNotes = () => {
   const uxContext = useUXContext()
