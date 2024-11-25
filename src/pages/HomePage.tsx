@@ -26,38 +26,50 @@ export default function HomePage() {
   )
 }
 
+const numWeeks = defaultNumWeeks
+
 const { readCalendar } = getSDK()
 const InnerPage: FC = () => {
   const todayLocalDate = getTodayLocalDate()
 
-  // Calendars
-  const [numWeeks] = useState(defaultNumWeeks)
+  // Weeks 4 Offsets for calendars
+  const [weeks4Offsets, setWeeks4Offsets] = useState<
+    Record<number, number | undefined>
+  >({})
+  const getWeeks4OffsetFromCalendar = (id: number) => weeks4Offsets[id] || 0
+  const setWeeks4OffsetForCalendar = (id: number, value: number) => {
+    setWeeks4Offsets(old => ({
+      ...old,
+      [id]: value,
+    }))
+  }
+  const setWeeks4InThePastForCalendar = (id: number) => {
+    setWeeks4OffsetForCalendar(id, getWeeks4OffsetFromCalendar(id) + 1)
+  }
+  const setWeeks4InTheFutureForCalendar = (id: number) => {
+    setWeeks4OffsetForCalendar(id, getWeeks4OffsetFromCalendar(id) - 1)
+  }
 
-  const [weeks4Before1, setWeeks4Before1] = useState(0)
-  const [weeks4Before2, setWeeks4Before2] = useState(0)
-  const [weeks4Before3, setWeeks4Before3] = useState(0)
-  const [weeks4Before4, setWeeks4Before4] = useState(0)
-  const [weeks4Before5, setWeeks4Before5] = useState(0)
-
+  // Calculating "From Dates" for calendars
   const fromDate1 = getDateWithOffsetDays(
     getDateFromLocalDate(todayLocalDate),
-    -7 * (numWeeks - 1 + 4 * weeks4Before1)
+    -7 * (numWeeks - 1 + 4 * getWeeks4OffsetFromCalendar(1))
   )
   const fromDate2 = getDateWithOffsetDays(
     getDateFromLocalDate(todayLocalDate),
-    -7 * (numWeeks - 1 + 4 * weeks4Before2)
+    -7 * (numWeeks - 1 + 4 * getWeeks4OffsetFromCalendar(2))
   )
   const fromDate3 = getDateWithOffsetDays(
     getDateFromLocalDate(todayLocalDate),
-    -7 * (numWeeks - 1 + 4 * weeks4Before3)
+    -7 * (numWeeks - 1 + 4 * getWeeks4OffsetFromCalendar(3))
   )
   const fromDate4 = getDateWithOffsetDays(
     getDateFromLocalDate(todayLocalDate),
-    -7 * (numWeeks - 1 + 4 * weeks4Before4)
+    -7 * (numWeeks - 1 + 4 * getWeeks4OffsetFromCalendar(4))
   )
   const fromDate5 = getDateWithOffsetDays(
     getDateFromLocalDate(todayLocalDate),
-    -7 * (numWeeks - 1 + 4 * weeks4Before5)
+    -7 * (numWeeks - 1 + 4 * getWeeks4OffsetFromCalendar(5))
   )
 
   // Calendars
@@ -101,10 +113,10 @@ const InnerPage: FC = () => {
                 )}
                 pleaseUpdateCalendar={refetchCalendar1}
                 goInThePast={() => {
-                  setWeeks4Before1(weeks4Before1 + 1)
+                  setWeeks4InThePastForCalendar(1)
                 }}
                 goInTheFuture={() => {
-                  setWeeks4Before1(weeks4Before1 - 1)
+                  setWeeks4InTheFutureForCalendar(1)
                 }}
               />
             </div>
@@ -124,10 +136,10 @@ const InnerPage: FC = () => {
                 )}
                 pleaseUpdateCalendar={refetchCalendar2}
                 goInThePast={() => {
-                  setWeeks4Before2(weeks4Before2 + 1)
+                  setWeeks4InThePastForCalendar(2)
                 }}
                 goInTheFuture={() => {
-                  setWeeks4Before2(weeks4Before2 - 1)
+                  setWeeks4InTheFutureForCalendar(2)
                 }}
               />
             </div>
@@ -147,10 +159,10 @@ const InnerPage: FC = () => {
                 )}
                 pleaseUpdateCalendar={refetchCalendar3}
                 goInThePast={() => {
-                  setWeeks4Before3(weeks4Before3 + 1)
+                  setWeeks4InThePastForCalendar(3)
                 }}
                 goInTheFuture={() => {
-                  setWeeks4Before3(weeks4Before3 - 1)
+                  setWeeks4InTheFutureForCalendar(3)
                 }}
               />
             </div>
@@ -170,10 +182,10 @@ const InnerPage: FC = () => {
                 )}
                 pleaseUpdateCalendar={refetchCalendar4}
                 goInThePast={() => {
-                  setWeeks4Before4(weeks4Before4 + 1)
+                  setWeeks4InThePastForCalendar(4)
                 }}
                 goInTheFuture={() => {
-                  setWeeks4Before4(weeks4Before4 - 1)
+                  setWeeks4InTheFutureForCalendar(4)
                 }}
               />
             </div>
@@ -193,10 +205,10 @@ const InnerPage: FC = () => {
                 )}
                 pleaseUpdateCalendar={refetchCalendar5}
                 goInThePast={() => {
-                  setWeeks4Before5(weeks4Before5 + 1)
+                  setWeeks4InThePastForCalendar(5)
                 }}
                 goInTheFuture={() => {
-                  setWeeks4Before5(weeks4Before5 - 1)
+                  setWeeks4InTheFutureForCalendar(5)
                 }}
               />
             </div>
