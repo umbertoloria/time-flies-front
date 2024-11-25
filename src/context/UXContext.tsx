@@ -125,10 +125,63 @@ export const useUXDialogForInsertNewGoal = () => {
   return uxContext.dialogForInsertNewGoal
 }
 
-// UX Context
+// UX Context: Dialog For Insert New Goal
 type UXContextTypeDialogForSeeNotes = {
   notes: string
 }
+type UXContextDialogForSeeNotesMainType = {
+  isOpen: boolean
+  data?: UXContextTypeDialogForSeeNotes
+  openDialog: (notes: string) => void
+  closeDialog: () => void
+}
+const dialogForSeeNotesConst: UXContextDialogForSeeNotesMainType = {
+  isOpen: false,
+  // data: undefined,
+  openDialog() {},
+  closeDialog() {},
+} as const
+const useUXContextDialogForSeeNotes = (): {
+  dialogForSeeNotes: UXContextDialogForSeeNotesMainType
+} => {
+  const [dialogForSeeNotes, setDialogForSeeNotes] = useState<{
+    isOpen: boolean
+    data?: UXContextTypeDialogForSeeNotes
+  }>({ isOpen: false })
+  return {
+    dialogForSeeNotes: {
+      isOpen: dialogForSeeNotes.isOpen,
+      data: dialogForSeeNotes.data,
+      openDialog(notes) {
+        if (dialogForSeeNotes.isOpen) {
+          return
+        }
+        setDialogForSeeNotes({
+          ...dialogForSeeNotes,
+          isOpen: true,
+          data: {
+            notes,
+          },
+        })
+      },
+      closeDialog() {
+        if (!dialogForSeeNotes.isOpen || !dialogForSeeNotes.data) {
+          return
+        }
+        setDialogForSeeNotes({
+          ...dialogForSeeNotes,
+          isOpen: false,
+        })
+      },
+    },
+  }
+}
+export const useUXDialogForSeeNotes = () => {
+  const uxContext = useUXContext()
+  return uxContext.dialogForSeeNotes
+}
+
+// UX Context
 export type GrooverData = {
   bass: string
   ghost: string
@@ -141,12 +194,7 @@ type UXContextTypeDialogForCheckPlannedEvent = {
 }
 const UXContext = createContext<{
   dialogForInsertNewGoal: UXContextDialogForInsertNewGoalMainType
-  dialogForSeeNotes: {
-    isOpen: boolean
-    data?: UXContextTypeDialogForSeeNotes
-    openDialog: (notes: string) => void
-    closeDialog: () => void
-  }
+  dialogForSeeNotes: UXContextDialogForSeeNotesMainType
   dialogForGroover: {
     isOpen: boolean
     data?: GrooverData
@@ -162,12 +210,7 @@ const UXContext = createContext<{
   }
 }>({
   dialogForInsertNewGoal: dialogForInsertNewGoalConst,
-  dialogForSeeNotes: {
-    isOpen: false,
-    // data: undefined,
-    openDialog() {},
-    closeDialog() {},
-  },
+  dialogForSeeNotes: dialogForSeeNotesConst,
   dialogForGroover: {
     isOpen: false,
     // data: undefined,
@@ -185,11 +228,7 @@ const UXContext = createContext<{
 
 export const UXProvider: FC<PropsWithChildren> = props => {
   const { dialogForInsertNewGoal } = useUXContextDialogForInsertNewGoal()
-
-  const [dialogForSeeNotes, setDialogForSeeNotes] = useState<{
-    isOpen: boolean
-    data?: UXContextTypeDialogForSeeNotes
-  }>({ isOpen: false })
+  const { dialogForSeeNotes } = useUXContextDialogForSeeNotes()
 
   const [dialogForGroover, setDialogForGroover] = useState<{
     isOpen: boolean
@@ -205,31 +244,7 @@ export const UXProvider: FC<PropsWithChildren> = props => {
     <UXContext.Provider
       value={{
         dialogForInsertNewGoal,
-        dialogForSeeNotes: {
-          isOpen: dialogForSeeNotes.isOpen,
-          data: dialogForSeeNotes.data,
-          openDialog(notes) {
-            if (dialogForSeeNotes.isOpen) {
-              return
-            }
-            setDialogForSeeNotes({
-              ...dialogForSeeNotes,
-              isOpen: true,
-              data: {
-                notes,
-              },
-            })
-          },
-          closeDialog() {
-            if (!dialogForSeeNotes.isOpen || !dialogForSeeNotes.data) {
-              return
-            }
-            setDialogForSeeNotes({
-              ...dialogForSeeNotes,
-              isOpen: false,
-            })
-          },
-        },
+        dialogForSeeNotes,
         dialogForGroover: {
           isOpen: dialogForGroover.isOpen,
           data: dialogForGroover.data,
@@ -328,10 +343,6 @@ export const UXProvider: FC<PropsWithChildren> = props => {
 
 export const useUXContext = () => {
   return useContext(UXContext)
-}
-export const useUXDialogForSeeNotes = () => {
-  const uxContext = useUXContext()
-  return uxContext.dialogForSeeNotes
 }
 export const useGrooverDialog = () => {
   const uxContext = useUXContext()
