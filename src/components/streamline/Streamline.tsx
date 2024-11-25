@@ -5,7 +5,7 @@ import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
 import { TCalendarSDK, TEvent } from '../../remote/sdk/types'
 import { ColouredLabel } from '../coloured/ColouredLabel.tsx'
 import { displayDateFromLocalDate } from '../calendar/utils.ts'
-import { useUXDialogForCheckPlannedEvent } from '../../context/UXContext.tsx'
+import { useUXDialogForCheckPlannedEvent } from '../../context/UXContextDialogForCheckPlannedEvents.tsx'
 import { CustomEventFnType } from '../../events/event-builder.ts'
 import {
   subscribeToStreamlineUpdates,

@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { useUXDialogForCheckPlannedEvent } from '../../context/UXContext.tsx'
+import { useUXDialogForCheckPlannedEvent } from '../../context/UXContextDialogForCheckPlannedEvents.tsx'
 import { GenericDialog } from './GenericDialog.tsx'
 
 export const InputDialogCheckPlannedEvent: FC = () => {
