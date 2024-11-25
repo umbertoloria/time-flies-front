@@ -1,27 +1,28 @@
 import { useState } from 'react'
-import { useUXContext } from './UXContext.tsx'
+import { useUXContext } from '../UXContext.tsx'
 
-type UXContextTypeDialogForSeeNotes = {
+type ContextPartData = {
   notes: string
 }
-export type UXContextDialogForSeeNotesMainType = {
+export type ContextDialogForSeeNotes = {
   isOpen: boolean
-  data?: UXContextTypeDialogForSeeNotes
+  data?: ContextPartData
   openDialog: (notes: string) => void
   closeDialog: () => void
 }
-export const dialogForSeeNotesConst: UXContextDialogForSeeNotesMainType = {
+export const contextDialogForSeeNotesDataDefault: ContextDialogForSeeNotes = {
   isOpen: false,
   // data: undefined,
   openDialog() {},
   closeDialog() {},
 } as const
-export const useUXContextDialogForSeeNotes = (): {
-  dialogForSeeNotes: UXContextDialogForSeeNotesMainType
+
+export const useUXContextDialogForSeeNotesForUX = (): {
+  dialogForSeeNotes: ContextDialogForSeeNotes
 } => {
   const [dialogForSeeNotes, setDialogForSeeNotes] = useState<{
     isOpen: boolean
-    data?: UXContextTypeDialogForSeeNotes
+    data?: ContextPartData
   }>({ isOpen: false })
   return {
     dialogForSeeNotes: {
@@ -51,7 +52,8 @@ export const useUXContextDialogForSeeNotes = (): {
     },
   }
 }
-export const useUXDialogForSeeNotes = () => {
+
+export const useDialogForSeeNotes = () => {
   const uxContext = useUXContext()
   return uxContext.dialogForSeeNotes
 }

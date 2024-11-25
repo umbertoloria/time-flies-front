@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import classNames from 'classnames'
 import { useDialogForInsertNewGoal } from '../../context/dialog-insert-new-goal/ContextDialogForInsertNewGoal.tsx'
-import { useUXDialogForSeeNotes } from '../../context/UXContextDialogForSeeNotes.tsx'
+import { useDialogForSeeNotes } from '../../context/dialog-see-notes/UXContextDialogForSeeNotes.tsx'
 import { isLocalDateToday, isLocalDateYesterday } from '../../lib/utils.ts'
 import { displayDateFromLocalDate } from './utils.ts'
 
@@ -28,9 +28,8 @@ export const DayStatus: FC<DayStatusProps> = props => {
 
   const isClickable = props.onClick || canSetAsChecked || hasNotes
 
-  const { openDialog: openDialogForInsertNewGoal } =
-    useUXDialogForInsertNewGoal()
-  const { openDialog: openDialogForSeeNotes } = useUXDialogForSeeNotes()
+  const { openDialog: openDialogForInsertNewGoal } = useDialogForInsertNewGoal()
+  const { openDialog: openDialogForSeeNotes } = useDialogForSeeNotes()
 
   const displayDate = displayDateFromLocalDate(props.dayData.date)
 

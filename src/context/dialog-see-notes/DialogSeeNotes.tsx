@@ -1,9 +1,9 @@
 import { FC } from 'react'
-import { useUXDialogForSeeNotes } from '../../context/UXContextDialogForSeeNotes.tsx'
-import { GenericDialog } from './GenericDialog.tsx'
+import { useDialogForSeeNotes } from './UXContextDialogForSeeNotes.tsx'
+import { GenericDialog } from '../../components/calendar/GenericDialog.tsx'
 
-export const InputDialogSeeNotes: FC = () => {
-  const { isOpen, data, closeDialog } = useUXDialogForSeeNotes()
+export const DialogSeeNotes: FC = () => {
+  const { isOpen, data, closeDialog } = useDialogForSeeNotes()
 
   return (
     <>
