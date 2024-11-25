@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { fireEventCalendarUpdated } from '../components/calendar/event-calendar-updated.ts'
-import { useUXContext } from './UXContext.tsx'
-import { getSDK } from '../remote/remote.ts'
+import { fireEventCalendarUpdated } from '../../components/calendar/event-calendar-updated.ts'
+import { useUXContext } from '../UXContext.tsx'
+import { getSDK } from '../../remote/remote.ts'
 
 type UXContextTypeDialogForInsertNewGoal = {
   calendarId: number

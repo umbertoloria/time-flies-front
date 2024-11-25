@@ -1,8 +1,8 @@
 import { FC } from 'react'
-import { useUXDialogForInsertNewGoal } from '../../context/UXContextDialogForInsertNewGoal.tsx'
-import { GenericDialog } from './GenericDialog.tsx'
+import { useUXDialogForInsertNewGoal } from './UXContextDialogForInsertNewGoal.tsx'
+import { GenericDialog } from '../../components/calendar/GenericDialog.tsx'
 
-export const InputDialogInsertNewGoal: FC = () => {
+export const DialogForInsertNewGoal: FC = () => {
   const { isOpen, closeDialog, confirmProgressDone } =
     useUXDialogForInsertNewGoal()
 
@@ -15,7 +15,7 @@ export const InputDialogInsertNewGoal: FC = () => {
           title='Segna come fatto'
         >
           <div className='p-4'>
-            Confermi di aver svolto questa attività?
+            {'Confermi di aver svolto questa attività?'}
             {/*<input
               type='text'
               id='input-field'
@@ -30,7 +30,7 @@ export const InputDialogInsertNewGoal: FC = () => {
               className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
               onClick={confirmProgressDone}
             >
-              Conferma
+              {'Conferma'}
             </button>
           </div>
         </GenericDialog>

@@ -1,5 +1,5 @@
 import { createContext, FC, PropsWithChildren, useContext } from 'react'
-import { InputDialogInsertNewGoal } from '../components/calendar/InputDialogInsertNewGoal.tsx'
+import { DialogForInsertNewGoal } from './dialog-insert-new-goal/DialogForInsertNewGoal.tsx'
 import { InputDialogSeeNotes } from '../components/calendar/InputDialogSeeNotes.tsx'
 import { GrooverDialog } from '../components/groover/GrooverDialog.tsx'
 import { InputDialogCheckPlannedEvent } from '../components/calendar/InputDialogCheckPlannedEvent.tsx'
@@ -7,7 +7,7 @@ import {
   dialogForInsertNewGoalConst,
   useUXContextDialogForInsertNewGoal,
   UXContextDialogForInsertNewGoalMainType,
-} from './UXContextDialogForInsertNewGoal.tsx'
+} from './dialog-insert-new-goal/UXContextDialogForInsertNewGoal.tsx'
 import {
   dialogForSeeNotesConst,
   useUXContextDialogForSeeNotes,
@@ -52,7 +52,7 @@ export const UXProvider: FC<PropsWithChildren> = props => {
         dialogForCheckPlannedEvent,
       }}
     >
-      <InputDialogInsertNewGoal />
+      <DialogForInsertNewGoal />
       <InputDialogSeeNotes />
       <GrooverDialog />
       <InputDialogCheckPlannedEvent />
