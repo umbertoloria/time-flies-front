@@ -25,19 +25,19 @@ import {
 } from './UXContextDialogForCheckPlannedEvents.tsx'
 
 const UXContext = createContext<{
-  dialogForInsertNewGoal: UXContextDialogForInsertNewGoalMainType
+  dialogForInsertNewGoal: ContextDialogForInsertNewGoal
   dialogForSeeNotes: UXContextDialogForSeeNotesMainType
   dialogForGroover: UXContextDialogForGrooverMainType
   dialogForCheckPlannedEvent: UXContextDialogForCheckPlannedEventMainType
 }>({
-  dialogForInsertNewGoal: dialogForInsertNewGoalConst,
+  dialogForInsertNewGoal: contextDialogForInsertNewGoalDataDefault,
   dialogForSeeNotes: dialogForSeeNotesConst,
   dialogForGroover: dialogForGrooverConst,
   dialogForCheckPlannedEvent: dialogForCheckPlannedEventConst,
 })
 
 export const UXProvider: FC<PropsWithChildren> = props => {
-  const { dialogForInsertNewGoal } = useUXContextDialogForInsertNewGoal()
+  const { dialogForInsertNewGoal } = useContextDialogForInsertNewGoalForUX()
   const { dialogForSeeNotes } = useUXContextDialogForSeeNotes()
   const { dialogForGroover } = useUXContextDialogForGroover()
   const { dialogForCheckPlannedEvent } =

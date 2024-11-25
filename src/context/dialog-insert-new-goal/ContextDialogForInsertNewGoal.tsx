@@ -3,19 +3,19 @@ import { fireEventCalendarUpdated } from '../../components/calendar/event-calend
 import { useUXContext } from '../UXContext.tsx'
 import { getSDK } from '../../remote/remote.ts'
 
-type UXContextTypeDialogForInsertNewGoal = {
+type ContextPartData = {
   calendarId: number
   localDate: string
   loading: boolean
 }
-export type UXContextDialogForInsertNewGoalMainType = {
+export type ContextDialogForInsertNewGoal = {
   isOpen: boolean
-  data?: UXContextTypeDialogForInsertNewGoal
+  data?: ContextPartData
   openDialog: (calendarId: number, localDate: string) => void
   closeDialog: () => void
   confirmProgressDone: () => void
 }
-export const dialogForInsertNewGoalConst: UXContextDialogForInsertNewGoalMainType =
+export const contextDialogForInsertNewGoalDataDefault: ContextDialogForInsertNewGoal =
   {
     isOpen: false,
     // data: undefined,
@@ -23,13 +23,14 @@ export const dialogForInsertNewGoalConst: UXContextDialogForInsertNewGoalMainTyp
     closeDialog() {},
     confirmProgressDone() {},
   } as const
+
 const { checkDateWithSuccess } = getSDK()
-export const useUXContextDialogForInsertNewGoal = (): {
-  dialogForInsertNewGoal: UXContextDialogForInsertNewGoalMainType
+export const useContextDialogForInsertNewGoalForUX = (): {
+  dialogForInsertNewGoal: ContextDialogForInsertNewGoal
 } => {
   const [dialogForInsertNewGoal, setDialogForInsertNewGoal] = useState<{
     isOpen: boolean
-    data?: UXContextTypeDialogForInsertNewGoal
+    data?: ContextPartData
   }>({ isOpen: false })
   return {
     dialogForInsertNewGoal: {
@@ -108,7 +109,8 @@ export const useUXContextDialogForInsertNewGoal = (): {
     },
   }
 }
-export const useUXDialogForInsertNewGoal = () => {
+
+export const useDialogForInsertNewGoal = () => {
   const uxContext = useUXContext()
   return uxContext.dialogForInsertNewGoal
 }

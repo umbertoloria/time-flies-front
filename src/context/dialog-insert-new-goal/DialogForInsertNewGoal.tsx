@@ -1,10 +1,10 @@
 import { FC } from 'react'
-import { useUXDialogForInsertNewGoal } from './UXContextDialogForInsertNewGoal.tsx'
+import { useDialogForInsertNewGoal } from './ContextDialogForInsertNewGoal.tsx'
 import { GenericDialog } from '../../components/calendar/GenericDialog.tsx'
 
 export const DialogForInsertNewGoal: FC = () => {
   const { isOpen, closeDialog, confirmProgressDone } =
-    useUXDialogForInsertNewGoal()
+    useDialogForInsertNewGoal()
 
   return (
     <>
