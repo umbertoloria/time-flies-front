@@ -5,7 +5,7 @@ import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
 import { TCalendarSDK, TEvent } from '../../remote/sdk/types'
 import { ColouredLabel } from '../coloured/ColouredLabel.tsx'
 import { displayDateFromLocalDate } from '../calendar/utils.ts'
-import { useUXDialogForCheckPlannedEvent } from '../../context/UXContextDialogForCheckPlannedEvents.tsx'
+import { useDialogForCheckPlannedEvent } from '../../context/dialog-check-planned-events/ContextDialogForCheckPlannedEvents.tsx'
 import { CustomEventFnType } from '../../events/event-builder.ts'
 import {
   subscribeToStreamlineUpdates,
@@ -51,7 +51,7 @@ export const Streamline: FC = () => {
 const StreamlineItem: FC<{
   event: TEvent
 }> = props => {
-  const { openDialog } = useUXDialogForCheckPlannedEvent()
+  const { openDialog } = useDialogForCheckPlannedEvent()
 
   return (
     <div className='min-h-9 p-2 rounded-sm bg-gray-200 flex flex-wrap gap-2'>

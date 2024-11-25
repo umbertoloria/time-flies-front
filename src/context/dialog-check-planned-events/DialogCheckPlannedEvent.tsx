@@ -1,10 +1,10 @@
 import { FC } from 'react'
-import { useUXDialogForCheckPlannedEvent } from '../../context/UXContextDialogForCheckPlannedEvents.tsx'
-import { GenericDialog } from './GenericDialog.tsx'
+import { useDialogForCheckPlannedEvent } from './ContextDialogForCheckPlannedEvents.tsx'
+import { GenericDialog } from '../../components/calendar/GenericDialog.tsx'
 
-export const InputDialogCheckPlannedEvent: FC = () => {
+export const DialogCheckPlannedEvent: FC = () => {
   const { isOpen, closeDialog, confirmProgressDone } =
-    useUXDialogForCheckPlannedEvent()
+    useDialogForCheckPlannedEvent()
 
   return (
     <>
@@ -15,7 +15,9 @@ export const InputDialogCheckPlannedEvent: FC = () => {
             labelOnClose='Indietro'
             title='Segna come fatto'
           >
-            <div className='p-4'>Confermi di aver svolto questa attività?</div>
+            <div className='p-4'>
+              {'Confermi di aver svolto questa attività?'}
+            </div>
             <div className='flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600'>
               <button
                 type='button'

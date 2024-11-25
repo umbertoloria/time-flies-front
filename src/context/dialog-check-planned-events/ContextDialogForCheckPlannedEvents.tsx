@@ -1,21 +1,21 @@
-import { getSDK } from '../remote/remote.ts'
+import { getSDK } from '../../remote/remote.ts'
 import { useState } from 'react'
-import { fireEventStreamlineUpdated } from '../components/streamline/event-streamline-updated.ts'
-import { useUXContext } from './UXContext.tsx'
+import { fireEventStreamlineUpdated } from '../../components/streamline/event-streamline-updated.ts'
+import { useUXContext } from '../UXContext.tsx'
 
-type UXContextTypeDialogForCheckPlannedEvent = {
+type ContextPartData = {
   calendarId: number
   eventId: number
   loading: boolean
 }
-export type UXContextDialogForCheckPlannedEventMainType = {
+export type ContextDialogForCheckPlannedEvent = {
   isOpen: boolean
-  data?: UXContextTypeDialogForCheckPlannedEvent
+  data?: ContextPartData
   openDialog: (calendarId: number, eventId: number) => void
   closeDialog: () => void
   confirmProgressDone: () => void
 }
-export const dialogForCheckPlannedEventConst: UXContextDialogForCheckPlannedEventMainType =
+export const contextDialogForCheckPlannedEventDataDefault: ContextDialogForCheckPlannedEvent =
   {
     isOpen: false,
     // data: undefined,
@@ -23,13 +23,14 @@ export const dialogForCheckPlannedEventConst: UXContextDialogForCheckPlannedEven
     closeDialog() {},
     confirmProgressDone() {},
   } as const
+
 const { checkPlannedEventWithSuccess } = getSDK()
-export const useUXContextDialogForCheckPlannedEvents = (): {
-  dialogForCheckPlannedEvent: UXContextDialogForCheckPlannedEventMainType
+export const useContextDialogForCheckPlannedEventsForUX = (): {
+  dialogForCheckPlannedEvent: ContextDialogForCheckPlannedEvent
 } => {
   const [dialogForCheckPlannedEvent, setDialogForCheckPlannedEvent] = useState<{
     isOpen: boolean
-    data?: UXContextTypeDialogForCheckPlannedEvent
+    data?: ContextPartData
   }>({ isOpen: false })
   return {
     dialogForCheckPlannedEvent: {
@@ -107,7 +108,8 @@ export const useUXContextDialogForCheckPlannedEvents = (): {
     },
   }
 }
-export const useUXDialogForCheckPlannedEvent = () => {
+
+export const useDialogForCheckPlannedEvent = () => {
   const uxContext = useUXContext()
   return uxContext.dialogForCheckPlannedEvent
 }
