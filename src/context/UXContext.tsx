@@ -21,52 +21,13 @@ import {
   useUXContextDialogForSeeNotes,
   UXContextDialogForSeeNotesMainType,
 } from './UXContextDialogForSeeNotes.tsx'
+import {
+  dialogForGrooverConst,
+  useUXContextDialogForGroover,
+  UXContextDialogForGrooverMainType,
+} from './UXContextDialogForGroover.tsx'
 
 const { checkPlannedEventWithSuccess } = getSDK()
-
-// UX Context: Dialog For Groover
-type UXContextTypeDialogForGroover = {
-  bass: string
-  ghost: string
-  hhr: string
-}
-type UXContextDialogForGrooverMainType = {
-  isOpen: boolean
-  data?: UXContextTypeDialogForGroover
-  openDialog: (data: UXContextTypeDialogForGroover) => void
-  closeDialog: () => void
-}
-const dialogForGrooverConst: UXContextDialogForGrooverMainType = {
-  isOpen: false,
-  // data: undefined,
-  openDialog() {},
-  closeDialog() {},
-} as const
-const useUXContextDialogForGroover = (): {
-  dialogForGroover: UXContextDialogForGrooverMainType
-} => {
-  const [dialogForGroover, setDialogForGroover] = useState<{
-    isOpen: boolean
-    data?: UXContextTypeDialogForGroover
-  }>({ isOpen: false })
-  return {
-    dialogForGroover: {
-      isOpen: dialogForGroover.isOpen,
-      data: dialogForGroover.data,
-      openDialog(data) {
-        setDialogForGroover({ isOpen: true, data })
-      },
-      closeDialog() {
-        // Deleting the old Groover data.
-        setDialogForGroover({ isOpen: false, data: undefined })
-      },
-    },
-  }
-}
-export const useGrooverDialog = () => {
-  const uxContext = useUXContext()
-  return uxContext.dialogForGroover
-}
 
 // UX Context: Dialog For Check Planned Events
 type UXContextTypeDialogForCheckPlannedEvent = {

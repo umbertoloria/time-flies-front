@@ -1,12 +1,12 @@
 import { FC, useEffect } from 'react'
-import { useGrooverDialog } from '../../context/UXContext.tsx'
+import { useUXDialogForGroover } from '../../context/UXContextDialogForGroover.tsx'
 import { GenericDialog } from '../calendar/GenericDialog.tsx'
 import { createSheet } from './lib/builder.ts'
 import { renderNewScoreInApp } from './lib/render.ts'
 import { mergeSnareAndGhostsTogether } from './lib/drums-patterns/snare-patterns.ts'
 
 export const GrooverDialog: FC = () => {
-  const { isOpen, data, closeDialog } = useGrooverDialog()
+  const { isOpen, data, closeDialog } = useUXDialogForGroover()
 
   useEffect(() => {
     if (!isOpen || !data) {
