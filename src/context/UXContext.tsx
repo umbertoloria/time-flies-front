@@ -225,64 +225,99 @@ export const useGrooverDialog = () => {
   return uxContext.dialogForGroover
 }
 
-// UX Context
+// UX Context: Dialog For Check Planned Events
 type UXContextTypeDialogForCheckPlannedEvent = {
   calendarId: number
   eventId: number
   loading: boolean
 }
-const UXContext = createContext<{
-  dialogForInsertNewGoal: UXContextDialogForInsertNewGoalMainType
-  dialogForSeeNotes: UXContextDialogForSeeNotesMainType
-  dialogForGroover: UXContextDialogForGrooverMainType
-  dialogForCheckPlannedEvent: {
-    isOpen: boolean
-    data?: UXContextTypeDialogForCheckPlannedEvent
-    openDialog: (calendarId: number, eventId: number) => void
-    closeDialog: () => void
-    confirmProgressDone: () => void
-  }
-}>({
-  dialogForInsertNewGoal: dialogForInsertNewGoalConst,
-  dialogForSeeNotes: dialogForSeeNotesConst,
-  dialogForGroover: dialogForGrooverConst,
-  dialogForCheckPlannedEvent: {
+type UXContextDialogForCheckPlannedEventMainType = {
+  isOpen: boolean
+  data?: UXContextTypeDialogForCheckPlannedEvent
+  openDialog: (calendarId: number, eventId: number) => void
+  closeDialog: () => void
+  confirmProgressDone: () => void
+}
+const dialogForCheckPlannedEventConst: UXContextDialogForCheckPlannedEventMainType =
+  {
     isOpen: false,
     // data: undefined,
     openDialog() {},
     closeDialog() {},
     confirmProgressDone() {},
-  },
-})
-
-export const UXProvider: FC<PropsWithChildren> = props => {
-  const { dialogForInsertNewGoal } = useUXContextDialogForInsertNewGoal()
-  const { dialogForSeeNotes } = useUXContextDialogForSeeNotes()
-  const { dialogForGroover } = useUXContextDialogForGroover()
-
+  } as const
+const useUXContextDialogForCheckPlannedEvents = (): {
+  dialogForCheckPlannedEvent: UXContextDialogForCheckPlannedEventMainType
+} => {
   const [dialogForCheckPlannedEvent, setDialogForCheckPlannedEvent] = useState<{
     isOpen: boolean
     data?: UXContextTypeDialogForCheckPlannedEvent
   }>({ isOpen: false })
-
-  return (
-    <UXContext.Provider
-      value={{
-        dialogForInsertNewGoal,
-        dialogForSeeNotes,
-        dialogForGroover,
-        dialogForCheckPlannedEvent: {
-          isOpen: dialogForCheckPlannedEvent.isOpen,
-          data: dialogForCheckPlannedEvent.data,
-          openDialog(calendarId, eventId) {
-            if (
-              dialogForCheckPlannedEvent.isOpen ||
-              dialogForCheckPlannedEvent.data?.loading
-            ) {
-              return
-            }
+  return {
+    dialogForCheckPlannedEvent: {
+      isOpen: dialogForCheckPlannedEvent.isOpen,
+      data: dialogForCheckPlannedEvent.data,
+      openDialog(calendarId, eventId) {
+        if (
+          dialogForCheckPlannedEvent.isOpen ||
+          dialogForCheckPlannedEvent.data?.loading
+        ) {
+          return
+        }
+        setDialogForCheckPlannedEvent({
+          ...dialogForCheckPlannedEvent,
+          isOpen: true,
+          data: {
+            calendarId,
+            eventId,
+            loading: false,
+          },
+        })
+      },
+      closeDialog() {
+        if (
+          !dialogForCheckPlannedEvent.isOpen ||
+          dialogForCheckPlannedEvent.data?.loading
+        ) {
+          return
+        }
+        setDialogForCheckPlannedEvent({
+          ...dialogForCheckPlannedEvent,
+          isOpen: false,
+        })
+      },
+      confirmProgressDone() {
+        if (
+          !dialogForCheckPlannedEvent.isOpen ||
+          !dialogForCheckPlannedEvent.data ||
+          dialogForCheckPlannedEvent.data.loading
+        ) {
+          return
+        }
+        const { calendarId, eventId } = dialogForCheckPlannedEvent.data
+        setDialogForCheckPlannedEvent({
+          isOpen: true,
+          data: {
+            calendarId,
+            eventId,
+            loading: true,
+          },
+        })
+        // TODO: De-couple this component from this logic
+        checkPlannedEventWithSuccess(calendarId, eventId)
+          .then(() => {
+            // Yay!
+            fireEventStreamlineUpdated(undefined)
             setDialogForCheckPlannedEvent({
-              ...dialogForCheckPlannedEvent,
+              isOpen: false,
+              // data: undefined,
+            })
+          })
+          .catch(err => {
+            console.error(err)
+            // TODO: Tell user all went KO
+            alert('Errore avvenuto')
+            setDialogForCheckPlannedEvent({
               isOpen: true,
               data: {
                 calendarId,
@@ -290,61 +325,43 @@ export const UXProvider: FC<PropsWithChildren> = props => {
                 loading: false,
               },
             })
-          },
-          closeDialog() {
-            if (
-              !dialogForCheckPlannedEvent.isOpen ||
-              dialogForCheckPlannedEvent.data?.loading
-            ) {
-              return
-            }
-            setDialogForCheckPlannedEvent({
-              ...dialogForCheckPlannedEvent,
-              isOpen: false,
-            })
-          },
-          confirmProgressDone() {
-            if (
-              !dialogForCheckPlannedEvent.isOpen ||
-              !dialogForCheckPlannedEvent.data ||
-              dialogForCheckPlannedEvent.data.loading
-            ) {
-              return
-            }
-            const { calendarId, eventId } = dialogForCheckPlannedEvent.data
-            setDialogForCheckPlannedEvent({
-              isOpen: true,
-              data: {
-                calendarId,
-                eventId,
-                loading: true,
-              },
-            })
-            // TODO: De-couple this component from this logic
-            checkPlannedEventWithSuccess(calendarId, eventId)
-              .then(() => {
-                // Yay!
-                fireEventStreamlineUpdated(undefined)
-                setDialogForCheckPlannedEvent({
-                  isOpen: false,
-                  // data: undefined,
-                })
-              })
-              .catch(err => {
-                console.error(err)
-                // TODO: Tell user all went KO
-                alert('Errore avvenuto')
-                setDialogForCheckPlannedEvent({
-                  isOpen: true,
-                  data: {
-                    calendarId,
-                    eventId,
-                    loading: false,
-                  },
-                })
-              })
-          },
-        },
+          })
+      },
+    },
+  }
+}
+export const useUXDialogForCheckPlannedEvent = () => {
+  const uxContext = useUXContext()
+  return uxContext.dialogForCheckPlannedEvent
+}
+
+// UX Context
+const UXContext = createContext<{
+  dialogForInsertNewGoal: UXContextDialogForInsertNewGoalMainType
+  dialogForSeeNotes: UXContextDialogForSeeNotesMainType
+  dialogForGroover: UXContextDialogForGrooverMainType
+  dialogForCheckPlannedEvent: UXContextDialogForCheckPlannedEventMainType
+}>({
+  dialogForInsertNewGoal: dialogForInsertNewGoalConst,
+  dialogForSeeNotes: dialogForSeeNotesConst,
+  dialogForGroover: dialogForGrooverConst,
+  dialogForCheckPlannedEvent: dialogForCheckPlannedEventConst,
+})
+
+export const UXProvider: FC<PropsWithChildren> = props => {
+  const { dialogForInsertNewGoal } = useUXContextDialogForInsertNewGoal()
+  const { dialogForSeeNotes } = useUXContextDialogForSeeNotes()
+  const { dialogForGroover } = useUXContextDialogForGroover()
+  const { dialogForCheckPlannedEvent } =
+    useUXContextDialogForCheckPlannedEvents()
+
+  return (
+    <UXContext.Provider
+      value={{
+        dialogForInsertNewGoal,
+        dialogForSeeNotes,
+        dialogForGroover,
+        dialogForCheckPlannedEvent,
       }}
     >
       <InputDialogInsertNewGoal />
@@ -358,8 +375,4 @@ export const UXProvider: FC<PropsWithChildren> = props => {
 
 export const useUXContext = () => {
   return useContext(UXContext)
-}
-export const useUXDialogForCheckPlannedEvent = () => {
-  const uxContext = useUXContext()
-  return uxContext.dialogForCheckPlannedEvent
 }
