@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { fireEventCalendarUpdated } from '../../components/calendar/event-calendar-updated.ts'
-import { useUXContext } from '../UXContext.tsx'
+import { fireEventStreamlineUpdated } from '../../components/streamline/event-streamline-updated.ts'
 import { getSDK } from '../../remote/remote.ts'
+import { useUXContext } from '../UXContext.tsx'
 
 type ContextPartData = {
   calendarId: number
@@ -75,8 +76,11 @@ export const useContextDialogForInsertNewGoalForUX = (): {
         checkDateWithSuccess(calendarId, localDate)
           .then(() => {
             // Yay!
-            // TODO: Tell user all went OK
+
             fireEventCalendarUpdated({ calendarId })
+            fireEventStreamlineUpdated(undefined)
+            // Because maybe there was a Planned Event right on that day.
+
             setDialog({
               isOpen: false,
               // data: undefined,

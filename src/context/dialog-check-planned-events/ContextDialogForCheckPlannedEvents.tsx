@@ -1,6 +1,7 @@
 import { getSDK } from '../../remote/remote.ts'
 import { useState } from 'react'
 import { fireEventStreamlineUpdated } from '../../components/streamline/event-streamline-updated.ts'
+import { fireEventCalendarUpdated } from '../../components/calendar/event-calendar-updated.ts'
 import { useUXContext } from '../UXContext.tsx'
 
 type ContextPartData = {
@@ -75,7 +76,10 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
         checkPlannedEventWithSuccess(calendarId, eventId)
           .then(() => {
             // Yay!
+
             fireEventStreamlineUpdated(undefined)
+            fireEventCalendarUpdated({ calendarId })
+
             setDialog({
               isOpen: false,
               // data: undefined,
