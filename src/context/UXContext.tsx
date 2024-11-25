@@ -12,7 +12,7 @@ import {
   ContextDialogForSeeNotes,
   contextDialogForSeeNotesDataDefault,
   useUXContextDialogForSeeNotesForUX,
-} from './dialog-see-notes/UXContextDialogForSeeNotes.tsx'
+} from './dialog-see-notes/ContextDialogForSeeNotes.tsx'
 import {
   ContextDialogForGroover,
   contextDialogForGrooverDataDefault,

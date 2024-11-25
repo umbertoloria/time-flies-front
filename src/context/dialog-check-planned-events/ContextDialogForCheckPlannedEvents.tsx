@@ -28,23 +28,20 @@ const { checkPlannedEventWithSuccess } = getSDK()
 export const useContextDialogForCheckPlannedEventsForUX = (): {
   dialogForCheckPlannedEvent: ContextDialogForCheckPlannedEvent
 } => {
-  const [dialogForCheckPlannedEvent, setDialogForCheckPlannedEvent] = useState<{
+  const [dialog, setDialog] = useState<{
     isOpen: boolean
     data?: ContextPartData
   }>({ isOpen: false })
   return {
     dialogForCheckPlannedEvent: {
-      isOpen: dialogForCheckPlannedEvent.isOpen,
-      data: dialogForCheckPlannedEvent.data,
+      isOpen: dialog.isOpen,
+      data: dialog.data,
       openDialog(calendarId, eventId) {
-        if (
-          dialogForCheckPlannedEvent.isOpen ||
-          dialogForCheckPlannedEvent.data?.loading
-        ) {
+        if (dialog.isOpen || dialog.data?.loading) {
           return
         }
-        setDialogForCheckPlannedEvent({
-          ...dialogForCheckPlannedEvent,
+        setDialog({
+          ...dialog,
           isOpen: true,
           data: {
             calendarId,
@@ -54,27 +51,20 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
         })
       },
       closeDialog() {
-        if (
-          !dialogForCheckPlannedEvent.isOpen ||
-          dialogForCheckPlannedEvent.data?.loading
-        ) {
+        if (!dialog.isOpen || dialog.data?.loading) {
           return
         }
-        setDialogForCheckPlannedEvent({
-          ...dialogForCheckPlannedEvent,
+        setDialog({
+          ...dialog,
           isOpen: false,
         })
       },
       confirmProgressDone() {
-        if (
-          !dialogForCheckPlannedEvent.isOpen ||
-          !dialogForCheckPlannedEvent.data ||
-          dialogForCheckPlannedEvent.data.loading
-        ) {
+        if (!dialog.isOpen || !dialog.data || dialog.data.loading) {
           return
         }
-        const { calendarId, eventId } = dialogForCheckPlannedEvent.data
-        setDialogForCheckPlannedEvent({
+        const { calendarId, eventId } = dialog.data
+        setDialog({
           isOpen: true,
           data: {
             calendarId,
@@ -86,7 +76,7 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
           .then(() => {
             // Yay!
             fireEventStreamlineUpdated(undefined)
-            setDialogForCheckPlannedEvent({
+            setDialog({
               isOpen: false,
               // data: undefined,
             })
@@ -95,7 +85,7 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
             console.error(err)
             // TODO: Tell user all went KO
             alert('Errore avvenuto')
-            setDialogForCheckPlannedEvent({
+            setDialog({
               isOpen: true,
               data: {
                 calendarId,

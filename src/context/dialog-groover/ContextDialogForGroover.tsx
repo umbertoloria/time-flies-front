@@ -22,20 +22,20 @@ export const contextDialogForGrooverDataDefault: ContextDialogForGroover = {
 export const useContextDialogForGrooverForUX = (): {
   dialogForGroover: ContextDialogForGroover
 } => {
-  const [dialogForGroover, setDialogForGroover] = useState<{
+  const [dialog, setDialog] = useState<{
     isOpen: boolean
     data?: ContextPartData
   }>({ isOpen: false })
   return {
     dialogForGroover: {
-      isOpen: dialogForGroover.isOpen,
-      data: dialogForGroover.data,
+      isOpen: dialog.isOpen,
+      data: dialog.data,
       openDialog(data) {
-        setDialogForGroover({ isOpen: true, data })
+        setDialog({ isOpen: true, data })
       },
       closeDialog() {
         // Deleting the old Groover data.
-        setDialogForGroover({ isOpen: false, data: undefined })
+        setDialog({ isOpen: false, data: undefined })
       },
     },
   }

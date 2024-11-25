@@ -28,23 +28,20 @@ const { checkDateWithSuccess } = getSDK()
 export const useContextDialogForInsertNewGoalForUX = (): {
   dialogForInsertNewGoal: ContextDialogForInsertNewGoal
 } => {
-  const [dialogForInsertNewGoal, setDialogForInsertNewGoal] = useState<{
+  const [dialog, setDialog] = useState<{
     isOpen: boolean
     data?: ContextPartData
   }>({ isOpen: false })
   return {
     dialogForInsertNewGoal: {
-      isOpen: dialogForInsertNewGoal.isOpen,
-      data: dialogForInsertNewGoal.data,
+      isOpen: dialog.isOpen,
+      data: dialog.data,
       openDialog(calendarId, localDate) {
-        if (
-          dialogForInsertNewGoal.isOpen ||
-          dialogForInsertNewGoal.data?.loading
-        ) {
+        if (dialog.isOpen || dialog.data?.loading) {
           return
         }
-        setDialogForInsertNewGoal({
-          ...dialogForInsertNewGoal,
+        setDialog({
+          ...dialog,
           isOpen: true,
           data: {
             calendarId,
@@ -54,27 +51,20 @@ export const useContextDialogForInsertNewGoalForUX = (): {
         })
       },
       closeDialog() {
-        if (
-          !dialogForInsertNewGoal.isOpen ||
-          dialogForInsertNewGoal.data?.loading
-        ) {
+        if (!dialog.isOpen || dialog.data?.loading) {
           return
         }
-        setDialogForInsertNewGoal({
-          ...dialogForInsertNewGoal,
+        setDialog({
+          ...dialog,
           isOpen: false,
         })
       },
       confirmProgressDone() {
-        if (
-          !dialogForInsertNewGoal.isOpen ||
-          !dialogForInsertNewGoal.data ||
-          dialogForInsertNewGoal.data.loading
-        ) {
+        if (!dialog.isOpen || !dialog.data || dialog.data.loading) {
           return
         }
-        const { calendarId, localDate } = dialogForInsertNewGoal.data
-        setDialogForInsertNewGoal({
+        const { calendarId, localDate } = dialog.data
+        setDialog({
           isOpen: true,
           data: {
             calendarId,
@@ -87,7 +77,7 @@ export const useContextDialogForInsertNewGoalForUX = (): {
             // Yay!
             // TODO: Tell user all went OK
             fireEventCalendarUpdated({ calendarId })
-            setDialogForInsertNewGoal({
+            setDialog({
               isOpen: false,
               // data: undefined,
             })
@@ -96,7 +86,7 @@ export const useContextDialogForInsertNewGoalForUX = (): {
             console.error(err)
             // TODO: Tell user all went KO
             alert('Errore avvenuto')
-            setDialogForInsertNewGoal({
+            setDialog({
               isOpen: true,
               data: {
                 calendarId,

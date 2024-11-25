@@ -20,20 +20,20 @@ export const contextDialogForSeeNotesDataDefault: ContextDialogForSeeNotes = {
 export const useUXContextDialogForSeeNotesForUX = (): {
   dialogForSeeNotes: ContextDialogForSeeNotes
 } => {
-  const [dialogForSeeNotes, setDialogForSeeNotes] = useState<{
+  const [dialog, setDialog] = useState<{
     isOpen: boolean
     data?: ContextPartData
   }>({ isOpen: false })
   return {
     dialogForSeeNotes: {
-      isOpen: dialogForSeeNotes.isOpen,
-      data: dialogForSeeNotes.data,
+      isOpen: dialog.isOpen,
+      data: dialog.data,
       openDialog(notes) {
-        if (dialogForSeeNotes.isOpen) {
+        if (dialog.isOpen) {
           return
         }
-        setDialogForSeeNotes({
-          ...dialogForSeeNotes,
+        setDialog({
+          ...dialog,
           isOpen: true,
           data: {
             notes,
@@ -41,11 +41,11 @@ export const useUXContextDialogForSeeNotesForUX = (): {
         })
       },
       closeDialog() {
-        if (!dialogForSeeNotes.isOpen || !dialogForSeeNotes.data) {
+        if (!dialog.isOpen || !dialog.data) {
           return
         }
-        setDialogForSeeNotes({
-          ...dialogForSeeNotes,
+        setDialog({
+          ...dialog,
           isOpen: false,
         })
       },
