@@ -72,12 +72,31 @@ const InnerPage: FC = () => {
   const [dataCalendar5, { refetch: refetchCalendar5 }] =
     useWrapperForCreateResource(() => readCalendar(5).then(safeCalendar))
 
+  const refetchOneCalendar = (calendarId: number) => {
+    // TODO: Improve this
+    if (calendarId === 1) {
+      refetchCalendar1()
+    } else if (calendarId === 2) {
+      refetchCalendar2()
+    } else if (calendarId === 3) {
+      refetchCalendar3()
+    } else if (calendarId === 4) {
+      refetchCalendar4()
+    } else if (calendarId === 5) {
+      refetchCalendar5()
+    } else {
+      // No support for other calendars...
+    }
+  }
+  const refetchAllCalendars = () => {
+    refetchOneCalendar(1)
+    refetchOneCalendar(2)
+    refetchOneCalendar(3)
+    refetchOneCalendar(4)
+    refetchOneCalendar(5)
+  }
   const refreshCalendarIntervalTimer = setInterval(() => {
-    refetchCalendar1()
-    refetchCalendar2()
-    refetchCalendar3()
-    refetchCalendar4()
-    refetchCalendar5()
+    refetchAllCalendars()
   }, periodRefreshCalendarsInMillis)
   useEffect(() => {
     return () => {
@@ -97,7 +116,9 @@ const InnerPage: FC = () => {
                 logicCalendar={createLogicCalendarFromTCalendar(
                   dataCalendar1.data
                 )}
-                pleaseUpdateCalendar={refetchCalendar1}
+                pleaseUpdateCalendar={() => {
+                  refetchOneCalendar(1)
+                }}
                 goInThePast={() => {
                   setWeeks4InThePastForCalendar(1)
                 }}
@@ -120,7 +141,9 @@ const InnerPage: FC = () => {
                 logicCalendar={createLogicCalendarFromTCalendar(
                   dataCalendar2.data
                 )}
-                pleaseUpdateCalendar={refetchCalendar2}
+                pleaseUpdateCalendar={() => {
+                  refetchOneCalendar(2)
+                }}
                 goInThePast={() => {
                   setWeeks4InThePastForCalendar(2)
                 }}
@@ -143,7 +166,9 @@ const InnerPage: FC = () => {
                 logicCalendar={createLogicCalendarFromTCalendar(
                   dataCalendar3.data
                 )}
-                pleaseUpdateCalendar={refetchCalendar3}
+                pleaseUpdateCalendar={() => {
+                  refetchOneCalendar(3)
+                }}
                 goInThePast={() => {
                   setWeeks4InThePastForCalendar(3)
                 }}
@@ -166,7 +191,9 @@ const InnerPage: FC = () => {
                 logicCalendar={createLogicCalendarFromTCalendar(
                   dataCalendar4.data
                 )}
-                pleaseUpdateCalendar={refetchCalendar4}
+                pleaseUpdateCalendar={() => {
+                  refetchOneCalendar(4)
+                }}
                 goInThePast={() => {
                   setWeeks4InThePastForCalendar(4)
                 }}
@@ -189,7 +216,9 @@ const InnerPage: FC = () => {
                 logicCalendar={createLogicCalendarFromTCalendar(
                   dataCalendar5.data
                 )}
-                pleaseUpdateCalendar={refetchCalendar5}
+                pleaseUpdateCalendar={() => {
+                  refetchOneCalendar(5)
+                }}
                 goInThePast={() => {
                   setWeeks4InThePastForCalendar(5)
                 }}
@@ -225,20 +254,7 @@ const InnerPage: FC = () => {
             dataCalendar4Loading={dataCalendar4.loading}
             dataCalendar5Loading={dataCalendar5.loading}
             pleaseUpdateCalendar={calendarId => {
-              // TODO: Improve this
-              if (calendarId === 1) {
-                refetchCalendar1()
-              } else if (calendarId === 2) {
-                refetchCalendar2()
-              } else if (calendarId === 3) {
-                refetchCalendar3()
-              } else if (calendarId === 4) {
-                refetchCalendar4()
-              } else if (calendarId === 5) {
-                refetchCalendar5()
-              } else {
-                // No support for other calendars...
-              }
+              refetchOneCalendar(calendarId)
             }}
           />
         )}
