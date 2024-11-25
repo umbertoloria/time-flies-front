@@ -51,26 +51,12 @@ const InnerPage: FC = () => {
   }
 
   // Calculating "From Dates" for calendars
-  const fromDate1 = getDateWithOffsetDays(
-    getDateFromLocalDate(todayLocalDate),
-    -7 * (numWeeks - 1 + 4 * getWeeks4OffsetFromCalendar(1))
-  )
-  const fromDate2 = getDateWithOffsetDays(
-    getDateFromLocalDate(todayLocalDate),
-    -7 * (numWeeks - 1 + 4 * getWeeks4OffsetFromCalendar(2))
-  )
-  const fromDate3 = getDateWithOffsetDays(
-    getDateFromLocalDate(todayLocalDate),
-    -7 * (numWeeks - 1 + 4 * getWeeks4OffsetFromCalendar(3))
-  )
-  const fromDate4 = getDateWithOffsetDays(
-    getDateFromLocalDate(todayLocalDate),
-    -7 * (numWeeks - 1 + 4 * getWeeks4OffsetFromCalendar(4))
-  )
-  const fromDate5 = getDateWithOffsetDays(
-    getDateFromLocalDate(todayLocalDate),
-    -7 * (numWeeks - 1 + 4 * getWeeks4OffsetFromCalendar(5))
-  )
+  const getFromDateForCalendar = (id: number) => {
+    return getDateWithOffsetDays(
+      getDateFromLocalDate(todayLocalDate),
+      -7 * (numWeeks - 1 + 4 * getWeeks4OffsetFromCalendar(id))
+    )
+  }
 
   // Calendars
   const safeCalendar = (data: TCalendar | 'unable') =>
@@ -106,7 +92,7 @@ const InnerPage: FC = () => {
           <>
             <div>
               <CalendarForLogicCalendar
-                startWeekFromDate={fromDate1}
+                startWeekFromDate={getFromDateForCalendar(1)}
                 numWeeks={numWeeks}
                 logicCalendar={createLogicCalendarFromTCalendar(
                   dataCalendar1.data
@@ -129,7 +115,7 @@ const InnerPage: FC = () => {
           <>
             <div>
               <CalendarForLogicCalendar
-                startWeekFromDate={fromDate2}
+                startWeekFromDate={getFromDateForCalendar(2)}
                 numWeeks={numWeeks}
                 logicCalendar={createLogicCalendarFromTCalendar(
                   dataCalendar2.data
@@ -152,7 +138,7 @@ const InnerPage: FC = () => {
           <>
             <div>
               <CalendarForLogicCalendar
-                startWeekFromDate={fromDate3}
+                startWeekFromDate={getFromDateForCalendar(3)}
                 numWeeks={numWeeks}
                 logicCalendar={createLogicCalendarFromTCalendar(
                   dataCalendar3.data
@@ -175,7 +161,7 @@ const InnerPage: FC = () => {
           <>
             <div>
               <CalendarForLogicCalendar
-                startWeekFromDate={fromDate4}
+                startWeekFromDate={getFromDateForCalendar(4)}
                 numWeeks={numWeeks}
                 logicCalendar={createLogicCalendarFromTCalendar(
                   dataCalendar4.data
@@ -198,7 +184,7 @@ const InnerPage: FC = () => {
           <>
             <div>
               <CalendarForLogicCalendar
-                startWeekFromDate={fromDate5}
+                startWeekFromDate={getFromDateForCalendar(5)}
                 numWeeks={numWeeks}
                 logicCalendar={createLogicCalendarFromTCalendar(
                   dataCalendar5.data
