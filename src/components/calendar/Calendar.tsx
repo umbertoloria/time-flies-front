@@ -45,11 +45,6 @@ function makeDayStatusRowsFromLogicCalendar(
   }
   const { logicDays } = logicCalendar
 
-  if (logicDays.length === 0) {
-    // Given no dates.
-    return dayStatusRows
-  }
-
   // From "logicDays", skipping all days that are before "fromLocalDate"
   const fromLocalDate = getLocalDayByDate(fromDate)
   let iNextCalendarDay = 0

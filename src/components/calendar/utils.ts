@@ -46,6 +46,10 @@ export function getFirstAndLastLocalDatesFromDayStatusRows(
   dayStatusRows: DayStatusRow[]
 ) {
   // Note: Param "dayStatusRows" is expected to be *NON-EMPTY*.
+  if (dayStatusRows.length === 0) {
+    throw new Error('Expected non-empty "dayStatusRows" param')
+  }
+
   // Calculate "firstLocalDate" and "lastLocalDate"
   let i = 0
   const firstLocalDate = dayStatusRows[i].dayStatuses[0].dayData.date
