@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { CalendarTitle } from '../calendar/Calendar.tsx'
 import { getSDK } from '../../remote/remote.ts'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
@@ -12,6 +12,7 @@ import {
   unsubscribeToStreamlineUpdates,
 } from './event-streamline-updated.ts'
 import { ColouredQuad } from '../coloured/ColouredQuad.tsx'
+import { getTodayLocalDate } from '../../lib/utils.ts'
 
 const { readStreamline } = getSDK()
 export const Streamline: FC = () => {
@@ -30,15 +31,26 @@ export const Streamline: FC = () => {
     }
   }, [])
 
+  // TODO: Perform past Event filtering server-side
+  const actualEvents = useMemo(() => {
+    if (!dataStreamline?.data) {
+      return null
+    }
+    const todayLocalDate = getTodayLocalDate()
+    return dataStreamline.data.events.filter(
+      event => event.date.localeCompare(todayLocalDate) >= 0
+    )
+  }, [dataStreamline])
+
   return (
     <div>
       <CalendarTitle textColor='#fff' label='Streamline' />
-      {!dataStreamline?.data || dataStreamline.loading ? (
+      {!actualEvents ? (
         <>Searching...</>
       ) : (
         <>
-          <div className='m-auto text-gray-700 flex flex-col gap-2'>
-            {(dataStreamline.data?.events || []).map((event, index) => (
+          <div className='m-auto text-gray-700 flex flex-col gap-2 overflow-y-scroll max-h-96 rounded-sm'>
+            {actualEvents.map((event, index) => (
               <StreamlineItem key={index} event={event} />
             ))}
           </div>
