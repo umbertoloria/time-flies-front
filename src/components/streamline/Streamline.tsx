@@ -66,18 +66,21 @@ const StreamlineItem: FC<{
   const { openDialog } = useDialogForCheckPlannedEvent()
 
   return (
-    <div className='min-h-9 p-2 rounded-sm bg-gray-200 flex flex-wrap gap-2'>
-      <ColouredQuad color={props.event.calendar.color} />
+    <div className='min-h-11 p-2 rounded-sm bg-gray-200 flex flex-wrap gap-2 justify-between'>
+      <div className='flex gap-2'>
+        <ColouredQuad color={props.event.calendar.color} />
 
-      <div>
-        <ColouredLabel bold>{props.event.calendar.name}</ColouredLabel>
+        <div>
+          <ColouredLabel bold>{props.event.calendar.name}</ColouredLabel>
+        </div>
+
+        <div>
+          <ColouredLabel>
+            {displayDateFromLocalDate(props.event.date)}
+          </ColouredLabel>
+        </div>
       </div>
 
-      <div>
-        <ColouredLabel>
-          {displayDateFromLocalDate(props.event.date)}
-        </ColouredLabel>
-      </div>
       <div>
         <button
           className='btn-primary'
