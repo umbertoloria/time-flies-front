@@ -1,46 +1,4 @@
-import { TCalendarCh } from '../../remote/sdk/types'
 import { DayStatusRow } from './Calendar'
-import { DayStatusDayData } from './DayStatus.tsx'
-
-export type LogicDay = {
-  dayData: DayStatusDayData
-  isPlanned?: boolean
-  color: string
-  onClick?: () => void
-}
-
-export function appendLogicDaysFromTCalendarCh(
-  logicDays: LogicDay[],
-  calendar: TCalendarCh
-) {
-  logicDays.push(
-    ...calendar.days.map(day => ({
-      dayData: {
-        date: day.date,
-        notes: day.notes,
-      },
-      color: calendar.color,
-    }))
-  )
-  if (calendar.plannedDays && calendar.plannedDays.length) {
-    logicDays.push(
-      ...calendar.plannedDays.map(day => ({
-        dayData: {
-          date: day.date,
-          notes: day.notes,
-        },
-        isPlanned: true,
-        color: calendar.plannedColor,
-      }))
-    )
-  }
-}
-
-export function finalizeLogicDays(logicDays: LogicDay[]) {
-  logicDays.sort((a, b) =>
-    a.dayData.date.localeCompare(b.dayData.date) < 0 ? -1 : 1
-  )
-}
 
 export function getFirstAndLastLocalDatesFromDayStatusRows(
   dayStatusRows: DayStatusRow[]

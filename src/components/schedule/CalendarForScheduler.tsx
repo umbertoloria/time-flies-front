@@ -5,7 +5,7 @@ import {
   getTodayLocalDate,
 } from '../../lib/utils.ts'
 import { CalendarForLogicCalendar } from '../calendar/Calendar.tsx'
-import { LogicDay } from '../calendar/utils.ts'
+import { LogicDay } from '../calendar/logic-calendar.ts'
 
 const defaultNumWeeks = 4 * 2 // Two months
 export const CalendarForScheduler: FC<{

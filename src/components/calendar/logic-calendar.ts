@@ -1,9 +1,5 @@
-import { TCalendar } from '../../remote/sdk/types'
-import {
-  appendLogicDaysFromTCalendarCh,
-  finalizeLogicDays,
-  LogicDay,
-} from './utils.ts'
+import { TCalendar, TCalendarCh } from '../../remote/sdk/types'
+import { DayStatusDayData } from './DayStatus.tsx'
 
 export type LogicCalendar = {
   color: string
@@ -13,10 +9,41 @@ export type LogicCalendar = {
   }
   logicDays: LogicDay[]
 }
+export type LogicDay = {
+  dayData: DayStatusDayData
+  isPlanned?: boolean
+  color: string
+  onClick?: () => void
+}
 
-export const createLogicDaysFromTCalendar = (
-  calendar: TCalendar
-): LogicDay[] => {
+export function appendLogicDaysFromTCalendarCh(
+  logicDays: LogicDay[],
+  calendar: TCalendarCh
+) {
+  logicDays.push(
+    ...calendar.days.map(day => ({
+      dayData: {
+        date: day.date,
+        notes: day.notes,
+      },
+      color: calendar.color,
+    }))
+  )
+  if (calendar.plannedDays && calendar.plannedDays.length) {
+    logicDays.push(
+      ...calendar.plannedDays.map(day => ({
+        dayData: {
+          date: day.date,
+          notes: day.notes,
+        },
+        isPlanned: true,
+        color: calendar.plannedColor,
+      }))
+    )
+  }
+}
+
+export function createLogicDaysFromTCalendar(calendar: TCalendar): LogicDay[] {
   const logicDays: LogicDay[] = []
 
   // All "TDays" to evaluate
@@ -26,18 +53,20 @@ export const createLogicDaysFromTCalendar = (
       appendLogicDaysFromTCalendarCh(logicDays, childCalendar)
     }
   }
-  finalizeLogicDays(logicDays)
+  logicDays.sort((a, b) => a.dayData.date.localeCompare(b.dayData.date))
 
   return logicDays
 }
 
-export const createLogicCalendarFromTCalendar = (
+export function createLogicCalendarFromTCalendar(
   calendar: TCalendar
-): LogicCalendar => ({
-  color: calendar.color,
-  name: calendar.name,
-  apiCalendar: {
-    id: calendar.id,
-  },
-  logicDays: createLogicDaysFromTCalendar(calendar),
-})
+): LogicCalendar {
+  return {
+    color: calendar.color,
+    name: calendar.name,
+    apiCalendar: {
+      id: calendar.id,
+    },
+    logicDays: createLogicDaysFromTCalendar(calendar),
+  }
+}
