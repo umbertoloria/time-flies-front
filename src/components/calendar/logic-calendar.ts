@@ -14,9 +14,9 @@ export type LogicCalendar = {
   logicDays: LogicDay[]
 }
 
-export const createLogicCalendarFromTCalendar = (
+export const createLogicDaysFromTCalendar = (
   calendar: TCalendar
-): LogicCalendar => {
+): LogicDay[] => {
   const logicDays: LogicDay[] = []
 
   // All "TDays" to evaluate
@@ -28,12 +28,16 @@ export const createLogicCalendarFromTCalendar = (
   }
   finalizeLogicDays(logicDays)
 
-  return {
-    color: calendar.color,
-    name: calendar.name,
-    apiCalendar: {
-      id: calendar.id,
-    },
-    logicDays,
-  }
+  return logicDays
 }
+
+export const createLogicCalendarFromTCalendar = (
+  calendar: TCalendar
+): LogicCalendar => ({
+  color: calendar.color,
+  name: calendar.name,
+  apiCalendar: {
+    id: calendar.id,
+  },
+  logicDays: createLogicDaysFromTCalendar(calendar),
+})

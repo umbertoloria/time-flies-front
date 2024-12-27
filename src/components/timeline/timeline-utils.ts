@@ -5,11 +5,7 @@ import {
   getLocalDayByDate,
   localDatesLT,
 } from '../../lib/utils.ts'
-import {
-  appendLogicDaysFromTCalendarCh,
-  finalizeLogicDays,
-  LogicDay,
-} from '../calendar/utils.ts'
+import { createLogicDaysFromTCalendar } from '../calendar/logic-calendar.ts'
 
 export function createDayStatusesFromTCalendar(
   endDate: Date,
@@ -24,15 +20,8 @@ export function createDayStatusesFromTCalendar(
     const curDate = getDateWithOffsetDays(endDate, -iCell)
     const localDate = getLocalDayByDate(curDate)
 
-    // All "TDays" to evaluate
-    const logicDays: LogicDay[] = []
-    appendLogicDaysFromTCalendarCh(logicDays, calendar)
-    if (calendar.children && calendar.children.length) {
-      for (const childCalendar of calendar.children) {
-        appendLogicDaysFromTCalendarCh(logicDays, childCalendar)
-      }
-    }
-    finalizeLogicDays(logicDays)
+    // All Logic Days to evaluate
+    const logicDays = createLogicDaysFromTCalendar(calendar)
 
     while (
       iDays < logicDays.length &&

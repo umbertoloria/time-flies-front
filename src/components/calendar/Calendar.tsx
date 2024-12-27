@@ -23,7 +23,9 @@ function makeDayStatusRowsFromLogicCalendar(
   fromDate: Date,
   weeksToShow: number
 ): DayStatusRow[] {
-  // Requirement: "fromDate" *MUST* be a Monday.
+  // Requirements:
+  // 1. Logic Days must be sorted in Date
+  // 2. "fromDate" must be a Monday
 
   const fillingCellsCount = 7 as const // 7 days per week.
 
