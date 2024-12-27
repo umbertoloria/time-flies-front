@@ -94,6 +94,36 @@ function makeDayStatusRowsFromLogicCalendar(
       // Going to the next Calendar Day (if there exist).
       if (iNextCalendarDay < logicDays.length) {
         curCalendarDay = logicDays[iNextCalendarDay++]
+
+        if (curCalendarDay.dayData.date === curLocalDate) {
+          // TODO: Multiple days in various Calendars (Parent and Children)
+          const prevCalendarDay = logicDays[iNextCalendarDay - 2]
+          console.log(
+            'Found multiple Calendar Days on the same date',
+            curLocalDate,
+            prevCalendarDay,
+            curCalendarDay
+          )
+
+          // Let's go in the future until we find:
+          // 1. a dead end, so no future Calendar Days left
+          // 2. a future Calendar Days
+          while (
+            curCalendarDay.dayData.date === curLocalDate &&
+            iNextCalendarDay < logicDays.length
+          ) {
+            curCalendarDay = logicDays[iNextCalendarDay++]
+          }
+          if (iNextCalendarDay < logicDays.length) {
+            // Fine. We jump the group of multiple Calendar Days that were on
+            // the same date. Now we can go to the next iteration.
+          } else {
+            // This means case 1: there are no Calendar Days left, and the
+            // "current" is still one of the multiple Calendar Days on the same
+            // date.
+            curCalendarDay = undefined
+          }
+        }
       } else {
         // No problem. This means there are no more Calendar Days to process.
         curCalendarDay = undefined
