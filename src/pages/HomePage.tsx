@@ -6,11 +6,7 @@ import {
 } from '../lib/utils.ts'
 import { UserLayout } from '../layout/UserLayout.tsx'
 import { getSDK } from '../remote/remote.ts'
-import {
-  CalendarForLogicCalendar,
-  defaultNumWeeks,
-} from '../components/calendar/Calendar.tsx'
-import { createLogicCalendarFromTCalendar } from '../components/calendar/logic-calendar.ts'
+import { CalendarFromCalendar } from '../components/calendar/Calendar.tsx'
 import { useWrapperForCreateResource } from '../lib/remote-resources.ts'
 import { Streamline } from '../components/streamline/Streamline.tsx'
 import { Timelines } from '../components/timeline/Timelines.tsx'
@@ -25,7 +21,7 @@ export default function HomePage() {
   )
 }
 
-const numWeeks = defaultNumWeeks
+const defaultNumWeeks = 4 * 3 // Three months
 
 const { readAllCalendars } = getSDK()
 const InnerPage: FC = () => {
@@ -53,7 +49,7 @@ const InnerPage: FC = () => {
   const getFromDateForCalendar = (id: number) => {
     return getDateWithOffsetDays(
       getDateFromLocalDate(todayLocalDate),
-      -7 * (numWeeks - 1 + 4 * getWeeks4OffsetFromCalendar(id))
+      -7 * (defaultNumWeeks - 1 + 4 * getWeeks4OffsetFromCalendar(id))
     )
   }
 
@@ -81,10 +77,10 @@ const InnerPage: FC = () => {
         {!dataAllCalendars?.loading && !!dataAllCalendars?.data ? (
           dataAllCalendars.data.calendars.map((calendar, index) => (
             <div key={index}>
-              <CalendarForLogicCalendar
+              <CalendarFromCalendar
+                calendar={calendar}
                 startWeekFromDate={getFromDateForCalendar(calendar.id)}
-                numWeeks={numWeeks}
-                logicCalendar={createLogicCalendarFromTCalendar(calendar)}
+                numWeeks={defaultNumWeeks}
                 pleaseUpdateCalendar={() => {
                   refetchOneCalendar(calendar.id)
                 }}

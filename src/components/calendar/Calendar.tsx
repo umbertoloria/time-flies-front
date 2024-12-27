@@ -16,7 +16,11 @@ import {
   getFirstAndLastLocalDatesFromDayStatusRows,
   moveDateToWeekStart,
 } from './utils'
-import { LogicCalendar } from './logic-calendar.ts'
+import {
+  createLogicCalendarFromTCalendar,
+  LogicCalendar,
+} from './logic-calendar.ts'
+import { TCalendar } from '../../remote/sdk/types'
 
 function makeDayStatusRowsFromLogicCalendar(
   logicCalendar: LogicCalendar,
@@ -148,7 +152,26 @@ function makeDayStatusRowsFromLogicCalendar(
   return dayStatusRows
 }
 
-export const defaultNumWeeks = 4 * 3 // Three months
+export const CalendarFromCalendar: FC<{
+  calendar: TCalendar
+  startWeekFromDate: Date
+  numWeeks: number
+  pleaseUpdateCalendar: () => void
+  goInThePast: () => void
+  goInTheFuture: () => void
+}> = props => {
+  return (
+    <CalendarForLogicCalendar
+      startWeekFromDate={props.startWeekFromDate}
+      numWeeks={props.numWeeks}
+      logicCalendar={createLogicCalendarFromTCalendar(props.calendar)}
+      pleaseUpdateCalendar={props.pleaseUpdateCalendar}
+      goInThePast={props.goInThePast}
+      goInTheFuture={props.goInTheFuture}
+    />
+  )
+}
+
 export const CalendarForLogicCalendar: FC<{
   startWeekFromDate: Date
   numWeeks: number
