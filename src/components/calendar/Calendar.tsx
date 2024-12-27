@@ -45,14 +45,14 @@ function makeDayStatusRowsFromLogicCalendar(
   }
   const { logicDays } = logicCalendar
 
-  // From "logicDays", skipping all days that are before "fromLocalDate"
-  const fromLocalDate = getLocalDayByDate(fromDate)
   let iNextCalendarDay = 0
   let curCalendarDay =
     iNextCalendarDay < logicDays.length
       ? logicDays[iNextCalendarDay++]
       : undefined
 
+  // From "logicDays", skipping all days that are before "fromDate"
+  const fromLocalDate = getLocalDayByDate(fromDate)
   while (
     !!curCalendarDay &&
     iNextCalendarDay < logicDays.length &&
@@ -60,37 +60,43 @@ function makeDayStatusRowsFromLogicCalendar(
   ) {
     curCalendarDay = logicDays[iNextCalendarDay++]
   }
+  // From now on, "curCalendarDay" will always be from "fromDate" to the future
+  // (or NULL if there aren't).
 
   // Filling "dayStatusRows"
-  let dayOffset = 0
   const daysToShow = weeksToShow * 7
-  while (dayOffset < daysToShow) {
+  for (let dayOffset = 0; dayOffset < daysToShow; ++dayOffset) {
     const curDate = getDateWithOffsetDays(fromDate, dayOffset)
     const curLocalDate = getLocalDayByDate(curDate)
 
     let color: undefined | string = undefined
     let status: 'planned' | 'done' | undefined = undefined
     let dayData: DayStatusDayData = {
-      // "Fake"
+      // "Empty day"
       date: curLocalDate,
       notes: undefined,
     }
     let onClick: undefined | (() => void) = undefined
 
-    if (!!curCalendarDay && iNextCalendarDay - 1 < logicDays.length) {
-      if (curLocalDate === curCalendarDay.dayData.date) {
-        color = curCalendarDay.color
+    if (!!curCalendarDay && curCalendarDay.dayData.date === curLocalDate) {
+      color = curCalendarDay.color
 
-        // Is it Done or Just Planned?
-        if (curCalendarDay.isPlanned) {
-          status = 'planned'
-        } else {
-          status = 'done'
-        }
+      // Is it Done or Just Planned?
+      if (curCalendarDay.isPlanned) {
+        status = 'planned'
+      } else {
+        status = 'done'
+      }
 
-        dayData = curCalendarDay.dayData
-        onClick = curCalendarDay.onClick
+      dayData = curCalendarDay.dayData
+      onClick = curCalendarDay.onClick
+
+      // Going to the next Calendar Day (if there exist).
+      if (iNextCalendarDay < logicDays.length) {
         curCalendarDay = logicDays[iNextCalendarDay++]
+      } else {
+        // No problem. This means there are no more Calendar Days to process.
+        curCalendarDay = undefined
       }
     }
 
@@ -105,8 +111,6 @@ function makeDayStatusRowsFromLogicCalendar(
       status,
       onClick,
     })
-
-    ++dayOffset
   }
 
   return dayStatusRows
