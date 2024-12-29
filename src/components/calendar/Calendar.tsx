@@ -52,7 +52,7 @@ function makeDayStatusRowsFromLogicCalendar(
   const { logicDays } = logicCalendar
 
   let iNextCalendarDay = 0
-  let curCalendarDay =
+  let curLogicDay =
     iNextCalendarDay < logicDays.length
       ? logicDays[iNextCalendarDay++]
       : undefined
@@ -60,13 +60,13 @@ function makeDayStatusRowsFromLogicCalendar(
   // From "logicDays", skipping all days that are before "fromDate"
   const fromLocalDate = getLocalDayByDate(fromDate)
   while (
-    !!curCalendarDay &&
+    !!curLogicDay &&
     iNextCalendarDay < logicDays.length &&
-    !localDatesLTE(fromLocalDate, curCalendarDay.dayData.date)
+    !localDatesLTE(fromLocalDate, curLogicDay.dayData.date)
   ) {
-    curCalendarDay = logicDays[iNextCalendarDay++]
+    curLogicDay = logicDays[iNextCalendarDay++]
   }
-  // From now on, "curCalendarDay" will always be from "fromDate" to the future
+  // From now on, "curLogicDay" will always be from "fromDate" to the future
   // (or NULL if there aren't).
 
   // Filling "dayStatusRows"
@@ -84,41 +84,41 @@ function makeDayStatusRowsFromLogicCalendar(
     }
     let onClick: undefined | (() => void) = undefined
 
-    if (!!curCalendarDay && curCalendarDay.dayData.date === curLocalDate) {
-      color = curCalendarDay.color
+    if (!!curLogicDay && curLogicDay.dayData.date === curLocalDate) {
+      color = curLogicDay.color
 
       // Is it Done or Just Planned?
-      if (curCalendarDay.isPlanned) {
+      if (curLogicDay.isPlanned) {
         status = 'planned'
       } else {
         status = 'done'
       }
 
-      dayData = curCalendarDay.dayData
-      onClick = curCalendarDay.onClick
+      dayData = curLogicDay.dayData
+      onClick = curLogicDay.onClick
 
       // Going to the next Calendar Day (if there exist).
       if (iNextCalendarDay < logicDays.length) {
-        curCalendarDay = logicDays[iNextCalendarDay++]
+        curLogicDay = logicDays[iNextCalendarDay++]
 
-        if (curCalendarDay.dayData.date === curLocalDate) {
+        if (curLogicDay.dayData.date === curLocalDate) {
           // TODO: Multiple days in various Calendars (Parent and Children)
           const prevCalendarDay = logicDays[iNextCalendarDay - 2]
           console.log(
             'Found multiple Calendar Days on the same date',
             curLocalDate,
             prevCalendarDay,
-            curCalendarDay
+            curLogicDay
           )
 
           // Let's go in the future until we find:
           // 1. a dead end, so no future Calendar Days left
           // 2. a future Calendar Days
           while (
-            curCalendarDay.dayData.date === curLocalDate &&
+            curLogicDay.dayData.date === curLocalDate &&
             iNextCalendarDay < logicDays.length
           ) {
-            curCalendarDay = logicDays[iNextCalendarDay++]
+            curLogicDay = logicDays[iNextCalendarDay++]
           }
           if (iNextCalendarDay < logicDays.length) {
             // Fine. We jump the group of multiple Calendar Days that were on
@@ -127,12 +127,12 @@ function makeDayStatusRowsFromLogicCalendar(
             // This means case 1: there are no Calendar Days left, and the
             // "current" is still one of the multiple Calendar Days on the same
             // date.
-            curCalendarDay = undefined
+            curLogicDay = undefined
           }
         }
       } else {
         // No problem. This means there are no more Calendar Days to process.
-        curCalendarDay = undefined
+        curLogicDay = undefined
       }
     }
 

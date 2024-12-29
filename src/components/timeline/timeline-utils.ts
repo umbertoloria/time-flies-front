@@ -29,23 +29,25 @@ export function createDayStatusesFromTCalendar(
     ) {
       ++iLocalDay
     }
-    // From now on, "day" will always be from "curLocalDate" to the future
+    // From now on, "curLogicDay" will always be from "curLocalDate" to the future
     // (or NULL if there aren't).
 
-    const day = iLocalDay < logicDays.length ? logicDays[iLocalDay] : undefined
-    if (!!day && day.dayData.date === curLocalDate) {
+    const curLogicDay =
+      iLocalDay < logicDays.length ? logicDays[iLocalDay] : undefined
+    if (!!curLogicDay && curLogicDay.dayData.date === curLocalDate) {
       dayStatuses.push({
-        dayData: day.dayData,
+        dayData: curLogicDay.dayData,
         apiData: {
           calendarId: calendar.id,
         },
-        color: day.color,
-        status: day.isPlanned ? 'planned' : 'done',
+        color: curLogicDay.color,
+        status: curLogicDay.isPlanned ? 'planned' : 'done',
+        onClick: curLogicDay.onClick,
       })
     } else {
       dayStatuses.push({
         dayData: {
-          // "Fake"
+          // "Empty day"
           date: curLocalDate,
         },
         apiData: {
