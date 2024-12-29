@@ -60,6 +60,10 @@ export function isLocalDateToday(localDate: string) {
   return datesInTheSameDay(getDateFromLocalDate(localDate), getTodayDate())
 }
 
+export function isLocalDateFuture(localDate: string) {
+  return localDatesLT(getTodayLocalDate(), localDate)
+}
+
 // TODAY DATE
 export function getNowDate() {
   return new Date()

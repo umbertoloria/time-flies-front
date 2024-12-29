@@ -152,6 +152,21 @@ export const getSDK = () => {
               }
               throw err
             }),
+    setDateAsPlannedEvent: (id: number, localDate: string) =>
+      debugMode
+        ? Promise.resolve('ok')
+        : api
+            .post(
+              '?a=planned-event-create',
+              makeFormData({ id: `${id}`, 'local-date': localDate })
+            )
+            .then<'ok'>(() => 'ok')
+            .catch<'invalid'>(err => {
+              if (err.response?.data === 'invalid') {
+                return 'invalid'
+              }
+              throw err
+            }),
 
     // Schedule
     readDateSchedule: (
