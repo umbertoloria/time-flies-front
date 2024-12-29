@@ -181,7 +181,7 @@ export const CalendarTitle: FC<
 > = props => (
   <div className='bg-gray-500 rounded mb-2 mx-auto px-2.5 py-1.5 max-w-96 flex flex-wrap items-center justify-between'>
     <h1
-      className='text-lg font-semibold text-gray-700'
+      className='bg-gray-600 px-1 rounded text-lg font-semibold text-gray-700'
       style={{
         color: props.textColor || undefined,
       }}

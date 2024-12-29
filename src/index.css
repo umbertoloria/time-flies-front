@@ -10,6 +10,7 @@
 
         &.has-border-inside, &:hover {
             border-color: rgba(0, 0, 0, .3);
+            @apply bg-gray-300
         }
 
         transition: .1s;
