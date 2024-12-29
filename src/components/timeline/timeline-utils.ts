@@ -5,56 +5,86 @@ import {
   getLocalDayByDate,
   localDatesLT,
 } from '../../lib/utils.ts'
-import { createLogicDaysFromTCalendar } from '../calendar/logic-calendar.ts'
+import { createLogicCalendarFromTCalendar } from '../calendar/logic-calendar.ts'
 
 export function createDayStatusesFromTCalendar(
   endDate: Date,
   numDaysBefore: number,
   calendar: TCalendar
 ): DayStatusProps[] {
-  const dayStatuses: DayStatusProps[] = []
-
-  // All Logic Days to evaluate
-  const logicDays = createLogicDaysFromTCalendar(calendar)
-
-  let iLocalDay = 0
+  const logicCalendar = createLogicCalendarFromTCalendar(calendar)
   // "numDaysBefore + 1" meaning plus today.
-  for (let dayOffset = 0; dayOffset < numDaysBefore + 1; ++dayOffset) {
+  const daysToShow = numDaysBefore + 1
+
+  const dayStatuses: DayStatusProps[] = []
+  const appendCell = (dayStatusProps: DayStatusProps) => {
+    dayStatuses.push(dayStatusProps)
+  }
+  const { logicDays } = logicCalendar
+
+  let iLogicDay = 0
+  for (let dayOffset = 0; dayOffset < daysToShow; ++dayOffset) {
     const curDate = getDateWithOffsetDays(endDate, dayOffset - numDaysBefore)
     const curLocalDate = getLocalDayByDate(curDate)
 
     while (
-      iLocalDay < logicDays.length &&
-      localDatesLT(logicDays[iLocalDay].dayData.date, curLocalDate)
+      iLogicDay < logicDays.length &&
+      localDatesLT(logicDays[iLogicDay].dayData.date, curLocalDate)
     ) {
-      ++iLocalDay
+      ++iLogicDay
     }
     // From now on, "curLogicDay" will always be from "curLocalDate" to the future
     // (or NULL if there aren't).
 
     const curLogicDay =
-      iLocalDay < logicDays.length ? logicDays[iLocalDay] : undefined
+      iLogicDay < logicDays.length ? logicDays[iLogicDay] : undefined
     if (!!curLogicDay && curLogicDay.dayData.date === curLocalDate) {
-      dayStatuses.push({
+      appendCell({
         dayData: curLogicDay.dayData,
-        apiData: {
-          calendarId: calendar.id,
-        },
+        apiData: logicCalendar.apiCalendar
+          ? {
+              calendarId: logicCalendar.apiCalendar.id,
+            }
+          : undefined,
         color: curLogicDay.color,
         status: curLogicDay.isPlanned ? 'planned' : 'done',
         onClick: curLogicDay.onClick,
       })
+
+      // Dealing with siblings
+      if (
+        iLogicDay + 1 < logicDays.length &&
+        logicDays[iLogicDay + 1].dayData.date === curLocalDate
+      ) {
+        let siblings_offset = 1
+        while (
+          iLogicDay + siblings_offset < logicDays.length &&
+          logicDays[iLogicDay + siblings_offset].dayData.date === curLocalDate
+        ) {
+          ++siblings_offset
+        }
+        // TODO: Multiple days in various Calendars (Parent and Children)
+        console.log(
+          'Found ' + siblings_offset + ' Logic Days on the same date',
+          curLocalDate,
+          curLogicDay
+        )
+      }
     } else {
-      dayStatuses.push({
+      appendCell({
         dayData: {
           // "Empty day"
           date: curLocalDate,
+          // notes: undefined,
         },
-        apiData: {
-          calendarId: calendar.id,
-        },
+        apiData: logicCalendar.apiCalendar
+          ? {
+              calendarId: logicCalendar.apiCalendar.id,
+            }
+          : undefined,
         // color: undefined,
         // status: undefined,
+        // onClick: undefined,
       })
     }
   }
