@@ -5,7 +5,7 @@ import {
   getLocalDayByDate,
   localDatesLTE,
 } from '../../lib/utils'
-import { DayStatus, DayStatusDayData, DayStatusProps } from './DayStatus'
+import { DayStatus, DayStatusProps } from './DayStatus'
 import { CustomEventFnType } from '../../events/event-builder.ts'
 import {
   CustomEventTypeCalendarUpdated,
@@ -75,27 +75,18 @@ function makeDayStatusRowsFromLogicCalendar(
     const curDate = getDateWithOffsetDays(fromDate, dayOffset)
     const curLocalDate = getLocalDayByDate(curDate)
 
-    let color: undefined | string = undefined
-    let status: 'planned' | 'done' | undefined = undefined
-    let dayData: DayStatusDayData = {
-      // "Empty day"
-      date: curLocalDate,
-      notes: undefined,
-    }
-    let onClick: undefined | (() => void) = undefined
-
     if (!!curLogicDay && curLogicDay.dayData.date === curLocalDate) {
-      color = curLogicDay.color
-
-      // Is it Done or Just Planned?
-      if (curLogicDay.isPlanned) {
-        status = 'planned'
-      } else {
-        status = 'done'
-      }
-
-      dayData = curLogicDay.dayData
-      onClick = curLogicDay.onClick
+      appendCell({
+        dayData: curLogicDay.dayData,
+        apiData: logicCalendar.apiCalendar
+          ? {
+              calendarId: logicCalendar.apiCalendar.id,
+            }
+          : undefined,
+        color: curLogicDay.color,
+        status: curLogicDay.isPlanned ? 'planned' : 'done',
+        onClick: curLogicDay.onClick,
+      })
 
       // Going to the next Calendar Day (if there exist).
       if (iNextCalendarDay < logicDays.length) {
@@ -134,19 +125,23 @@ function makeDayStatusRowsFromLogicCalendar(
         // No problem. This means there are no more Calendar Days to process.
         curLogicDay = undefined
       }
+    } else {
+      appendCell({
+        dayData: {
+          // "Empty day"
+          date: curLocalDate,
+          // notes: undefined,
+        },
+        apiData: logicCalendar.apiCalendar
+          ? {
+              calendarId: logicCalendar.apiCalendar.id,
+            }
+          : undefined,
+        // color: undefined,
+        // status: undefined,
+        // onClick: undefined,
+      })
     }
-
-    appendCell({
-      dayData,
-      apiData: logicCalendar.apiCalendar
-        ? {
-            calendarId: logicCalendar.apiCalendar.id,
-          }
-        : undefined,
-      color: color || undefined,
-      status,
-      onClick,
-    })
   }
 
   return dayStatusRows
