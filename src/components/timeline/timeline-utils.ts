@@ -14,52 +14,39 @@ export function createDayStatusesFromTCalendar(
 ): DayStatusProps[] {
   const dayStatuses: DayStatusProps[] = []
 
-  let iDays = 0
-  let iCell = numDaysBefore
-  while (iCell >= 0) {
-    const curDate = getDateWithOffsetDays(endDate, -iCell)
-    const localDate = getLocalDayByDate(curDate)
+  // All Logic Days to evaluate
+  const logicDays = createLogicDaysFromTCalendar(calendar)
 
-    // All Logic Days to evaluate
-    const logicDays = createLogicDaysFromTCalendar(calendar)
+  let iLocalDay = 0
+  // "numDaysBefore + 1" meaning plus today.
+  for (let dayOffset = 0; dayOffset < numDaysBefore + 1; ++dayOffset) {
+    const curDate = getDateWithOffsetDays(endDate, dayOffset - numDaysBefore)
+    const curLocalDate = getLocalDayByDate(curDate)
 
     while (
-      iDays < logicDays.length &&
-      localDatesLT(logicDays[iDays].dayData.date, localDate)
+      iLocalDay < logicDays.length &&
+      localDatesLT(logicDays[iLocalDay].dayData.date, curLocalDate)
     ) {
-      ++iDays
+      ++iLocalDay
     }
+    // From now on, "day" will always be from "curLocalDate" to the future
+    // (or NULL if there aren't).
 
-    if (iDays < logicDays.length) {
-      const day = logicDays[iDays]
-
-      if (day.dayData.date === localDate) {
-        dayStatuses.push({
-          dayData: day.dayData,
-          apiData: {
-            calendarId: calendar.id,
-          },
-          color: day.color,
-          status: day.isPlanned ? 'planned' : 'done',
-        })
-      } else {
-        dayStatuses.push({
-          dayData: {
-            // "Fake"
-            date: localDate,
-          },
-          apiData: {
-            calendarId: calendar.id,
-          },
-          // color: undefined,
-          // status: undefined,
-        })
-      }
+    const day = iLocalDay < logicDays.length ? logicDays[iLocalDay] : undefined
+    if (!!day && day.dayData.date === curLocalDate) {
+      dayStatuses.push({
+        dayData: day.dayData,
+        apiData: {
+          calendarId: calendar.id,
+        },
+        color: day.color,
+        status: day.isPlanned ? 'planned' : 'done',
+      })
     } else {
       dayStatuses.push({
         dayData: {
           // "Fake"
-          date: localDate,
+          date: curLocalDate,
         },
         apiData: {
           calendarId: calendar.id,
@@ -68,8 +55,6 @@ export function createDayStatusesFromTCalendar(
         // status: undefined,
       })
     }
-
-    --iCell
   }
 
   return dayStatuses
