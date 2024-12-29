@@ -5,26 +5,23 @@ import {
   getLocalDayByDate,
   localDatesLT,
 } from '../../lib/utils.ts'
-import { createLogicCalendarFromTCalendar } from '../calendar/logic-calendar.ts'
+import {
+  createLogicCalendarFromTCalendar,
+  LogicCalendar,
+} from '../calendar/logic-calendar.ts'
 
-export function createDayStatusesFromTCalendar(
-  endDate: Date,
-  numDaysBefore: number,
-  calendar: TCalendar
-): DayStatusProps[] {
-  const logicCalendar = createLogicCalendarFromTCalendar(calendar)
-  // "numDaysBefore + 1" meaning plus today.
-  const daysToShow = numDaysBefore + 1
+export function createDayStatusPropsListFromLogicCalendar(
+  logicCalendar: LogicCalendar,
+  daysToShow: number,
+  fromDate: Date
+) {
+  const result: DayStatusProps[] = []
 
-  const dayStatuses: DayStatusProps[] = []
-  const appendCell = (dayStatusProps: DayStatusProps) => {
-    dayStatuses.push(dayStatusProps)
-  }
   const { logicDays } = logicCalendar
 
   let iLogicDay = 0
   for (let dayOffset = 0; dayOffset < daysToShow; ++dayOffset) {
-    const curDate = getDateWithOffsetDays(endDate, dayOffset - numDaysBefore)
+    const curDate = getDateWithOffsetDays(fromDate, dayOffset)
     const curLocalDate = getLocalDayByDate(curDate)
 
     while (
@@ -39,7 +36,7 @@ export function createDayStatusesFromTCalendar(
     const curLogicDay =
       iLogicDay < logicDays.length ? logicDays[iLogicDay] : undefined
     if (!!curLogicDay && curLogicDay.dayData.date === curLocalDate) {
-      appendCell({
+      result.push({
         dayData: curLogicDay.dayData,
         apiData: logicCalendar.apiCalendar
           ? {
@@ -71,7 +68,7 @@ export function createDayStatusesFromTCalendar(
         )
       }
     } else {
-      appendCell({
+      result.push({
         dayData: {
           // "Empty day"
           date: curLocalDate,
@@ -89,5 +86,17 @@ export function createDayStatusesFromTCalendar(
     }
   }
 
-  return dayStatuses
+  return result
+}
+
+export function createDayStatusesFromTCalendar(
+  endDate: Date,
+  numDaysBefore: number,
+  calendar: TCalendar
+): DayStatusProps[] {
+  return createDayStatusPropsListFromLogicCalendar(
+    createLogicCalendarFromTCalendar(calendar),
+    numDaysBefore + 1, // "numDaysBefore + 1" meaning plus today.
+    getDateWithOffsetDays(endDate, -numDaysBefore)
+  )
 }

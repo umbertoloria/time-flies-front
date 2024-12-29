@@ -1,10 +1,5 @@
 import { FC, PropsWithChildren, useEffect } from 'react'
-import {
-  getDateWithOffsetDays,
-  getITMonthFromLocalDate,
-  getLocalDayByDate,
-  localDatesLT,
-} from '../../lib/utils'
+import { getITMonthFromLocalDate } from '../../lib/utils'
 import { DayStatus, DayStatusProps } from './DayStatus'
 import { CustomEventFnType } from '../../events/event-builder.ts'
 import {
@@ -21,6 +16,7 @@ import {
   LogicCalendar,
 } from './logic-calendar.ts'
 import { TCalendar } from '../../remote/sdk/types'
+import { createDayStatusPropsListFromLogicCalendar } from '../timeline/timeline-utils.ts'
 
 function makeDayStatusRowsFromLogicCalendar(
   logicCalendar: LogicCalendar,
@@ -32,10 +28,13 @@ function makeDayStatusRowsFromLogicCalendar(
   // 2. "fromDate" must be a Monday
 
   const fillingCellsCount = 7 as const // 7 days per week.
-  const daysToShow = weeksToShow * 7
-
   const dayStatusRows: DayStatusRow[] = []
-  const appendCell = (dayStatusProps: DayStatusProps) => {
+  const dayStatusPropsList = createDayStatusPropsListFromLogicCalendar(
+    logicCalendar,
+    weeksToShow * 7,
+    fromDate
+  )
+  for (const dayStatusProps of dayStatusPropsList) {
     if (dayStatusRows.length === 0) {
       dayStatusRows.push({
         dayStatuses: [],
@@ -49,74 +48,6 @@ function makeDayStatusRowsFromLogicCalendar(
       cells = dayStatusRows[dayStatusRows.length - 1].dayStatuses
     }
     cells.push(dayStatusProps)
-  }
-  const { logicDays } = logicCalendar
-
-  let iLogicDay = 0
-  for (let dayOffset = 0; dayOffset < daysToShow; ++dayOffset) {
-    const curDate = getDateWithOffsetDays(fromDate, dayOffset)
-    const curLocalDate = getLocalDayByDate(curDate)
-
-    while (
-      iLogicDay < logicDays.length &&
-      localDatesLT(logicDays[iLogicDay].dayData.date, curLocalDate)
-    ) {
-      ++iLogicDay
-    }
-    // From now on, "curLogicDay" will always be from "curLocalDate" to the future
-    // (or NULL if there aren't).
-
-    const curLogicDay =
-      iLogicDay < logicDays.length ? logicDays[iLogicDay] : undefined
-    if (!!curLogicDay && curLogicDay.dayData.date === curLocalDate) {
-      appendCell({
-        dayData: curLogicDay.dayData,
-        apiData: logicCalendar.apiCalendar
-          ? {
-              calendarId: logicCalendar.apiCalendar.id,
-            }
-          : undefined,
-        color: curLogicDay.color,
-        status: curLogicDay.isPlanned ? 'planned' : 'done',
-        onClick: curLogicDay.onClick,
-      })
-
-      // Dealing with siblings
-      if (
-        iLogicDay + 1 < logicDays.length &&
-        logicDays[iLogicDay + 1].dayData.date === curLocalDate
-      ) {
-        let siblings_offset = 1
-        while (
-          iLogicDay + siblings_offset < logicDays.length &&
-          logicDays[iLogicDay + siblings_offset].dayData.date === curLocalDate
-        ) {
-          ++siblings_offset
-        }
-        // TODO: Multiple days in various Calendars (Parent and Children)
-        console.log(
-          'Found ' + siblings_offset + ' Logic Days on the same date',
-          curLocalDate,
-          curLogicDay
-        )
-      }
-    } else {
-      appendCell({
-        dayData: {
-          // "Empty day"
-          date: curLocalDate,
-          // notes: undefined,
-        },
-        apiData: logicCalendar.apiCalendar
-          ? {
-              calendarId: logicCalendar.apiCalendar.id,
-            }
-          : undefined,
-        // color: undefined,
-        // status: undefined,
-        // onClick: undefined,
-      })
-    }
   }
 
   return dayStatusRows
