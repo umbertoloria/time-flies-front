@@ -32,6 +32,7 @@ function makeDayStatusRowsFromLogicCalendar(
   // 2. "fromDate" must be a Monday
 
   const fillingCellsCount = 7 as const // 7 days per week.
+  const daysToShow = weeksToShow * 7
 
   const dayStatusRows: DayStatusRow[] = []
   const appendCell = (dayStatusProps: DayStatusProps) => {
@@ -52,7 +53,6 @@ function makeDayStatusRowsFromLogicCalendar(
   const { logicDays } = logicCalendar
 
   let iLogicDay = 0
-  const daysToShow = weeksToShow * 7
   for (let dayOffset = 0; dayOffset < daysToShow; ++dayOffset) {
     const curDate = getDateWithOffsetDays(fromDate, dayOffset)
     const curLocalDate = getLocalDayByDate(curDate)
