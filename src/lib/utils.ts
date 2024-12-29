@@ -45,14 +45,6 @@ export function datesInTheSameDay(aDate: Date, bDate: Date) {
 }
 
 // TODAYs AND YESTERDAYs
-export function isDateToday(date: Date) {
-  return datesInTheSameDay(date, getTodayDate())
-}
-
-export function isLocalDateToday(localDate: string) {
-  return datesInTheSameDay(getDateFromLocalDate(localDate), getTodayDate())
-}
-
 export function getDateWithOffsetDays(fromDate: Date, offset: number) {
   const result = new Date(fromDate)
   result.setDate(result.getDate() + offset)
@@ -62,6 +54,10 @@ export function getDateWithOffsetDays(fromDate: Date, offset: number) {
 export function isLocalDateYesterday(localDate: string) {
   const yesterdayDate = getDateWithOffsetDays(getTodayDate(), -1)
   return datesInTheSameDay(getDateFromLocalDate(localDate), yesterdayDate)
+}
+
+export function isLocalDateToday(localDate: string) {
+  return datesInTheSameDay(getDateFromLocalDate(localDate), getTodayDate())
 }
 
 // TODAY DATE

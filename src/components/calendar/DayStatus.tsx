@@ -22,11 +22,23 @@ export const DayStatus: FC<DayStatusProps> = props => {
   const isToday = isLocalDateToday(props.dayData.date)
   const isYesterday = isLocalDateYesterday(props.dayData.date)
 
-  const canSetAsChecked =
-    props.status !== 'done' && (isYesterday || isToday) && props.apiData
+  const actionMode:
+    | 'none'
+    | 'create-new-calendar-day'
+    | 'create-new-planned-event' = (() => {
+    if (props.status !== 'done') {
+      if ((isYesterday || isToday) && !!props.apiData) {
+        return 'create-new-calendar-day'
+      }
+      /*if (isFuture) {
+        return 'create-new-planned-event'
+      }*/
+    }
+    return 'none'
+  })()
   const hasNotes = typeof props.dayData?.notes === 'string'
 
-  const isClickable = props.onClick || canSetAsChecked || hasNotes
+  const isClickable = props.onClick || actionMode !== 'none' || hasNotes
 
   const { openDialog: openDialogForInsertNewGoal } = useDialogForInsertNewGoal()
   const { openDialog: openDialogForSeeNotes } = useDialogForSeeNotes()
@@ -53,12 +65,20 @@ export const DayStatus: FC<DayStatusProps> = props => {
         onClick={() => {
           if (props.onClick) {
             props.onClick()
-          } else if (canSetAsChecked && props.apiData) {
+          } else if (
+            props.apiData &&
+            actionMode === 'create-new-calendar-day'
+          ) {
             openDialogForInsertNewGoal(
               props.apiData.calendarId,
               props.dayData.date
             )
-          } else if (hasNotes && !!props.dayData?.notes) {
+          } /* else if (
+            props.apiData &&
+            actionMode === 'create-new-planned-event'
+          ) {
+            // TODO: Create dialog for insert Planned Event
+          }*/ else if (hasNotes && !!props.dayData?.notes) {
             openDialogForSeeNotes(props.dayData.notes)
           }
         }}
