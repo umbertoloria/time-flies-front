@@ -21,7 +21,9 @@ export default function HomePage() {
   )
 }
 
-const defaultNumWeeks = 4 * 3 // Three months
+// One month prior, one week future
+const defaultNumWeeks = 5
+const defaultWeeksInAdvance = 1
 
 const { readAllCalendars } = getSDK()
 const InnerPage: FC = () => {
@@ -49,7 +51,11 @@ const InnerPage: FC = () => {
   const getFromDateForCalendar = (id: number) => {
     return getDateWithOffsetDays(
       getDateFromLocalDate(todayLocalDate),
-      -7 * (defaultNumWeeks - 1 + 4 * getWeeks4OffsetFromCalendar(id))
+      -7 *
+        (defaultNumWeeks -
+          1 -
+          defaultWeeksInAdvance +
+          4 * getWeeks4OffsetFromCalendar(id))
     )
   }
 
