@@ -1,6 +1,6 @@
 // Types
-// 2024-11-24T18:57:31Z
-// v2.8
+// 2025-01-06T18:44:48Z
+// v2.9
 
 // Calendar
 export type TCalendar = TCalendarCh & {
@@ -77,7 +77,10 @@ export namespace TScheduleSDK {
   }
 }
 export namespace TCalendarSDK {
-  export type ReadPlannedEvents = {
+  export type ReadPlannedEventsRequest = {
+    onlyToday?: boolean
+  }
+  export type ReadPlannedEventsResponse = {
     events: TEvent[]
   }
 }

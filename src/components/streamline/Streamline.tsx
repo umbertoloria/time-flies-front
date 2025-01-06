@@ -2,7 +2,7 @@ import { FC, useEffect, useMemo } from 'react'
 import { CalendarTitle } from '../calendar/Calendar.tsx'
 import { getSDK } from '../../remote/remote.ts'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
-import { TCalendarSDK, TEvent } from '../../remote/sdk/types'
+import { TEvent } from '../../remote/sdk/types'
 import { ColouredLabel } from '../coloured/ColouredLabel.tsx'
 import { displayDateFromLocalDate } from '../calendar/utils.ts'
 import { useDialogForCheckPlannedEvent } from '../../context/dialog-check-planned-events/ContextDialogForCheckPlannedEvents.tsx'
@@ -16,10 +16,13 @@ import { getTodayLocalDate } from '../../lib/utils.ts'
 
 const { readStreamline } = getSDK()
 export const Streamline: FC = () => {
-  const safeStreamline = (data: TCalendarSDK.ReadPlannedEvents | 'unable') =>
-    data === 'unable' ? undefined : data
+  // Showing only Today Planned Events
   const [dataStreamline, { refetch: refreshStreamline }] =
-    useWrapperForCreateResource(() => readStreamline().then(safeStreamline))
+    useWrapperForCreateResource(() =>
+      readStreamline({ onlyToday: true }).then(data =>
+        data === 'unable' ? undefined : data
+      )
+    )
 
   useEffect(() => {
     const listener: CustomEventFnType<undefined> = () => {

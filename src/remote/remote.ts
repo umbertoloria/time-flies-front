@@ -261,7 +261,9 @@ throw err
               }
               throw err
             }),
-    readStreamline: (): Promise<TCalendarSDK.ReadPlannedEvents | 'unable'> =>
+    readStreamline: (
+      request: TCalendarSDK.ReadPlannedEventsRequest
+    ): Promise<TCalendarSDK.ReadPlannedEventsResponse | 'unable'> =>
       debugMode
         ? Promise.resolve({
             events: [
@@ -286,7 +288,10 @@ throw err
             ],
           })
         : api
-            .get('?a=planned-event-read')
+            .get(
+              '?a=planned-event-read' +
+                (request.onlyToday ? '&only-today=true' : '')
+            )
             .then(({ data }) => data)
             .catch<'unable'>(() => 'unable'),
     checkPlannedEventWithSuccess: (
