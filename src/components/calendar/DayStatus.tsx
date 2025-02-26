@@ -30,30 +30,28 @@ export const DayStatus: FC<DayStatusProps> = props => {
   const isFuture = isLocalDateFuture(props.dayData.date)
 
   const actionMode:
-    | 'none'
     | 'custom-action'
+    | 'manage-calendar-date'
     | 'create-new-calendar-day'
     | 'create-new-planned-event'
-    | 'show-notes' = (() => {
+    | 'none' = (() => {
     if (props.onClick) {
       return 'custom-action'
     }
-    if (typeof props.dayData?.notes === 'string') {
-      return 'show-notes'
+    if (props.status === 'done' && !!props.apiData) {
+      return 'manage-calendar-date'
     }
-    if (props.status !== 'done') {
-      if ((isYesterday || isToday) && !!props.apiData) {
-        return 'create-new-calendar-day'
-      }
-      if (isFuture && !props.status) {
-        return 'create-new-planned-event'
-      }
+    if ((isYesterday || isToday) && !!props.apiData) {
+      return 'create-new-calendar-day'
+    }
+    if (isFuture && !props.status && !!props.apiData) {
+      return 'create-new-planned-event'
     }
     return 'none'
   })()
 
   const onClick = (() => {
-    if (actionMode === 'custom-action' && props.onClick) {
+    if (actionMode === 'custom-action') {
       return () => {
         if (props.onClick) {
           props.onClick()
@@ -62,24 +60,20 @@ export const DayStatus: FC<DayStatusProps> = props => {
         }
       }
     }
-    if (
-      actionMode === 'show-notes' &&
-      typeof props.dayData?.notes === 'string' &&
-      !!props.apiData
-    ) {
+    if (actionMode === 'manage-calendar-date') {
       return () => {
-        if (typeof props.dayData?.notes === 'string' && !!props.apiData) {
+        if (props.status === 'done' && !!props.apiData) {
           openDialogForCalendarDateManagement({
             calendarId: props.apiData.calendarId,
             date: props.dayData.date,
-            notes: props.dayData.notes,
+            notes: props.dayData.notes || undefined,
           })
         } else {
           // Should never happen.
         }
       }
     }
-    if (actionMode === 'create-new-calendar-day' && props.apiData) {
+    if (actionMode === 'create-new-calendar-day') {
       return () => {
         if (props.apiData) {
           openDialogForInsertNewGoal(
@@ -91,9 +85,9 @@ export const DayStatus: FC<DayStatusProps> = props => {
         }
       }
     }
-    if (actionMode === 'create-new-planned-event' && props.apiData) {
+    if (actionMode === 'create-new-planned-event') {
       return () => {
-        if (props.apiData) {
+        if (!props.status && !!props.apiData) {
           openDialogForInsertPlannedEvent(
             props.apiData.calendarId,
             props.dayData.date
@@ -126,9 +120,16 @@ export const DayStatus: FC<DayStatusProps> = props => {
         className={classNames('rounded-sm w-full h-full', {
           'bg-gray-200': !props.color,
           clickable: actionMode !== 'none',
-          'has-border-inside':
-            actionMode !== 'none' && actionMode !== 'create-new-planned-event',
-          'day-status-has-notes': actionMode === 'show-notes',
+          highlight:
+            actionMode === 'custom-action' ||
+            actionMode === 'create-new-calendar-day' ||
+            actionMode === 'create-new-planned-event' ||
+            !!props.dayData.notes,
+          'highlight-with-border-inside':
+            actionMode === 'custom-action' ||
+            (actionMode === 'manage-calendar-date' && !!props.dayData.notes) ||
+            actionMode === 'create-new-calendar-day',
+          'day-status-has-notes': !!props.dayData.notes,
         })}
         style={{
           background: props.color || undefined,

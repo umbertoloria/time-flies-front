@@ -3,8 +3,8 @@ import { useUXContext } from '../UXContext.tsx'
 
 type ContextPartData = {
   calendarId: number
-  date: string // Es. "2023-01-01"
-  notes: string
+  date: string // Es. "2025-02-26"
+  notes?: string
 }
 export type ContextDialogForCalendarDateManagement = {
   isOpen: boolean

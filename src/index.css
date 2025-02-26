@@ -6,18 +6,32 @@
 
     .clickable {
         cursor: pointer;
+        transition: .1s;
+
+        &:hover {
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, .3);
+        }
+    }
+
+    .highlight {
+        cursor: pointer;
         border: 4px solid transparent;
 
-        &.has-border-inside, &:hover {
+        &:hover {
+            border-width: 6px;
+
+            &:not(.day-status-has-notes) {
+                box-shadow: unset;
+            }
+        }
+
+        &.highlight-with-border-inside, &:hover {
             border-color: rgba(0, 0, 0, .3);
-            @apply bg-gray-300
+            @apply bg-gray-300;
         }
 
         transition: .1s;
-    }
 
-    .clickable:hover {
-        border-width: 6px;
     }
 
     .day-status-has-notes {
