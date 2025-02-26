@@ -1,6 +1,6 @@
 import { createContext, FC, PropsWithChildren, useContext } from 'react'
 import { DialogForInsertNewGoal } from './dialog-insert-new-goal/DialogForInsertNewGoal.tsx'
-import { DialogSeeNotes } from './dialog-see-notes/DialogSeeNotes.tsx'
+import { DialogCalendarDateManagement } from './dialog-see-notes/DialogCalendarDateManagement.tsx'
 import { DialogForGroover } from './dialog-groover/DialogForGroover.tsx'
 import { DialogCheckPlannedEvent } from './dialog-check-planned-events/DialogCheckPlannedEvent.tsx'
 import {
@@ -9,10 +9,10 @@ import {
   useContextDialogForInsertNewGoalForUX,
 } from './dialog-insert-new-goal/ContextDialogForInsertNewGoal.tsx'
 import {
-  ContextDialogForSeeNotes,
-  contextDialogForSeeNotesDataDefault,
-  useUXContextDialogForSeeNotesForUX,
-} from './dialog-see-notes/ContextDialogForSeeNotes.tsx'
+  ContextDialogForCalendarDateManagement,
+  contextDialogForCalendarDateManagementDataDefault,
+  useUXContextDialogForCalendarDateManagementForUX,
+} from './dialog-see-notes/ContextDialogForCalendarDateManagement.tsx'
 import {
   ContextDialogForGroover,
   contextDialogForGrooverDataDefault,
@@ -32,13 +32,14 @@ import { DialogForInsertNewPlannedEvent } from './dialog-insert-new-planned-even
 
 const UXContext = createContext<{
   dialogForInsertNewGoal: ContextDialogForInsertNewGoal
-  dialogForSeeNotes: ContextDialogForSeeNotes
+  dialogForCalendarDateManagement: ContextDialogForCalendarDateManagement
   dialogForGroover: ContextDialogForGroover
   dialogForCheckPlannedEvent: ContextDialogForCheckPlannedEvent
   dialogForInsertNewPlannedEvent: ContextDialogForInsertNewPlannedEvent
 }>({
   dialogForInsertNewGoal: contextDialogForInsertNewGoalDataDefault,
-  dialogForSeeNotes: contextDialogForSeeNotesDataDefault,
+  dialogForCalendarDateManagement:
+    contextDialogForCalendarDateManagementDataDefault,
   dialogForGroover: contextDialogForGrooverDataDefault,
   dialogForCheckPlannedEvent: contextDialogForCheckPlannedEventDataDefault,
   dialogForInsertNewPlannedEvent:
@@ -47,7 +48,8 @@ const UXContext = createContext<{
 
 export const UXProvider: FC<PropsWithChildren> = props => {
   const { dialogForInsertNewGoal } = useContextDialogForInsertNewGoalForUX()
-  const { dialogForSeeNotes } = useUXContextDialogForSeeNotesForUX()
+  const { dialogForCalendarDateManagement } =
+    useUXContextDialogForCalendarDateManagementForUX()
   const { dialogForGroover } = useContextDialogForGrooverForUX()
   const { dialogForCheckPlannedEvent } =
     useContextDialogForCheckPlannedEventsForUX()
@@ -58,14 +60,14 @@ export const UXProvider: FC<PropsWithChildren> = props => {
     <UXContext.Provider
       value={{
         dialogForInsertNewGoal,
-        dialogForSeeNotes,
+        dialogForCalendarDateManagement,
         dialogForGroover,
         dialogForCheckPlannedEvent,
         dialogForInsertNewPlannedEvent,
       }}
     >
       <DialogForInsertNewGoal />
-      <DialogSeeNotes />
+      <DialogCalendarDateManagement />
       <DialogForGroover />
       <DialogCheckPlannedEvent />
       <DialogForInsertNewPlannedEvent />

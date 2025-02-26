@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import classNames from 'classnames'
 import { useDialogForInsertNewGoal } from '../../context/dialog-insert-new-goal/ContextDialogForInsertNewGoal.tsx'
-import { useDialogForSeeNotes } from '../../context/dialog-see-notes/ContextDialogForSeeNotes.tsx'
+import { useDialogForCalendarDateManagement } from '../../context/dialog-see-notes/ContextDialogForCalendarDateManagement.tsx'
 import {
   isLocalDateFuture,
   isLocalDateToday,
@@ -64,11 +64,16 @@ export const DayStatus: FC<DayStatusProps> = props => {
     }
     if (
       actionMode === 'show-notes' &&
-      typeof props.dayData?.notes === 'string'
+      typeof props.dayData?.notes === 'string' &&
+      !!props.apiData
     ) {
       return () => {
-        if (typeof props.dayData?.notes === 'string') {
-          openDialogForSeeNotes(props.dayData.notes)
+        if (typeof props.dayData?.notes === 'string' && !!props.apiData) {
+          openDialogForCalendarDateManagement({
+            calendarId: props.apiData.calendarId,
+            date: props.dayData.date,
+            notes: props.dayData.notes,
+          })
         } else {
           // Should never happen.
         }
@@ -105,7 +110,8 @@ export const DayStatus: FC<DayStatusProps> = props => {
   })()
 
   const { openDialog: openDialogForInsertNewGoal } = useDialogForInsertNewGoal()
-  const { openDialog: openDialogForSeeNotes } = useDialogForSeeNotes()
+  const { openDialog: openDialogForCalendarDateManagement } =
+    useDialogForCalendarDateManagement()
   const { openDialog: openDialogForInsertPlannedEvent } =
     useDialogForInsertNewPlannedEvent()
 

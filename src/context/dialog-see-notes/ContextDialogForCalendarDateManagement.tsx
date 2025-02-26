@@ -2,42 +2,43 @@ import { useState } from 'react'
 import { useUXContext } from '../UXContext.tsx'
 
 type ContextPartData = {
+  calendarId: number
+  date: string // Es. "2023-01-01"
   notes: string
 }
-export type ContextDialogForSeeNotes = {
+export type ContextDialogForCalendarDateManagement = {
   isOpen: boolean
   data?: ContextPartData
-  openDialog: (notes: string) => void
+  openDialog: (data: ContextPartData) => void
   closeDialog: () => void
 }
-export const contextDialogForSeeNotesDataDefault: ContextDialogForSeeNotes = {
-  isOpen: false,
-  // data: undefined,
-  openDialog() {},
-  closeDialog() {},
-} as const
+export const contextDialogForCalendarDateManagementDataDefault: ContextDialogForCalendarDateManagement =
+  {
+    isOpen: false,
+    // data: undefined,
+    openDialog() {},
+    closeDialog() {},
+  } as const
 
-export const useUXContextDialogForSeeNotesForUX = (): {
-  dialogForSeeNotes: ContextDialogForSeeNotes
+export const useUXContextDialogForCalendarDateManagementForUX = (): {
+  dialogForCalendarDateManagement: ContextDialogForCalendarDateManagement
 } => {
   const [dialog, setDialog] = useState<{
     isOpen: boolean
     data?: ContextPartData
   }>({ isOpen: false })
   return {
-    dialogForSeeNotes: {
+    dialogForCalendarDateManagement: {
       isOpen: dialog.isOpen,
       data: dialog.data,
-      openDialog(notes) {
+      openDialog(data) {
         if (dialog.isOpen) {
           return
         }
         setDialog({
           ...dialog,
           isOpen: true,
-          data: {
-            notes,
-          },
+          data,
         })
       },
       closeDialog() {
@@ -53,7 +54,7 @@ export const useUXContextDialogForSeeNotesForUX = (): {
   }
 }
 
-export const useDialogForSeeNotes = () => {
+export const useDialogForCalendarDateManagement = () => {
   const uxContext = useUXContext()
-  return uxContext.dialogForSeeNotes
+  return uxContext.dialogForCalendarDateManagement
 }
