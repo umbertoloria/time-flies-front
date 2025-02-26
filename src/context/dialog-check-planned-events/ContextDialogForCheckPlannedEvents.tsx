@@ -7,12 +7,17 @@ import { useUXContext } from '../UXContext.tsx'
 type ContextPartData = {
   calendarId: number
   eventId: number
+  mode: 'done' | 'missed'
   loading: boolean
 }
 export type ContextDialogForCheckPlannedEvent = {
   isOpen: boolean
   data?: ContextPartData
-  openDialog: (calendarId: number, eventId: number) => void
+  openDialog: (
+    calendarId: number,
+    eventId: number,
+    mode: 'done' | 'missed'
+  ) => void
   closeDialog: () => void
   confirmProgressDone: () => void
 }
@@ -37,7 +42,7 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
     dialogForCheckPlannedEvent: {
       isOpen: dialog.isOpen,
       data: dialog.data,
-      openDialog(calendarId, eventId) {
+      openDialog(calendarId, eventId, mode) {
         if (dialog.isOpen || dialog.data?.loading) {
           return
         }
@@ -47,6 +52,7 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
           data: {
             calendarId,
             eventId,
+            mode,
             loading: false,
           },
         })
@@ -64,16 +70,17 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
         if (!dialog.isOpen || !dialog.data || dialog.data.loading) {
           return
         }
-        const { calendarId, eventId } = dialog.data
+        const { calendarId, eventId, mode } = dialog.data
         setDialog({
           isOpen: true,
           data: {
             calendarId,
             eventId,
+            mode,
             loading: true,
           },
         })
-        checkPlannedEventWithSuccess(calendarId, eventId)
+        checkPlannedEventWithSuccess(calendarId, eventId, mode)
           .then(() => {
             // Yay!
 
@@ -94,6 +101,7 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
               data: {
                 calendarId,
                 eventId,
+                mode,
                 loading: false,
               },
             })

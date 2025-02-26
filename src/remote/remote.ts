@@ -301,7 +301,8 @@ throw err
             .catch<'unable'>(() => 'unable'),
     checkPlannedEventWithSuccess: (
       calendarId: number,
-      eventId: number
+      eventId: number,
+      mode: 'done' | 'missed'
     ): Promise<'ok' | 'invalid'> =>
       debugMode
         ? Promise.resolve('ok')
@@ -311,6 +312,7 @@ throw err
               makeFormData({
                 calendar_id: `${calendarId}`,
                 event_id: `${eventId}`,
+                set_as_missed: mode === 'missed' ? 'true' : undefined,
               })
             )
             .then<'ok'>(() => 'ok')

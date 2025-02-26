@@ -12,14 +12,18 @@ import {
   unsubscribeToStreamlineUpdates,
 } from './event-streamline-updated.ts'
 import { ColouredQuad } from '../coloured/ColouredQuad.tsx'
-import { getTodayLocalDate } from '../../lib/utils.ts'
+import {
+  getDateWithOffsetDays,
+  getLocalDayByDate,
+  getTodayDate,
+} from '../../lib/utils.ts'
 
 const { readStreamline } = getSDK()
 export const Streamline: FC = () => {
   // Showing only Today Planned Events
   const [dataStreamline, { refetch: refreshStreamline }] =
     useWrapperForCreateResource(() =>
-      readStreamline({ onlyToday: true }).then(data =>
+      readStreamline({ onlyToday: false }).then(data =>
         data === 'unable' ? undefined : data
       )
     )
@@ -39,9 +43,13 @@ export const Streamline: FC = () => {
     if (!dataStreamline?.data) {
       return null
     }
-    const todayLocalDate = getTodayLocalDate()
+
+    // Showing Planned Events until the day after tomorrow (included).
+    const limitLocalDate = getLocalDayByDate(
+      getDateWithOffsetDays(getTodayDate(), 2)
+    )
     return dataStreamline.data.events.filter(
-      event => event.date.localeCompare(todayLocalDate) >= 0
+      event => event.date.localeCompare(limitLocalDate) <= 0
     )
   }, [dataStreamline])
 
@@ -88,10 +96,18 @@ const StreamlineItem: FC<{
         <button
           className='btn-primary'
           onClick={() => {
-            openDialog(props.event.calendar.id, props.event.id)
+            openDialog(props.event.calendar.id, props.event.id, 'done')
           }}
         >
           {'Done?'}
+        </button>
+        <button
+          className='btn-warning ml-1'
+          onClick={() => {
+            openDialog(props.event.calendar.id, props.event.id, 'missed')
+          }}
+        >
+          {'Salta?'}
         </button>
       </div>
     </div>
