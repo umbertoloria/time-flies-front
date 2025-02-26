@@ -3,9 +3,12 @@ import classNames from 'classnames'
 import { useDialogForInsertNewGoal } from '../../context/dialog-insert-new-goal/ContextDialogForInsertNewGoal.tsx'
 import { useDialogForCalendarDateManagement } from '../../context/dialog-see-notes/ContextDialogForCalendarDateManagement.tsx'
 import {
+  getDateWithOffsetDays,
+  getLocalDayByDate,
+  getTodayDate,
   isLocalDateFuture,
   isLocalDateToday,
-  isLocalDateYesterday,
+  localDatesLTE,
 } from '../../lib/utils.ts'
 import { displayDateFromLocalDate } from './utils.ts'
 import { useDialogForInsertNewPlannedEvent } from '../../context/dialog-insert-new-planned-event/ContextDialogForInsertNewPlannedEvent.tsx'
@@ -25,8 +28,12 @@ export type DayStatusProps = {
   // For now, "onClick" is used by the "Calendar Simulator" in Schedule page
 }
 export const DayStatus: FC<DayStatusProps> = props => {
+  const todayDate = getTodayDate()
+  const lastWeek = getLocalDayByDate(getDateWithOffsetDays(todayDate, -7))
+  const isInCurrWeek =
+    localDatesLTE(lastWeek, props.dayData.date) &&
+    localDatesLTE(props.dayData.date, getLocalDayByDate(todayDate))
   const isToday = isLocalDateToday(props.dayData.date)
-  const isYesterday = isLocalDateYesterday(props.dayData.date)
   const isFuture = isLocalDateFuture(props.dayData.date)
 
   const actionMode:
@@ -41,7 +48,7 @@ export const DayStatus: FC<DayStatusProps> = props => {
     if (props.status === 'done' && !!props.apiData) {
       return 'manage-calendar-date'
     }
-    if ((isYesterday || isToday) && !!props.apiData) {
+    if (isInCurrWeek && !!props.apiData) {
       return 'create-new-calendar-day'
     }
     if (isFuture && !props.status && !!props.apiData) {
@@ -120,15 +127,7 @@ export const DayStatus: FC<DayStatusProps> = props => {
         className={classNames('rounded-sm w-full h-full', {
           'bg-gray-200': !props.color,
           clickable: actionMode !== 'none',
-          highlight:
-            actionMode === 'custom-action' ||
-            actionMode === 'create-new-calendar-day' ||
-            actionMode === 'create-new-planned-event' ||
-            !!props.dayData.notes,
-          'highlight-with-border-inside':
-            actionMode === 'custom-action' ||
-            (actionMode === 'manage-calendar-date' && !!props.dayData.notes) ||
-            actionMode === 'create-new-calendar-day',
+          'show-today': isToday,
           'day-status-has-notes': !!props.dayData.notes,
         })}
         style={{

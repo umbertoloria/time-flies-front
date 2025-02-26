@@ -9,33 +9,18 @@
         transition: .1s;
 
         &:hover {
-            box-shadow: 0 0 0 3px rgba(0, 0, 0, .3);
+            transform: scale(1.15);
+            @apply bg-gray-300;
         }
     }
 
-    .highlight {
-        cursor: pointer;
-        border: 4px solid transparent;
-
-        &:hover {
-            border-width: 6px;
-
-            &:not(.day-status-has-notes) {
-                box-shadow: unset;
-            }
-        }
-
-        &.highlight-with-border-inside, &:hover {
-            border-color: rgba(0, 0, 0, .3);
-            @apply bg-gray-300;
-        }
-
-        transition: .1s;
-
+    .show-today {
+        border: 4px solid rgba(0, 0, 0, .3);
+        @apply bg-gray-300;
     }
 
     .day-status-has-notes {
-        box-shadow: 0 0 0 3px rgba(0, 0, 0, .3);
+        box-shadow: 0 0 0 4px rgba(0, 0, 0, .4);
     }
 
     .btn-primary {
