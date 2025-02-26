@@ -14,7 +14,7 @@ export type ContextDialogForInsertNewGoal = {
   data?: ContextPartData
   openDialog: (calendarId: number, localDate: string) => void
   closeDialog: () => void
-  confirmProgressDone: () => void
+  confirmProgressDone: (notes: undefined | string) => void
 }
 export const contextDialogForInsertNewGoalDataDefault: ContextDialogForInsertNewGoal =
   {
@@ -60,7 +60,7 @@ export const useContextDialogForInsertNewGoalForUX = (): {
           isOpen: false,
         })
       },
-      confirmProgressDone() {
+      confirmProgressDone(notes) {
         if (!dialog.isOpen || !dialog.data || dialog.data.loading) {
           return
         }
@@ -73,7 +73,7 @@ export const useContextDialogForInsertNewGoalForUX = (): {
             loading: true,
           },
         })
-        checkDateWithSuccess(calendarId, localDate)
+        checkDateWithSuccess(calendarId, localDate, notes)
           .then(() => {
             // Yay!
 

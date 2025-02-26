@@ -136,14 +136,19 @@ export const getSDK = () => {
             }),
     checkDateWithSuccess: (
       id: number,
-      localDate: string
+      localDate: string,
+      notes: undefined | string
     ): Promise<'ok' | 'invalid'> =>
       debugMode
         ? Promise.resolve('ok')
         : api
             .post(
               '?a=calendar-date-create',
-              makeFormData({ id: `${id}`, 'local-date': localDate })
+              makeFormData({
+                id: `${id}`,
+                'local-date': localDate,
+                notes,
+              })
             )
             .then<'ok'>(() => 'ok')
             .catch<'invalid'>(err => {
