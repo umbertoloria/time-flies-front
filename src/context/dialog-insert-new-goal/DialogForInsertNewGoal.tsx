@@ -1,14 +1,22 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useDialogForInsertNewGoal } from './ContextDialogForInsertNewGoal.tsx'
 import { GenericDialog } from '../../components/calendar/GenericDialog.tsx'
 import classNames from 'classnames'
 
+const INITIAL_ENABLE_NOTE = false
+const INITIAL_INPUT_VALUE = ''
 export const DialogForInsertNewGoal: FC = () => {
   const { isOpen, closeDialog, confirmProgressDone } =
     useDialogForInsertNewGoal()
 
-  const [enableNoteInput, setEnableNoteInput] = useState(false)
-  const [inputValue, setInputValue] = useState('')
+  const [enableNoteInput, setEnableNoteInput] = useState(INITIAL_ENABLE_NOTE)
+  const [inputValue, setInputValue] = useState(INITIAL_INPUT_VALUE)
+  useEffect(() => {
+    if (isOpen) {
+      setEnableNoteInput(INITIAL_ENABLE_NOTE)
+      setInputValue(INITIAL_INPUT_VALUE)
+    }
+  }, [isOpen])
 
   return (
     <>
