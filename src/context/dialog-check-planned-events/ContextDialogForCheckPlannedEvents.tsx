@@ -19,7 +19,7 @@ export type ContextDialogForCheckPlannedEvent = {
     mode: 'done' | 'missed'
   ) => void
   closeDialog: () => void
-  confirmProgressDone: () => void
+  confirmProgressDone: (notes: undefined | string) => void
 }
 export const contextDialogForCheckPlannedEventDataDefault: ContextDialogForCheckPlannedEvent =
   {
@@ -66,7 +66,7 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
           isOpen: false,
         })
       },
-      confirmProgressDone() {
+      confirmProgressDone(notes) {
         if (!dialog.isOpen || !dialog.data || dialog.data.loading) {
           return
         }
@@ -80,7 +80,18 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
             loading: true,
           },
         })
-        checkPlannedEventWithSuccess(calendarId, eventId, mode)
+        checkPlannedEventWithSuccess(
+          calendarId,
+          eventId,
+          mode === 'done'
+            ? {
+                type: 'done',
+                notes,
+              }
+            : {
+                type: 'missed',
+              }
+        )
           .then(() => {
             // Yay!
 

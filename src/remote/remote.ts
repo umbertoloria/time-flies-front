@@ -310,7 +310,14 @@ throw err
     checkPlannedEventWithSuccess: (
       calendarId: number,
       eventId: number,
-      mode: 'done' | 'missed'
+      mode:
+        | {
+            type: 'done'
+            notes: undefined | string
+          }
+        | {
+            type: 'missed'
+          }
     ): Promise<'ok' | 'invalid'> =>
       debugMode
         ? Promise.resolve('ok')
@@ -320,7 +327,11 @@ throw err
               makeFormData({
                 calendar_id: `${calendarId}`,
                 event_id: `${eventId}`,
-                set_as_missed: mode === 'missed' ? 'true' : undefined,
+                set_as_missed: mode.type === 'missed' ? 'true' : undefined,
+                notes:
+                  mode.type === 'done' && typeof mode.notes === 'string'
+                    ? mode.notes
+                    : undefined,
               })
             )
             .then<'ok'>(() => 'ok')
