@@ -66,8 +66,8 @@ export const DialogForInsertNewGoal: FC = () => {
                 let notes: undefined | string = undefined
                 if (enableNoteInput) {
                   notes = inputValue.trim()
-                  if (notes.length < 2 || notes.length > 30) {
-                    alert('Nota non valida: minimo 2 massimo 30 caratteri')
+                  if (notes.length < 2 || notes.length > 300) {
+                    alert('Nota non valida: minimo 2 massimo 300 caratteri')
                     return
                   }
                 }

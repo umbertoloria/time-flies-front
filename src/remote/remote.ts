@@ -157,13 +157,21 @@ export const getSDK = () => {
               }
               throw err
             }),
-    setDateAsPlannedEvent: (id: number, localDate: string) =>
+    setDateAsPlannedEvent: (
+      id: number,
+      localDate: string,
+      notes: undefined | string
+    ) =>
       debugMode
         ? Promise.resolve('ok')
         : api
             .post(
               '?a=planned-event-create',
-              makeFormData({ id: `${id}`, 'local-date': localDate })
+              makeFormData({
+                id: `${id}`,
+                'local-date': localDate,
+                notes,
+              })
             )
             .then<'ok'>(() => 'ok')
             .catch<'invalid'>(err => {

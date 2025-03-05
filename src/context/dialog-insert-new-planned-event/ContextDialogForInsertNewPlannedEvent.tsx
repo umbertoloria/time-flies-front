@@ -14,7 +14,7 @@ export type ContextDialogForInsertNewPlannedEvent = {
   data?: ContextPartData
   openDialog: (calendarId: number, localDate: string) => void
   closeDialog: () => void
-  confirmProgressToDo: () => void
+  confirmProgressToDo: (notes: undefined | string) => void
 }
 export const contextDialogForInsertNewPlannedEventDataDefault: ContextDialogForInsertNewPlannedEvent =
   {
@@ -60,7 +60,7 @@ export const useContextDialogForInsertNewPlannedEventForUX = (): {
           isOpen: false,
         })
       },
-      confirmProgressToDo() {
+      confirmProgressToDo(notes) {
         if (!dialog.isOpen || !dialog.data || dialog.data.loading) {
           return
         }
@@ -73,7 +73,7 @@ export const useContextDialogForInsertNewPlannedEventForUX = (): {
             loading: true,
           },
         })
-        setDateAsPlannedEvent(calendarId, localDate)
+        setDateAsPlannedEvent(calendarId, localDate, notes)
           .then(() => {
             // Yay!
 
