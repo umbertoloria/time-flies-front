@@ -21,20 +21,28 @@ export function appendLogicDaysFromTCalendarCh(
   calendar: TCalendarCh
 ) {
   logicDays.push(
-    ...calendar.days.map(day => ({
+    ...calendar.days.map<LogicDay>(day => ({
       dayData: {
         date: day.date,
-        notes: day.notes,
+        notes: day.notes
+          ? {
+              text: day.notes,
+            }
+          : undefined,
       },
       color: calendar.color,
     }))
   )
   if (calendar.plannedDays && calendar.plannedDays.length) {
     logicDays.push(
-      ...calendar.plannedDays.map(day => ({
+      ...calendar.plannedDays.map<LogicDay>(day => ({
         dayData: {
           date: day.date,
-          notes: day.notes,
+          notes: day.notes
+            ? {
+                text: day.notes,
+              }
+            : undefined,
         },
         isPlanned: true,
         color: calendar.plannedColor,

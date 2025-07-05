@@ -15,7 +15,9 @@ import { useDialogForInsertNewPlannedEvent } from '../../context/dialog-insert-n
 
 export type DayStatusDayData = {
   date: string // Es. "2023-01-01"
-  notes?: string
+  notes?: {
+    text: string
+  }
 }
 export type DayStatusProps = {
   dayData: DayStatusDayData
@@ -73,7 +75,11 @@ export const DayStatus: FC<DayStatusProps> = props => {
           openDialogForCalendarDateManagement({
             calendarId: props.apiData.calendarId,
             date: props.dayData.date,
-            notes: props.dayData.notes || undefined,
+            notes: props.dayData.notes
+              ? {
+                  text: props.dayData.notes.text,
+                }
+              : undefined,
           })
         } else {
           // Should never happen.

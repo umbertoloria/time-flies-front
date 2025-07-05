@@ -24,7 +24,7 @@ export const DialogCalendarDateManagement: FC = () => {
                 {!!data.notes && (
                   <>
                     <p>
-                      <Badge>Note</Badge> {data.notes}
+                      <Badge>Note</Badge> {data.notes.text}
                     </p>
                   </>
                 )}
