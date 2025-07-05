@@ -75,11 +75,14 @@ export const DayStatus: FC<DayStatusProps> = props => {
           openDialogForCalendarDateManagement({
             calendarId: props.apiData.calendarId,
             date: props.dayData.date,
+            /*
+            // Previously, these data were known, now the dialog fetches them.
             notes: props.dayData.notes
               ? {
                   text: props.dayData.notes.text,
                 }
               : undefined,
+            */
           })
         } else {
           // Should never happen.

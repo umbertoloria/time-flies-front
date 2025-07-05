@@ -1,62 +1,94 @@
-import { FC, useRef, useState } from 'react'
-import {
-  ContextPartDataNotes,
-  useDialogForCalendarDateManagement,
-} from './ContextDialogForCalendarDateManagement.tsx'
+import { FC, useEffect, useRef, useState } from 'react'
+import { useDialogForCalendarDateManagement } from './ContextDialogForCalendarDateManagement.tsx'
 import { GenericDialog } from '../../components/calendar/GenericDialog.tsx'
 import { displayDateFromLocalDate } from '../../components/calendar/utils.ts'
 import { Badge } from '../../components/calendar/Badge.tsx'
 import { getSDK } from '../../remote/remote.ts'
 import { fireEventCalendarUpdated } from '../../components/calendar/event-calendar-updated.ts'
+import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
 
 export const DialogCalendarDateManagement: FC = () => {
   const { isOpen, data, closeDialog } = useDialogForCalendarDateManagement()
 
   return (
     <>
-      {isOpen && (
-        <GenericDialog
-          onClose={closeDialog}
-          labelOnClose='Indietro'
-          title='Attività'
-        >
-          {!!data && (
-            <>
-              <div className='p-4 flex flex-col gap-1'>
-                <p>
-                  <Badge>Data</Badge> {displayDateFromLocalDate(data.date)}
-                </p>
-                {!!data.notes && (
-                  <>
-                    <p>
-                      <Badge>Note</Badge>
-                    </p>
-                    <div>
-                      <CalendarDayNote
-                        calendarId={data.calendarId}
-                        localDate={data.date}
-                        notes={data.notes}
-                        editable={true}
-                        onUpdated={() => {
-                          closeDialog()
-                        }}
-                      />
-                    </div>
-                  </>
-                )}
-              </div>
-            </>
-          )}
-        </GenericDialog>
+      {isOpen && !!data && (
+        <DialogCalendarDateManagementInner
+          calendarId={data.calendarId}
+          date={data.date}
+          closeDialog={closeDialog}
+        />
       )}
     </>
+  )
+}
+
+const periodRefreshDateInMillis = 3 * 60 * 60 * 1000 // 3 minutes.
+export const DialogCalendarDateManagementInner: FC<{
+  calendarId: number
+  date: string
+  closeDialog: () => void
+}> = ({ calendarId, date, closeDialog }) => {
+  const { readCalendarDate } = getSDK()
+  const [data, { refetch: refreshDate }] = useWrapperForCreateResource(() =>
+    readCalendarDate(calendarId, date)
+  )
+  useEffect(() => {
+    const refreshDateIntervalTimer = setInterval(
+      refreshDate,
+      periodRefreshDateInMillis
+    )
+    return () => {
+      clearInterval(refreshDateIntervalTimer)
+    }
+  }, [])
+
+  return (
+    <GenericDialog
+      onClose={closeDialog}
+      labelOnClose='Indietro'
+      title='Attività'
+    >
+      {!!data?.data && (
+        <>
+          <div className='p-4 flex flex-col gap-1'>
+            <p>
+              <Badge>Data</Badge>{' '}
+              {displayDateFromLocalDate(data.data.date.date)}
+            </p>
+            {!!data.data.date.notes && (
+              <>
+                <p>
+                  <Badge>Note</Badge>
+                </p>
+                <div>
+                  <CalendarDayNote
+                    calendarId={data.data.calendar.id}
+                    localDate={data.data.date.date}
+                    notes={{
+                      text: data.data.date.notes,
+                    }}
+                    editable={true}
+                    onUpdated={() => {
+                      closeDialog()
+                    }}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        </>
+      )}
+    </GenericDialog>
   )
 }
 
 const CalendarDayNote: FC<{
   calendarId: number
   localDate: string
-  notes: ContextPartDataNotes
+  notes: {
+    text: string
+  }
   editable: boolean
   onUpdated: () => void
 }> = ({ calendarId, localDate, notes, editable, onUpdated }) => {

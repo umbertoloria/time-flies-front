@@ -1,6 +1,6 @@
 // Types
-// 2025-01-06T18:44:48Z
-// v2.9
+// 2025-07-05T14:23:37Z
+// v3.0
 
 // Calendar
 export type TCalendar = TCalendarCh & {
@@ -16,8 +16,14 @@ type TCalendarCh = {
 }
 export type TDay = {
   date: string // Es. "2023-01-01"
-  intensity?: number
   notes?: string
+}
+export type TCalendarDate = {
+  calendar: {
+    id: number
+    name: string
+  }
+  date: TDay
 }
 
 // Schedule
