@@ -157,6 +157,23 @@ export const getSDK = () => {
               }
               throw err
             }),
+    updateCalendarDateNotes: (
+      calendarId: number,
+      localDate: string,
+      notes: undefined | string
+    ): Promise<'ok' | 'invalid'> =>
+      debugMode
+        ? Promise.resolve('ok')
+        : api
+            .post(
+              '?a=calendar-date-update-notes',
+              makeFormData({
+                'calendar-id': `${calendarId}`,
+                'local-date': localDate,
+                notes,
+              })
+            )
+            .then<'ok'>(() => 'ok'),
     setDateAsPlannedEvent: (
       id: number,
       localDate: string,

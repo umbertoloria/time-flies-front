@@ -65,6 +65,7 @@ export const DialogForInsertNewGoal: FC = () => {
               onClick={() => {
                 let notes: undefined | string = undefined
                 if (enableNoteInput) {
+                  // TODO: Duplicated code (*sdcn)
                   notes = inputValue.trim()
                   if (notes.length < 2 || notes.length > 300) {
                     alert('Nota non valida: minimo 2 massimo 300 caratteri')
