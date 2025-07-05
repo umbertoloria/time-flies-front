@@ -6,7 +6,7 @@ type ContextPartData = {
   date: string // Es. "2025-02-26"
   notes?: ContextPartDataNotes
 }
-type ContextPartDataNotes = {
+export type ContextPartDataNotes = {
   text: string
 }
 export type ContextDialogForCalendarDateManagement = {

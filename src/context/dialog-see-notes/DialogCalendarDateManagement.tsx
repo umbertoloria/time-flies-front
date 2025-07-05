@@ -1,5 +1,8 @@
 import { FC } from 'react'
-import { useDialogForCalendarDateManagement } from './ContextDialogForCalendarDateManagement.tsx'
+import {
+  ContextPartDataNotes,
+  useDialogForCalendarDateManagement,
+} from './ContextDialogForCalendarDateManagement.tsx'
 import { GenericDialog } from '../../components/calendar/GenericDialog.tsx'
 import { displayDateFromLocalDate } from '../../components/calendar/utils.ts'
 import { Badge } from '../../components/calendar/Badge.tsx'
@@ -23,9 +26,7 @@ export const DialogCalendarDateManagement: FC = () => {
                 </p>
                 {!!data.notes && (
                   <>
-                    <p>
-                      <Badge>Note</Badge> {data.notes.text}
-                    </p>
+                    <CalendarDayNote notes={data.notes} />
                   </>
                 )}
               </div>
@@ -34,5 +35,15 @@ export const DialogCalendarDateManagement: FC = () => {
         </GenericDialog>
       )}
     </>
+  )
+}
+
+const CalendarDayNote: FC<{ notes: ContextPartDataNotes }> = ({ notes }) => {
+  return (
+    <div>
+      <p>
+        <Badge>Note</Badge> {notes.text}
+      </p>
+    </div>
   )
 }

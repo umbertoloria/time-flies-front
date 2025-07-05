@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "format": "prettier --write \"src/**/*.ts*\"",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "codefix": "npm run format && npm run lint & npm run format",
     "preview": "vite preview"
   },
   "dependencies": {
