@@ -14,7 +14,7 @@ import { displayDateFromLocalDate } from './utils.ts'
 import { useDialogForInsertNewPlannedEvent } from '../../context/dialog-insert-new-planned-event/ContextDialogForInsertNewPlannedEvent.tsx'
 
 export type DayStatusProps = {
-  dayData: DayStatusDayData
+  date: string // Es. "2023-01-01"
   status?: 'planned' | 'done'
   color?: string
   apiData?: {
@@ -23,20 +23,14 @@ export type DayStatusProps = {
   onClick?: () => void
   // For now, "onClick" is used by the "Calendar Simulator" in Schedule page
 }
-export type DayStatusDayData = {
-  date: string // Es. "2023-01-01"
-  notes?: {
-    text: string
-  }
-}
 export const DayStatus: FC<DayStatusProps> = props => {
   const todayDate = getTodayDate()
   const lastWeek = getLocalDayByDate(getDateWithOffsetDays(todayDate, -7))
   const isInCurrWeek =
-    localDatesLTE(lastWeek, props.dayData.date) &&
-    localDatesLTE(props.dayData.date, getLocalDayByDate(todayDate))
-  const isToday = isLocalDateToday(props.dayData.date)
-  const isFuture = isLocalDateFuture(props.dayData.date)
+    localDatesLTE(lastWeek, props.date) &&
+    localDatesLTE(props.date, getLocalDayByDate(todayDate))
+  const isToday = isLocalDateToday(props.date)
+  const isFuture = isLocalDateFuture(props.date)
 
   const actionMode:
     | 'custom-action'
@@ -76,7 +70,7 @@ export const DayStatus: FC<DayStatusProps> = props => {
           // Child depending on the actual Date).
           openDialogForCalendarDateManagement({
             calendarId: props.apiData.calendarId,
-            date: props.dayData.date,
+            date: props.date,
           })
         } else {
           // Should never happen.
@@ -87,10 +81,7 @@ export const DayStatus: FC<DayStatusProps> = props => {
       return () => {
         if (props.apiData) {
           // On Parent Calendar, this uses Parent Calendar ID.
-          openDialogForInsertNewGoal(
-            props.apiData.calendarId,
-            props.dayData.date
-          )
+          openDialogForInsertNewGoal(props.apiData.calendarId, props.date)
         } else {
           // Should never happen.
         }
@@ -100,10 +91,7 @@ export const DayStatus: FC<DayStatusProps> = props => {
       return () => {
         if (!props.status && !!props.apiData) {
           // On Parent Calendar, this uses Parent Calendar ID.
-          openDialogForInsertPlannedEvent(
-            props.apiData.calendarId,
-            props.dayData.date
-          )
+          openDialogForInsertPlannedEvent(props.apiData.calendarId, props.date)
         } else {
           // Should never happen.
         }
@@ -121,7 +109,7 @@ export const DayStatus: FC<DayStatusProps> = props => {
   const { openDialog: openDialogForInsertPlannedEvent } =
     useDialogForInsertNewPlannedEvent()
 
-  const displayDate = displayDateFromLocalDate(props.dayData.date)
+  const displayDate = displayDateFromLocalDate(props.date)
 
   return (
     <div
@@ -133,7 +121,6 @@ export const DayStatus: FC<DayStatusProps> = props => {
           'bg-gray-200': !props.color,
           clickable: actionMode !== 'none',
           'show-today': isToday,
-          'day-status-has-notes': !!props.dayData.notes,
         })}
         style={{
           background: props.color || undefined,

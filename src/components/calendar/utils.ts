@@ -10,7 +10,7 @@ export function getFirstAndLastLocalDatesFromDayStatusRows(
 
   // Calculate "firstLocalDate" and "lastLocalDate"
   let i = 0
-  const firstLocalDate = dayStatusRows[i].dayStatuses[0].dayData.date
+  const firstLocalDate = dayStatusRows[i].dayStatuses[0].date
   let j = 1
   let lastLocalDate = firstLocalDate
   while (i < dayStatusRows.length) {
@@ -18,7 +18,7 @@ export function getFirstAndLastLocalDatesFromDayStatusRows(
     j = 0
     while (j < dayStatusRow.dayStatuses.length) {
       const cell = dayStatusRow.dayStatuses[j]
-      lastLocalDate = cell.dayData.date
+      lastLocalDate = cell.date
       ++j
     }
     ++i

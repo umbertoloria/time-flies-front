@@ -19,10 +19,6 @@
         @apply bg-gray-300;
     }
 
-    .day-status-has-notes {
-        box-shadow: 0 0 0 4px rgba(0, 0, 0, .4);
-    }
-
     .btn-primary {
         @apply py-1 px-2 bg-blue-600 text-white text-sm font-semibold rounded-md shadow-md transition-all
         hover:bg-blue-700

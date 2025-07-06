@@ -1,5 +1,4 @@
 import { TCalendar, TCalendarCh } from '../../remote/sdk/types'
-import { DayStatusDayData } from './DayStatus.tsx'
 
 export type LogicCalendar = {
   color: string
@@ -11,7 +10,7 @@ export type LogicCalendar = {
   logicDays: LogicDay[]
 }
 export type LogicDay = {
-  dayData: DayStatusDayData
+  date: string // Es. "2023-01-01"
   apiCalendar?: {
     id: number
   }
@@ -26,14 +25,7 @@ export function appendLogicDaysFromTCalendarCh(
 ) {
   logicDays.push(
     ...calendar.days.map<LogicDay>(day => ({
-      dayData: {
-        date: day.date,
-        notes: day.notes
-          ? {
-              text: day.notes,
-            }
-          : undefined,
-      },
+      date: day.date,
       apiCalendar: {
         id: calendar.id,
       },
@@ -43,14 +35,7 @@ export function appendLogicDaysFromTCalendarCh(
   if (calendar.plannedDays && calendar.plannedDays.length) {
     logicDays.push(
       ...calendar.plannedDays.map<LogicDay>(day => ({
-        dayData: {
-          date: day.date,
-          notes: day.notes
-            ? {
-                text: day.notes,
-              }
-            : undefined,
-        },
+        date: day.date,
         apiCalendar: {
           id: calendar.id,
         },
@@ -71,7 +56,7 @@ export function createLogicDaysFromTCalendar(calendar: TCalendar): LogicDay[] {
       appendLogicDaysFromTCalendarCh(logicDays, childCalendar)
     }
   }
-  logicDays.sort((a, b) => a.dayData.date.localeCompare(b.dayData.date))
+  logicDays.sort((a, b) => a.date.localeCompare(b.date))
 
   return logicDays
 }

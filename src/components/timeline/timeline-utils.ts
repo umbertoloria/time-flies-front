@@ -26,7 +26,7 @@ export function createDayStatusPropsListFromLogicCalendar(
 
     while (
       iLogicDay < logicDays.length &&
-      localDatesLT(logicDays[iLogicDay].dayData.date, curLocalDate)
+      localDatesLT(logicDays[iLogicDay].date, curLocalDate)
     ) {
       ++iLogicDay
     }
@@ -35,9 +35,9 @@ export function createDayStatusPropsListFromLogicCalendar(
 
     const curLogicDay =
       iLogicDay < logicDays.length ? logicDays[iLogicDay] : undefined
-    if (!!curLogicDay && curLogicDay.dayData.date === curLocalDate) {
+    if (!!curLogicDay && curLogicDay.date === curLocalDate) {
       result.push({
-        dayData: curLogicDay.dayData,
+        date: curLogicDay.date,
         apiData: curLogicDay.apiCalendar
           ? {
               calendarId: curLogicDay.apiCalendar.id,
@@ -51,12 +51,12 @@ export function createDayStatusPropsListFromLogicCalendar(
       // Dealing with siblings
       if (
         iLogicDay + 1 < logicDays.length &&
-        logicDays[iLogicDay + 1].dayData.date === curLocalDate
+        logicDays[iLogicDay + 1].date === curLocalDate
       ) {
         let siblings_offset = 1
         while (
           iLogicDay + siblings_offset < logicDays.length &&
-          logicDays[iLogicDay + siblings_offset].dayData.date === curLocalDate
+          logicDays[iLogicDay + siblings_offset].date === curLocalDate
         ) {
           ++siblings_offset
         }
@@ -69,11 +69,8 @@ export function createDayStatusPropsListFromLogicCalendar(
       }
     } else {
       result.push({
-        dayData: {
-          // "Empty day"
-          date: curLocalDate,
-          // notes: undefined,
-        },
+        // "Empty day"
+        date: curLocalDate,
         apiData: logicCalendar.apiCalendar
           ? {
               // On Parent Calendar: using Parent Calendar ID for empty days.
