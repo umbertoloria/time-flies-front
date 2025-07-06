@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 import { useDialogForCheckPlannedEvent } from './ContextDialogForCheckPlannedEvents.tsx'
 import { GenericDialog } from '../../components/calendar/GenericDialog.tsx'
-import classNames from 'classnames'
+import { NotesFieldEditor } from '../dialog-insert-new-goal/DialogForInsertNewGoal.tsx'
 
 const INITIAL_ENABLE_NOTE = false
 const INITIAL_INPUT_VALUE = ''
@@ -15,7 +15,7 @@ export const DialogCheckPlannedEvent: FC = () => {
   const [enableNoteInput, setEnableNoteInput] = useState(INITIAL_ENABLE_NOTE)
   const [inputValue, setInputValue] = useState(INITIAL_INPUT_VALUE)
   useEffect(() => {
-    if (isOpen) {
+    if (!isOpen) {
       setEnableNoteInput(INITIAL_ENABLE_NOTE)
       setInputValue(INITIAL_INPUT_VALUE)
     }
@@ -40,35 +40,12 @@ export const DialogCheckPlannedEvent: FC = () => {
               </>
             )}
             {!settingAsMissed && (
-              <div className='pt-2'>
-                {'Inserisci note'}
-                <input
-                  type='checkbox'
-                  className='inline ml-1'
-                  checked={enableNoteInput}
-                  onChange={event => {
-                    setEnableNoteInput(event.currentTarget.checked)
-                  }}
-                />
-                <input
-                  type='text'
-                  id='input-field'
-                  className={classNames(
-                    'block w-full px-2 py-1  border border-gray-300 rounded-md focus:border-blue-500 focus:outline-none focus:ring-blue-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:focus:border-blue-400 dark:focus:ring-blue-900',
-                    {
-                      'bg-white': enableNoteInput,
-                      'bg-gray-100': !enableNoteInput,
-                      'text-gray-700': enableNoteInput,
-                      'text-gray-500': !enableNoteInput,
-                    }
-                  )}
-                  value={inputValue}
-                  disabled={!enableNoteInput}
-                  onChange={event => {
-                    setInputValue(event.target.value)
-                  }}
-                />
-              </div>
+              <NotesFieldEditor
+                enableNoteInput={enableNoteInput}
+                setEnableNoteInput={setEnableNoteInput}
+                inputValue={inputValue}
+                setInputValue={setInputValue}
+              />
             )}
           </div>
           <div className='flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600'>

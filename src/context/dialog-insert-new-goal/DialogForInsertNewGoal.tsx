@@ -61,7 +61,7 @@ export const DialogForInsertNewGoal: FC = () => {
   )
 }
 
-const NotesFieldEditor: FC<{
+export const NotesFieldEditor: FC<{
   enableNoteInput: boolean
   setEnableNoteInput: (enableNoteInput: boolean) => void
   inputValue: string
