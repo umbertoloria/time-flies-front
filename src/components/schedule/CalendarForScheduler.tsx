@@ -25,6 +25,8 @@ export const CalendarForScheduler: FC<{
     dayData: {
       date: localDate,
     },
+    // apiCalendar: undefined,
+    // isPlanned: undefined,
     color: manualCalendarColor,
     onClick() {
       props.setLocalDate(localDate)
@@ -35,6 +37,8 @@ export const CalendarForScheduler: FC<{
     dayData: {
       date: lastLocalDate,
     },
+    // apiCalendar: undefined,
+    // isPlanned: undefined,
     color: manualCalendarColor,
     onClick() {
       props.setLocalDate(lastLocalDate)

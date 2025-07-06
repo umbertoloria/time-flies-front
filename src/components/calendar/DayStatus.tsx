@@ -13,12 +13,6 @@ import {
 import { displayDateFromLocalDate } from './utils.ts'
 import { useDialogForInsertNewPlannedEvent } from '../../context/dialog-insert-new-planned-event/ContextDialogForInsertNewPlannedEvent.tsx'
 
-export type DayStatusDayData = {
-  date: string // Es. "2023-01-01"
-  notes?: {
-    text: string
-  }
-}
 export type DayStatusProps = {
   dayData: DayStatusDayData
   status?: 'planned' | 'done'
@@ -28,6 +22,12 @@ export type DayStatusProps = {
   }
   onClick?: () => void
   // For now, "onClick" is used by the "Calendar Simulator" in Schedule page
+}
+export type DayStatusDayData = {
+  date: string // Es. "2023-01-01"
+  notes?: {
+    text: string
+  }
 }
 export const DayStatus: FC<DayStatusProps> = props => {
   const todayDate = getTodayDate()
@@ -72,17 +72,11 @@ export const DayStatus: FC<DayStatusProps> = props => {
     if (actionMode === 'manage-calendar-date') {
       return () => {
         if (props.status === 'done' && !!props.apiData) {
+          // On Parent Calendar, this uses the Actual Calendar ID (Parent or
+          // Child depending on the actual Date).
           openDialogForCalendarDateManagement({
             calendarId: props.apiData.calendarId,
             date: props.dayData.date,
-            /*
-            // Previously, these data were known, now the dialog fetches them.
-            notes: props.dayData.notes
-              ? {
-                  text: props.dayData.notes.text,
-                }
-              : undefined,
-            */
           })
         } else {
           // Should never happen.
@@ -92,6 +86,7 @@ export const DayStatus: FC<DayStatusProps> = props => {
     if (actionMode === 'create-new-calendar-day') {
       return () => {
         if (props.apiData) {
+          // On Parent Calendar, this uses Parent Calendar ID.
           openDialogForInsertNewGoal(
             props.apiData.calendarId,
             props.dayData.date
@@ -104,6 +99,7 @@ export const DayStatus: FC<DayStatusProps> = props => {
     if (actionMode === 'create-new-planned-event') {
       return () => {
         if (!props.status && !!props.apiData) {
+          // On Parent Calendar, this uses Parent Calendar ID.
           openDialogForInsertPlannedEvent(
             props.apiData.calendarId,
             props.dayData.date

@@ -5,12 +5,16 @@ export type LogicCalendar = {
   color: string
   name: string
   apiCalendar?: {
+    // On Parent Calendars this can be different from "logicDays*.apiCalendar"
     id: number
   }
   logicDays: LogicDay[]
 }
 export type LogicDay = {
   dayData: DayStatusDayData
+  apiCalendar?: {
+    id: number
+  }
   isPlanned?: boolean
   color: string
   onClick?: () => void
@@ -30,6 +34,9 @@ export function appendLogicDaysFromTCalendarCh(
             }
           : undefined,
       },
+      apiCalendar: {
+        id: calendar.id,
+      },
       color: calendar.color,
     }))
   )
@@ -43,6 +50,9 @@ export function appendLogicDaysFromTCalendarCh(
                 text: day.notes,
               }
             : undefined,
+        },
+        apiCalendar: {
+          id: calendar.id,
         },
         isPlanned: true,
         color: calendar.plannedColor,
