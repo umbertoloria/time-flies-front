@@ -6,6 +6,7 @@ import { Badge } from '../../components/calendar/Badge.tsx'
 import { getSDK } from '../../remote/remote.ts'
 import { fireEventCalendarUpdated } from '../../components/calendar/event-calendar-updated.ts'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
+import { TCalendarDate } from '../../remote/sdk/types'
 
 export const DialogCalendarDateManagement: FC = () => {
   const { isOpen, data, closeDialog } = useDialogForCalendarDateManagement()
@@ -44,7 +45,6 @@ export const DialogCalendarDateManagementInner: FC<{
   }, [])
 
   const notes_available = data?.data.calendar.usesNotes
-  const notes_editable = true // TODO: Understand when a Calendar Date can be updated
 
   return (
     <GenericDialog
@@ -69,43 +69,60 @@ export const DialogCalendarDateManagementInner: FC<{
             </p>
             {notes_available && (
               <>
-                <p>
-                  <Badge>Note</Badge>
-                </p>
-                <div>
-                  {data.data.date.notes ? (
-                    <>
-                      <CalendarDayNote
-                        calendarId={data.data.calendar.id}
-                        localDate={data.data.date.date}
-                        notes={{
-                          text: data.data.date.notes,
-                        }}
-                        editable={notes_editable}
-                        onUpdated={() => {
-                          refreshDate()
-                        }}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <NotesAddForm
-                        calendarId={data.data.calendar.id}
-                        localDate={data.data.date.date}
-                        editable={notes_editable}
-                        onInserted={() => {
-                          refreshDate()
-                        }}
-                      />
-                    </>
-                  )}
-                </div>
+                <CalendarDateNotesComponent
+                  calendarDate={data.data}
+                  refreshDate={refreshDate}
+                />
               </>
             )}
           </>
         )}
       </div>
     </GenericDialog>
+  )
+}
+
+const CalendarDateNotesComponent: FC<{
+  calendarDate: TCalendarDate
+  refreshDate: () => void
+}> = ({ calendarDate, refreshDate }) => {
+  const notes_editable = true // TODO: Understand when a Calendar Date can be updated
+  return (
+    <>
+      <>
+        <p>
+          <Badge>Note</Badge>
+        </p>
+        <div>
+          {calendarDate.date.notes ? (
+            <>
+              <CalendarDayNote
+                calendarId={calendarDate.calendar.id}
+                localDate={calendarDate.date.date}
+                notes={{
+                  text: calendarDate.date.notes,
+                }}
+                editable={notes_editable}
+                onUpdated={() => {
+                  refreshDate()
+                }}
+              />
+            </>
+          ) : (
+            <>
+              <NotesAddForm
+                calendarId={calendarDate.calendar.id}
+                localDate={calendarDate.date.date}
+                editable={notes_editable}
+                onInserted={() => {
+                  refreshDate()
+                }}
+              />
+            </>
+          )}
+        </div>
+      </>
+    </>
   )
 }
 
