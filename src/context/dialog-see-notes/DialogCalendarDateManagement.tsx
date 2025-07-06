@@ -85,7 +85,16 @@ export const DialogCalendarDateManagementInner: FC<{
                   />
                 </>
               ) : (
-                <></>
+                <>
+                  <NotesAddForm
+                    calendarId={data.data.calendar.id}
+                    localDate={data.data.date.date}
+                    editable={editable}
+                    onInserted={() => {
+                      refreshDate()
+                    }}
+                  />
+                </>
               )}
             </div>
           </>
@@ -117,13 +126,17 @@ const CalendarDayNote: FC<{
             loading={loading}
             editable={editable}
             onSubmit={_notes => {
-              if (_notes === notes.text.trim()) {
+              if (!!_notes && _notes === notes.text.trim()) {
                 // Useless to save: fake the update.
                 setEditing(false)
                 return
               }
               setLoading(true)
-              updateCalendarDateNotes(calendarId, localDate, _notes)
+              updateCalendarDateNotes(
+                calendarId,
+                localDate,
+                _notes || undefined
+              )
                 .then(() => {
                   // Yay!
 
@@ -167,11 +180,73 @@ const CalendarDayNote: FC<{
   )
 }
 
+const NotesAddForm: FC<{
+  calendarId: number
+  localDate: string
+  editable: boolean
+  onInserted: () => void
+}> = ({ calendarId, localDate, editable, onInserted }) => {
+  const { updateCalendarDateNotes } = getSDK()
+  const [adding, setAdding] = useState(false)
+  const [loading, setLoading] = useState(false)
+  return (
+    <>
+      {adding ? (
+        <>
+          <NotesForm
+            initialValue=''
+            loading={loading}
+            editable={editable}
+            onSubmit={_notes => {
+              setLoading(true)
+              updateCalendarDateNotes(
+                calendarId,
+                localDate,
+                _notes || undefined
+              )
+                .then(() => {
+                  // Yay!
+
+                  fireEventCalendarUpdated({ calendarId })
+                  // fireEventStreamlineUpdated(undefined)
+                  // This wasn't a Planned Event.
+
+                  setLoading(false)
+                  setAdding(false)
+                  onInserted()
+                })
+                .catch(err => {
+                  console.error(err)
+                  // TODO: Tell user all went KO
+                  alert('Errore avvenuto')
+                  setLoading(false)
+                })
+            }}
+          />
+        </>
+      ) : (
+        <>
+          <button
+            className='btn-primary'
+            onClick={() => {
+              if (editable) {
+                setAdding(true)
+              }
+            }}
+          >
+            {'Add'}
+          </button>
+        </>
+      )}
+    </>
+  )
+}
+
 const NotesForm: FC<{
   initialValue: string
   loading: boolean
   editable: boolean
-  onSubmit: (value: string) => void
+  onSubmit: (value: string | null) => void
 }> = ({ initialValue, loading, editable, onSubmit }) => {
   const inputRef = useRef<HTMLInputElement>(null)
   return (
@@ -199,13 +274,18 @@ const NotesForm: FC<{
                 return
               }
               const inputValue = inputElement.value
-              // TODO: Duplicated code (*sdcn)
-              const _notes = inputValue.trim()
-              if (_notes.length < 2 || _notes.length > 300) {
-                alert('Nota non valida: minimo 2 massimo 300 caratteri')
-                return
+              if (inputValue === '') {
+                // Remove notes
+                onSubmit(null)
+              } else {
+                // TODO: Duplicated code (*sdcn)
+                const _notes = inputValue.trim()
+                if (_notes.length < 2 || _notes.length > 300) {
+                  alert('Nota non valida: minimo 2 massimo 300 caratteri')
+                  return
+                }
+                onSubmit(_notes)
               }
-              onSubmit(_notes)
             }
           }}
         >
