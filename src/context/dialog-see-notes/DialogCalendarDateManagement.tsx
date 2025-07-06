@@ -49,9 +49,17 @@ export const DialogCalendarDateManagementInner: FC<{
       labelOnClose='Indietro'
       title='Attività'
     >
-      {!!data?.data && (
-        <>
-          <div className='p-4 flex flex-col gap-1'>
+      <div className='p-4 flex flex-col gap-1'>
+        {data?.loading && (
+          <>
+            <Badge>Caricamento...</Badge>
+          </>
+        )}
+        {!!data?.data && (
+          <>
+            <p>
+              <Badge>Calendario</Badge> {data.data.calendar.name}
+            </p>
             <p>
               <Badge>Data</Badge>{' '}
               {displayDateFromLocalDate(data.data.date.date)}
@@ -70,15 +78,15 @@ export const DialogCalendarDateManagementInner: FC<{
                     }}
                     editable={true}
                     onUpdated={() => {
-                      closeDialog()
+                      refreshDate()
                     }}
                   />
                 </div>
               </>
             )}
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </div>
     </GenericDialog>
   )
 }
