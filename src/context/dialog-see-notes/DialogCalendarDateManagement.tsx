@@ -43,7 +43,8 @@ export const DialogCalendarDateManagementInner: FC<{
     }
   }, [])
 
-  const editable = true // TODO: Understand when a Calendar Date can be updated
+  const notes_available = data?.data.calendar.usesNotes
+  const notes_editable = true // TODO: Understand when a Calendar Date can be updated
 
   return (
     <GenericDialog
@@ -66,37 +67,41 @@ export const DialogCalendarDateManagementInner: FC<{
               <Badge>Data</Badge>{' '}
               {displayDateFromLocalDate(data.data.date.date)}
             </p>
-            <p>
-              <Badge>Note</Badge>
-            </p>
-            <div>
-              {data.data.date.notes ? (
-                <>
-                  <CalendarDayNote
-                    calendarId={data.data.calendar.id}
-                    localDate={data.data.date.date}
-                    notes={{
-                      text: data.data.date.notes,
-                    }}
-                    editable={editable}
-                    onUpdated={() => {
-                      refreshDate()
-                    }}
-                  />
-                </>
-              ) : (
-                <>
-                  <NotesAddForm
-                    calendarId={data.data.calendar.id}
-                    localDate={data.data.date.date}
-                    editable={editable}
-                    onInserted={() => {
-                      refreshDate()
-                    }}
-                  />
-                </>
-              )}
-            </div>
+            {notes_available && (
+              <>
+                <p>
+                  <Badge>Note</Badge>
+                </p>
+                <div>
+                  {data.data.date.notes ? (
+                    <>
+                      <CalendarDayNote
+                        calendarId={data.data.calendar.id}
+                        localDate={data.data.date.date}
+                        notes={{
+                          text: data.data.date.notes,
+                        }}
+                        editable={notes_editable}
+                        onUpdated={() => {
+                          refreshDate()
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <NotesAddForm
+                        calendarId={data.data.calendar.id}
+                        localDate={data.data.date.date}
+                        editable={notes_editable}
+                        onInserted={() => {
+                          refreshDate()
+                        }}
+                      />
+                    </>
+                  )}
+                </div>
+              </>
+            )}
           </>
         )}
       </div>

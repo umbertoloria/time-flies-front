@@ -1,6 +1,6 @@
 // Types
-// 2025-07-05T14:23:37Z
-// v3.0
+// 2025-07-06T10:46:24Z
+// v3.1
 
 // Calendar
 export type TCalendar = TCalendarCh & {
@@ -11,6 +11,7 @@ type TCalendarCh = {
   name: string
   color: string
   plannedColor: string
+  usesNotes?: boolean
   days: TDay[]
   plannedDays?: TDay[]
 }
@@ -22,6 +23,7 @@ export type TCalendarDate = {
   calendar: {
     id: number
     name: string
+    usesNotes?: boolean
   }
   date: TDay
 }
