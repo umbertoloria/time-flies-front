@@ -1,6 +1,6 @@
 import { createContext, FC, PropsWithChildren, useContext } from 'react'
 import { DialogForInsertNewGoal } from './dialog-insert-new-goal/DialogForInsertNewGoal.tsx'
-import { DialogCalendarDateManagement } from './dialog-see-notes/DialogCalendarDateManagement.tsx'
+import { DialogDatePanel } from './dialog-date-panel/DialogDatePanel.tsx'
 import { DialogForGroover } from './dialog-groover/DialogForGroover.tsx'
 import { DialogCheckPlannedEvent } from './dialog-check-planned-events/DialogCheckPlannedEvent.tsx'
 import {
@@ -9,10 +9,10 @@ import {
   useContextDialogForInsertNewGoalForUX,
 } from './dialog-insert-new-goal/ContextDialogForInsertNewGoal.tsx'
 import {
-  ContextDialogForCalendarDateManagement,
-  contextDialogForCalendarDateManagementDataDefault,
-  useUXContextDialogForCalendarDateManagementForUX,
-} from './dialog-see-notes/ContextDialogForCalendarDateManagement.tsx'
+  ContextDialogForDatePanel,
+  contextDialogForDatePanelDataDefault,
+  useUXContextDialogForDatePanelForUX,
+} from './dialog-date-panel/ContextDialogForDatePanel.tsx'
 import {
   ContextDialogForGroover,
   contextDialogForGrooverDataDefault,
@@ -32,14 +32,13 @@ import { DialogForInsertNewPlannedEvent } from './dialog-insert-new-planned-even
 
 const UXContext = createContext<{
   dialogForInsertNewGoal: ContextDialogForInsertNewGoal
-  dialogForCalendarDateManagement: ContextDialogForCalendarDateManagement
+  dialogForDatePanel: ContextDialogForDatePanel
   dialogForGroover: ContextDialogForGroover
   dialogForCheckPlannedEvent: ContextDialogForCheckPlannedEvent
   dialogForInsertNewPlannedEvent: ContextDialogForInsertNewPlannedEvent
 }>({
   dialogForInsertNewGoal: contextDialogForInsertNewGoalDataDefault,
-  dialogForCalendarDateManagement:
-    contextDialogForCalendarDateManagementDataDefault,
+  dialogForDatePanel: contextDialogForDatePanelDataDefault,
   dialogForGroover: contextDialogForGrooverDataDefault,
   dialogForCheckPlannedEvent: contextDialogForCheckPlannedEventDataDefault,
   dialogForInsertNewPlannedEvent:
@@ -48,8 +47,7 @@ const UXContext = createContext<{
 
 export const UXProvider: FC<PropsWithChildren> = props => {
   const { dialogForInsertNewGoal } = useContextDialogForInsertNewGoalForUX()
-  const { dialogForCalendarDateManagement } =
-    useUXContextDialogForCalendarDateManagementForUX()
+  const { dialogForDatePanel } = useUXContextDialogForDatePanelForUX()
   const { dialogForGroover } = useContextDialogForGrooverForUX()
   const { dialogForCheckPlannedEvent } =
     useContextDialogForCheckPlannedEventsForUX()
@@ -60,14 +58,14 @@ export const UXProvider: FC<PropsWithChildren> = props => {
     <UXContext.Provider
       value={{
         dialogForInsertNewGoal,
-        dialogForCalendarDateManagement,
+        dialogForDatePanel,
         dialogForGroover,
         dialogForCheckPlannedEvent,
         dialogForInsertNewPlannedEvent,
       }}
     >
       <DialogForInsertNewGoal />
-      <DialogCalendarDateManagement />
+      <DialogDatePanel />
       <DialogForGroover />
       <DialogCheckPlannedEvent />
       <DialogForInsertNewPlannedEvent />

@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import classNames from 'classnames'
 import { useDialogForInsertNewGoal } from '../../context/dialog-insert-new-goal/ContextDialogForInsertNewGoal.tsx'
-import { useDialogForCalendarDateManagement } from '../../context/dialog-see-notes/ContextDialogForCalendarDateManagement.tsx'
+import { useDialogForDatePanel } from '../../context/dialog-date-panel/ContextDialogForDatePanel.tsx'
 import {
   getDateWithOffsetDays,
   getLocalDayByDate,
@@ -68,7 +68,7 @@ export const DayStatus: FC<DayStatusProps> = props => {
         if (props.status === 'done' && !!props.apiData) {
           // On Parent Calendar, this uses the Actual Calendar ID (Parent or
           // Child depending on the actual Date).
-          openDialogForCalendarDateManagement({
+          openDialogForDatePanel({
             calendarId: props.apiData.calendarId,
             date: props.date,
           })
@@ -104,8 +104,7 @@ export const DayStatus: FC<DayStatusProps> = props => {
   })()
 
   const { openDialog: openDialogForInsertNewGoal } = useDialogForInsertNewGoal()
-  const { openDialog: openDialogForCalendarDateManagement } =
-    useDialogForCalendarDateManagement()
+  const { openDialog: openDialogForDatePanel } = useDialogForDatePanel()
   const { openDialog: openDialogForInsertPlannedEvent } =
     useDialogForInsertNewPlannedEvent()
 

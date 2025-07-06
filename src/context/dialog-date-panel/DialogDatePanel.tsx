@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef, useState } from 'react'
-import { useDialogForCalendarDateManagement } from './ContextDialogForCalendarDateManagement.tsx'
+import { useDialogForDatePanel } from './ContextDialogForDatePanel.tsx'
 import { GenericDialog } from '../../components/calendar/GenericDialog.tsx'
 import { displayDateFromLocalDate } from '../../components/calendar/utils.ts'
 import { Badge } from '../../components/calendar/Badge.tsx'
@@ -8,13 +8,13 @@ import { fireEventCalendarUpdated } from '../../components/calendar/event-calend
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
 import { TCalendarDate } from '../../remote/sdk/types'
 
-export const DialogCalendarDateManagement: FC = () => {
-  const { isOpen, data, closeDialog } = useDialogForCalendarDateManagement()
+export const DialogDatePanel: FC = () => {
+  const { isOpen, data, closeDialog } = useDialogForDatePanel()
 
   return (
     <>
       {isOpen && !!data && (
-        <DialogCalendarDateManagementInner
+        <DialogDatePanelInner
           calendarId={data.calendarId}
           date={data.date}
           closeDialog={closeDialog}
@@ -25,7 +25,7 @@ export const DialogCalendarDateManagement: FC = () => {
 }
 
 const periodRefreshDateInMillis = 3 * 60 * 60 * 1000 // 3 minutes.
-export const DialogCalendarDateManagementInner: FC<{
+export const DialogDatePanelInner: FC<{
   calendarId: number
   date: string
   closeDialog: () => void
