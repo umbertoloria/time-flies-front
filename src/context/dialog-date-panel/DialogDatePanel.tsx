@@ -5,7 +5,12 @@ import { Badge } from '../../components/calendar/Badge.tsx'
 import { getSDK } from '../../remote/remote.ts'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
 import { TCalendar } from '../../remote/sdk/types'
-import { DiaryEntry } from '../../components/diary/Diary.tsx'
+import { DiaryEntry, DiaryEntriesList } from '../../components/diary/Diary.tsx'
+import {
+  filterUnique,
+  getDateFromLocalDate,
+  getTodayYear,
+} from '../../lib/utils.ts'
 
 export const DialogDatePanel: FC = () => {
   const { isOpen, data, closeDialog } = useDialogForDatePanel()
@@ -84,25 +89,71 @@ const CalendarComponent: FC<{
   calendar: TCalendar
   refreshCalendar: () => void
 }> = ({ calendar, refreshCalendar }) => {
-  return (
-    <>
-      {calendar.days.map((day, index) => (
-        <div key={index}>
-          <DiaryEntry
-            data={{
+  const allYears = calendar.days
+    .map(day => getDateFromLocalDate(day.date).getFullYear())
+    .filter(filterUnique)
+  const todayYear = getTodayYear()
+
+  if (allYears.length === 1) {
+    return (
+      <>
+        <DiaryEntriesList
+          dates={calendar.days.map(date => ({
+            calendar: {
+              id: calendar.id,
+              name: calendar.name,
+              usesNotes: calendar.usesNotes,
+            },
+            date,
+          }))}
+          refreshDate={refreshCalendar}
+        />
+      </>
+    )
+  } else {
+    const currentYearDates = calendar.days.filter(
+      date => getDateFromLocalDate(date.date).getFullYear() === todayYear
+    )
+    const allPastYears = allYears.filter(year => year !== todayYear)
+    return (
+      <>
+        {!!currentYearDates.length && (
+          <DiaryEntriesList
+            title={todayYear.toString()}
+            dates={currentYearDates.map(date => ({
               calendar: {
                 id: calendar.id,
                 name: calendar.name,
                 usesNotes: calendar.usesNotes,
               },
-              date: day,
-            }}
+              date,
+            }))}
             refreshDate={refreshCalendar}
           />
-        </div>
-      ))}
-    </>
-  )
+        )}
+        {allPastYears.map((year, index) => (
+          <div key={index}>
+            <DiaryEntriesList
+              title={year.toString()}
+              dates={calendar.days
+                .filter(
+                  date => getDateFromLocalDate(date.date).getFullYear() === year
+                )
+                .map(date => ({
+                  calendar: {
+                    id: calendar.id,
+                    name: calendar.name,
+                    usesNotes: calendar.usesNotes,
+                  },
+                  date,
+                }))}
+              refreshDate={refreshCalendar}
+            />
+          </div>
+        ))}
+      </>
+    )
+  }
 }
 
 export const DialogDatePanelInner: FC<{
@@ -140,7 +191,7 @@ export const DialogDatePanelInner: FC<{
           <>
             <DiaryEntry
               //
-              data={data.data}
+              date={data.data}
               refreshDate={refreshDate}
             />
           </>

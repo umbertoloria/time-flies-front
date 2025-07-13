@@ -76,3 +76,10 @@ export function getTodayLocalDate() {
 export function getTodayDate() {
   return getDateFromLocalDate(getTodayLocalDate())
 }
+
+export const getTodayYear = () => getTodayDate().getFullYear()
+
+// LISTs
+export const filterUnique = <T>(value: T, index: number, array: T[]) =>
+  array.indexOf(value) === index
+export const getUniqueElems = <T>(list: T[]) => list.filter(filterUnique)

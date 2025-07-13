@@ -4,17 +4,34 @@ import { displayDateFromLocalDate } from '../calendar/utils.ts'
 import { getSDK } from '../../remote/remote.ts'
 import { fireEventCalendarUpdated } from '../calendar/event-calendar-updated.ts'
 
-export const DiaryEntry: FC<{
-  data: TCalendarDate
+export const DiaryEntriesList: FC<{
+  title?: string
+  dates: TCalendarDate[]
   refreshDate: () => void
-}> = ({ data, refreshDate }) => {
+}> = ({ title, dates, refreshDate }) => {
   return (
     <>
-      <i className='underline'>{displayDateFromLocalDate(data.date.date)}</i>
-      {data.calendar.usesNotes && (
+      {!!title && <h1>{title}</h1>}
+      {dates.map((date, index) => (
+        <div key={index}>
+          <DiaryEntry date={date} refreshDate={refreshDate} />
+        </div>
+      ))}
+    </>
+  )
+}
+
+export const DiaryEntry: FC<{
+  date: TCalendarDate
+  refreshDate: () => void
+}> = ({ date, refreshDate }) => {
+  return (
+    <>
+      <i className='underline'>{displayDateFromLocalDate(date.date.date)}</i>
+      {date.calendar.usesNotes && (
         <>
           <CalendarDateNotesComponent
-            calendarDate={data}
+            calendarDate={date}
             refreshDate={refreshDate}
           />
         </>
