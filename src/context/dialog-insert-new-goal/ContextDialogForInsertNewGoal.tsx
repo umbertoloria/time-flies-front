@@ -5,14 +5,21 @@ import { getSDK } from '../../remote/remote.ts'
 import { useUXContext } from '../UXContext.tsx'
 
 type ContextPartData = {
-  calendarId: number
+  calendar: {
+    id: number
+    usesNotes: boolean
+  }
   localDate: string
   loading: boolean
 }
 export type ContextDialogForInsertNewGoal = {
   isOpen: boolean
   data?: ContextPartData
-  openDialog: (calendarId: number, localDate: string) => void
+  openDialog: (
+    calendarId: number,
+    calendarUsesNotes: boolean,
+    localDate: string
+  ) => void
   closeDialog: () => void
   confirmProgressDone: (notes: undefined | string) => void
 }
@@ -37,15 +44,17 @@ export const useContextDialogForInsertNewGoalForUX = (): {
     dialogForInsertNewGoal: {
       isOpen: dialog.isOpen,
       data: dialog.data,
-      openDialog(calendarId, localDate) {
+      openDialog(calendarId, calendarUsesNotes, localDate) {
         if (dialog.isOpen || dialog.data?.loading) {
           return
         }
         setDialog({
-          ...dialog,
           isOpen: true,
           data: {
-            calendarId,
+            calendar: {
+              id: calendarId,
+              usesNotes: calendarUsesNotes,
+            },
             localDate,
             loading: false,
           },
@@ -64,20 +73,23 @@ export const useContextDialogForInsertNewGoalForUX = (): {
         if (!dialog.isOpen || !dialog.data || dialog.data.loading) {
           return
         }
-        const { calendarId, localDate } = dialog.data
+        const { calendar, localDate } = dialog.data
         setDialog({
           isOpen: true,
           data: {
-            calendarId,
+            calendar: {
+              id: calendar.id,
+              usesNotes: calendar.usesNotes,
+            },
             localDate,
             loading: true,
           },
         })
-        checkDateWithSuccess(calendarId, localDate, notes)
+        checkDateWithSuccess(calendar.id, localDate, notes)
           .then(() => {
             // Yay!
 
-            fireEventCalendarUpdated({ calendarId })
+            fireEventCalendarUpdated({ calendarId: calendar.id })
             fireEventStreamlineUpdated(undefined)
             // Because maybe there was a Planned Event right on that day.
 
@@ -93,7 +105,10 @@ export const useContextDialogForInsertNewGoalForUX = (): {
             setDialog({
               isOpen: true,
               data: {
-                calendarId,
+                calendar: {
+                  id: calendar.id,
+                  usesNotes: calendar.usesNotes,
+                },
                 localDate,
                 loading: false,
               },

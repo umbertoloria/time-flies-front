@@ -6,8 +6,9 @@ import classNames from 'classnames'
 const INITIAL_ENABLE_NOTE = false
 const INITIAL_INPUT_VALUE = ''
 export const DialogForInsertNewGoal: FC = () => {
-  const { isOpen, closeDialog, confirmProgressDone } =
+  const { isOpen, data, closeDialog, confirmProgressDone } =
     useDialogForInsertNewGoal()
+  const calendarUsesNotes = !!data?.calendar.usesNotes
 
   const [enableNoteInput, setEnableNoteInput] = useState(INITIAL_ENABLE_NOTE)
   const [inputValue, setInputValue] = useState(INITIAL_INPUT_VALUE)
@@ -28,12 +29,14 @@ export const DialogForInsertNewGoal: FC = () => {
         >
           <div className='p-4'>
             <p>{'Confermi di aver svolto questa attività?'}</p>
-            <NotesFieldEditor
-              enableNoteInput={enableNoteInput}
-              setEnableNoteInput={setEnableNoteInput}
-              inputValue={inputValue}
-              setInputValue={setInputValue}
-            />
+            {calendarUsesNotes && (
+              <NotesFieldEditor
+                enableNoteInput={enableNoteInput}
+                setEnableNoteInput={setEnableNoteInput}
+                inputValue={inputValue}
+                setInputValue={setInputValue}
+              />
+            )}
           </div>
           <div className='flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600'>
             <button

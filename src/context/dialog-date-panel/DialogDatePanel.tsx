@@ -44,7 +44,7 @@ export const DialogDatePanelInner: FC<{
     }
   }, [])
 
-  const notes_available = data?.data.calendar.usesNotes
+  const calendarUsesNotes = data?.data.calendar.usesNotes
 
   return (
     <GenericDialog
@@ -67,7 +67,7 @@ export const DialogDatePanelInner: FC<{
               <Badge>Data</Badge>{' '}
               {displayDateFromLocalDate(data.data.date.date)}
             </p>
-            {notes_available && (
+            {calendarUsesNotes && (
               <>
                 <CalendarDateNotesComponent
                   calendarDate={data.data}

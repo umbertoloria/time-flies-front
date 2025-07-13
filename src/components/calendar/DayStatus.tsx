@@ -18,7 +18,10 @@ export type DayStatusProps = {
   status?: 'planned' | 'done'
   color?: string
   apiData?: {
-    calendarId: number
+    calendar: {
+      id: number
+      usesNotes: boolean
+    }
   }
   onClick?: () => void
   // For now, "onClick" is used by the "Calendar Simulator" in Schedule page
@@ -69,7 +72,7 @@ export const DayStatus: FC<DayStatusProps> = props => {
           // On Parent Calendar, this uses the Actual Calendar ID (Parent or
           // Child depending on the actual Date).
           openDialogForDatePanel({
-            calendarId: props.apiData.calendarId,
+            calendarId: props.apiData.calendar.id,
             date: props.date,
           })
         } else {
@@ -81,7 +84,11 @@ export const DayStatus: FC<DayStatusProps> = props => {
       return () => {
         if (props.apiData) {
           // On Parent Calendar, this uses Parent Calendar ID.
-          openDialogForInsertNewGoal(props.apiData.calendarId, props.date)
+          openDialogForInsertNewGoal(
+            props.apiData.calendar.id,
+            props.apiData.calendar.usesNotes,
+            props.date
+          )
         } else {
           // Should never happen.
         }
@@ -91,7 +98,7 @@ export const DayStatus: FC<DayStatusProps> = props => {
       return () => {
         if (!props.status && !!props.apiData) {
           // On Parent Calendar, this uses Parent Calendar ID.
-          openDialogForInsertPlannedEvent(props.apiData.calendarId, props.date)
+          openDialogForInsertPlannedEvent(props.apiData.calendar.id, props.date)
         } else {
           // Should never happen.
         }

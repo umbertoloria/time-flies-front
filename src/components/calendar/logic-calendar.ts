@@ -6,6 +6,7 @@ export type LogicCalendar = {
   apiCalendar?: {
     // On Parent Calendars this can be different from "logicDays*.apiCalendar"
     id: number
+    usesNotes: boolean
   }
   logicDays: LogicDay[]
 }
@@ -13,6 +14,7 @@ export type LogicDay = {
   date: string // Es. "2023-01-01"
   apiCalendar?: {
     id: number
+    usesNotes: boolean
   }
   isPlanned?: boolean
   color: string
@@ -28,6 +30,7 @@ export function appendLogicDaysFromTCalendarCh(
       date: day.date,
       apiCalendar: {
         id: calendar.id,
+        usesNotes: !!calendar.usesNotes,
       },
       color: calendar.color,
     }))
@@ -38,6 +41,7 @@ export function appendLogicDaysFromTCalendarCh(
         date: day.date,
         apiCalendar: {
           id: calendar.id,
+          usesNotes: !!calendar.usesNotes,
         },
         isPlanned: true,
         color: calendar.plannedColor,
@@ -69,6 +73,7 @@ export function createLogicCalendarFromTCalendar(
     name: calendar.name,
     apiCalendar: {
       id: calendar.id,
+      usesNotes: !!calendar.usesNotes,
     },
     logicDays: createLogicDaysFromTCalendar(calendar),
   }

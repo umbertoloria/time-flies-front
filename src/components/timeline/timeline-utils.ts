@@ -40,7 +40,10 @@ export function createDayStatusPropsListFromLogicCalendar(
         date: curLogicDay.date,
         apiData: curLogicDay.apiCalendar
           ? {
-              calendarId: curLogicDay.apiCalendar.id,
+              calendar: {
+                id: curLogicDay.apiCalendar.id,
+                usesNotes: curLogicDay.apiCalendar.usesNotes,
+              },
             }
           : undefined,
         color: curLogicDay.color,
@@ -73,8 +76,11 @@ export function createDayStatusPropsListFromLogicCalendar(
         date: curLocalDate,
         apiData: logicCalendar.apiCalendar
           ? {
-              // On Parent Calendar: using Parent Calendar ID for empty days.
-              calendarId: logicCalendar.apiCalendar.id,
+              calendar: {
+                // On Parent Calendar: using Parent Calendar ID for empty days.
+                id: logicCalendar.apiCalendar.id,
+                usesNotes: logicCalendar.apiCalendar.usesNotes,
+              },
             }
           : undefined,
         // color: undefined,
