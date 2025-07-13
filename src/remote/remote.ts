@@ -135,7 +135,7 @@ export const getSDK = () => {
             return Promise.reject(new Error('Calendar not found (debug mode)'))
           })()
         : api
-            .get(`?a=calendar-read&id=${id}`)
+            .get(`?a=calendar-read&cid=${id}`)
             .then(({ data }) => data)
             .catch(() => {
               return 'unable'

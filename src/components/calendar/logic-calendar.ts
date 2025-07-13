@@ -3,6 +3,7 @@ import { TCalendar, TCalendarCh } from '../../remote/sdk/types'
 export type LogicCalendar = {
   color: string
   name: string
+  onClickOpenDialogForCalendarOverview?: boolean
   apiCalendar?: {
     // On Parent Calendars this can be different from "logicDays*.apiCalendar"
     id: number
@@ -71,6 +72,7 @@ export function createLogicCalendarFromTCalendar(
   return {
     color: calendar.color,
     name: calendar.name,
+    onClickOpenDialogForCalendarOverview: true,
     apiCalendar: {
       id: calendar.id,
       usesNotes: !!calendar.usesNotes,

@@ -17,6 +17,8 @@ import {
 } from './logic-calendar.ts'
 import { TCalendar } from '../../remote/sdk/types'
 import { createDayStatusPropsListFromLogicCalendar } from '../timeline/timeline-utils.ts'
+import classNames from 'classnames'
+import { useDialogForDatePanel } from '../../context/dialog-date-panel/ContextDialogForDatePanel.tsx'
 
 function makeDayStatusRowsFromLogicCalendar(
   logicCalendar: LogicCalendar,
@@ -81,6 +83,7 @@ export const CalendarForLogicCalendar: FC<{
   goInThePast: () => void
   goInTheFuture: () => void
 }> = props => {
+  const { openDialog: openDialogForDatePanel } = useDialogForDatePanel()
   return (
     <CalendarStateless
       dayStatusRows={makeDayStatusRowsFromLogicCalendar(
@@ -92,6 +95,16 @@ export const CalendarForLogicCalendar: FC<{
         idForUpdate: props.logicCalendar.apiCalendar?.id,
         color: props.logicCalendar.color,
         name: props.logicCalendar.name,
+        onClick: props.logicCalendar.onClickOpenDialogForCalendarOverview
+          ? () => {
+              if (props.logicCalendar.apiCalendar) {
+                openDialogForDatePanel({
+                  mode: 'calendar-panel',
+                  calendarId: props.logicCalendar.apiCalendar.id,
+                })
+              }
+            }
+          : undefined,
       }}
       placeTableHeadWithWeekDays
       pleaseUpdateCalendar={props.pleaseUpdateCalendar}
@@ -105,6 +118,7 @@ export type CalendarDataProps = {
   idForUpdate?: number
   color: string
   name: string
+  onClick?: () => void
 }
 export const CalendarStateless: FC<{
   dayStatusRows: DayStatusRow[]
@@ -145,6 +159,7 @@ export const CalendarStateless: FC<{
           <CalendarTitle
             textColor={props.calendarData.color}
             label={props.calendarData.name}
+            onClick={props.calendarData.onClick}
           >
             <CalendarArrowControl
               firstMonthLang={firstMonthLang}
@@ -177,17 +192,28 @@ export const CalendarTitle: FC<
   PropsWithChildren<{
     textColor?: string
     label: string
+    onClick?: () => void
   }>
 > = props => (
   <div className='bg-gray-500 rounded mb-2 mx-auto px-2.5 py-1.5 max-w-96 flex flex-wrap items-center justify-between'>
-    <h1
-      className='bg-gray-600 px-1 rounded text-lg font-semibold text-gray-700'
+    <a
+      className={classNames(
+        'bg-gray-600 px-1 rounded text-lg font-semibold text-gray-700',
+        {
+          'cursor-pointer': !!props.onClick,
+        }
+      )}
       style={{
         color: props.textColor || undefined,
       }}
+      onClick={() => {
+        if (props.onClick) {
+          props.onClick()
+        }
+      }}
     >
       {props.label}
-    </h1>
+    </a>
     {props.children}
   </div>
 )

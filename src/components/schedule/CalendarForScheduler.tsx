@@ -46,9 +46,10 @@ export const CalendarForScheduler: FC<{
       startWeekFromDate={fromDate1}
       numWeeks={numWeeks}
       logicCalendar={{
-        // apiCalendar: undefined,
         color: manualCalendarColor,
         name: 'Calendario',
+        // onClickOpenDialogForCalendarOverview: undefined,
+        // apiCalendar: undefined,
         logicDays,
       }}
       pleaseUpdateCalendar={() => {

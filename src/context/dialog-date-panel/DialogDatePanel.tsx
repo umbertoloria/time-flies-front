@@ -6,7 +6,7 @@ import { Badge } from '../../components/calendar/Badge.tsx'
 import { getSDK } from '../../remote/remote.ts'
 import { fireEventCalendarUpdated } from '../../components/calendar/event-calendar-updated.ts'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
-import { TCalendarDate } from '../../remote/sdk/types'
+import { TCalendar, TCalendarDate } from '../../remote/sdk/types'
 
 export const DialogDatePanel: FC = () => {
   const { isOpen, data, closeDialog } = useDialogForDatePanel()
@@ -14,17 +14,98 @@ export const DialogDatePanel: FC = () => {
   return (
     <>
       {isOpen && !!data && (
-        <DialogDatePanelInner
-          calendarId={data.calendarId}
-          date={data.date}
-          closeDialog={closeDialog}
-        />
+        <>
+          {data.mode == 'calendar-date-panel' && (
+            <DialogDatePanelInner
+              calendarId={data.calendarId}
+              date={data.date}
+              closeDialog={closeDialog}
+            />
+          )}
+          {data.mode == 'calendar-panel' && (
+            <DialogCalendarPanelInner
+              calendarId={data.calendarId}
+              closeDialog={closeDialog}
+            />
+          )}
+        </>
       )}
     </>
   )
 }
 
 const periodRefreshDateInMillis = 3 * 60 * 60 * 1000 // 3 minutes.
+export const DialogCalendarPanelInner: FC<{
+  calendarId: number
+  closeDialog: () => void
+}> = ({ calendarId, closeDialog }) => {
+  const { readCalendar } = getSDK()
+  const [data, { refetch: refreshCalendar }] = useWrapperForCreateResource(() =>
+    readCalendar(calendarId).then(response =>
+      typeof response === 'object' ? response : undefined
+    )
+  )
+  useEffect(() => {
+    const refreshDateIntervalTimer = setInterval(
+      refreshCalendar,
+      periodRefreshDateInMillis
+    )
+    return () => {
+      clearInterval(refreshDateIntervalTimer)
+    }
+  }, [])
+
+  const calendar = data?.data
+
+  return (
+    <GenericDialog
+      onClose={closeDialog}
+      labelOnClose='Indietro'
+      title='Attività'
+    >
+      <div className='p-4 flex flex-col gap-1'>
+        {data?.loading && (
+          <>
+            <Badge>Caricamento...</Badge>
+          </>
+        )}
+        {!!calendar && (
+          <>
+            <CalendarComponent
+              calendar={calendar}
+              refreshCalendar={refreshCalendar}
+            />
+          </>
+        )}
+      </div>
+    </GenericDialog>
+  )
+}
+const CalendarComponent: FC<{
+  calendar: TCalendar
+  refreshCalendar: () => void
+}> = ({ calendar, refreshCalendar }) => {
+  return (
+    <>
+      {calendar.days.map((day, index) => (
+        <div key={index}>
+          <CalendarDateComponent
+            data={{
+              calendar: {
+                id: calendar.id,
+                name: calendar.name,
+                usesNotes: calendar.usesNotes,
+              },
+              date: day,
+            }}
+            refreshDate={refreshCalendar}
+          />
+        </div>
+      ))}
+    </>
+  )
+}
+
 export const DialogDatePanelInner: FC<{
   calendarId: number
   date: string
@@ -44,8 +125,6 @@ export const DialogDatePanelInner: FC<{
     }
   }, [])
 
-  const calendarUsesNotes = data?.data.calendar.usesNotes || false
-
   return (
     <GenericDialog
       onClose={closeDialog}
@@ -60,11 +139,7 @@ export const DialogDatePanelInner: FC<{
         )}
         {!!data?.data && (
           <>
-            <CalendarDateComponent
-              data={data.data}
-              calendarUsesNotes={calendarUsesNotes}
-              refreshDate={refreshDate}
-            />
+            <CalendarDateComponent data={data.data} refreshDate={refreshDate} />
           </>
         )}
       </div>
@@ -74,9 +149,8 @@ export const DialogDatePanelInner: FC<{
 
 const CalendarDateComponent: FC<{
   data: TCalendarDate
-  calendarUsesNotes: boolean
   refreshDate: () => void
-}> = ({ data, calendarUsesNotes, refreshDate }) => {
+}> = ({ data, refreshDate }) => {
   return (
     <>
       <p>
@@ -85,7 +159,7 @@ const CalendarDateComponent: FC<{
       <p>
         <Badge>Data</Badge> {displayDateFromLocalDate(data.date.date)}
       </p>
-      {calendarUsesNotes && (
+      {data.calendar.usesNotes && (
         <>
           <CalendarDateNotesComponent
             calendarDate={data}

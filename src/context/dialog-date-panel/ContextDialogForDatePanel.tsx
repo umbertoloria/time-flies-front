@@ -1,10 +1,16 @@
 import { useState } from 'react'
 import { useUXContext } from '../UXContext.tsx'
 
-type ContextPartData = {
-  calendarId: number
-  date: string // Es. "2025-02-26"
-}
+type ContextPartData =
+  | {
+      mode: 'calendar-date-panel'
+      calendarId: number
+      date: string // Es. "2025-02-26"
+    }
+  | {
+      mode: 'calendar-panel'
+      calendarId: number
+    }
 export type ContextDialogForDatePanel = {
   isOpen: boolean
   data?: ContextPartData
