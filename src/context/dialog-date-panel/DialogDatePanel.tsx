@@ -44,7 +44,7 @@ export const DialogDatePanelInner: FC<{
     }
   }, [])
 
-  const calendarUsesNotes = data?.data.calendar.usesNotes
+  const calendarUsesNotes = data?.data.calendar.usesNotes || false
 
   return (
     <GenericDialog
@@ -60,21 +60,11 @@ export const DialogDatePanelInner: FC<{
         )}
         {!!data?.data && (
           <>
-            <p>
-              <Badge>Calendario</Badge> {data.data.calendar.name}
-            </p>
-            <p>
-              <Badge>Data</Badge>{' '}
-              {displayDateFromLocalDate(data.data.date.date)}
-            </p>
-            {calendarUsesNotes && (
-              <>
-                <CalendarDateNotesComponent
-                  calendarDate={data.data}
-                  refreshDate={refreshDate}
-                />
-              </>
-            )}
+            <CalendarDateComponent
+              data={data.data}
+              calendarUsesNotes={calendarUsesNotes}
+              refreshDate={refreshDate}
+            />
           </>
         )}
       </div>
@@ -82,11 +72,35 @@ export const DialogDatePanelInner: FC<{
   )
 }
 
+const CalendarDateComponent: FC<{
+  data: TCalendarDate
+  calendarUsesNotes: boolean
+  refreshDate: () => void
+}> = ({ data, calendarUsesNotes, refreshDate }) => {
+  return (
+    <>
+      <p>
+        <Badge>Calendario</Badge> {data.calendar.name}
+      </p>
+      <p>
+        <Badge>Data</Badge> {displayDateFromLocalDate(data.date.date)}
+      </p>
+      {calendarUsesNotes && (
+        <>
+          <CalendarDateNotesComponent
+            calendarDate={data}
+            refreshDate={refreshDate}
+          />
+        </>
+      )}
+    </>
+  )
+}
+
 const CalendarDateNotesComponent: FC<{
   calendarDate: TCalendarDate
   refreshDate: () => void
 }> = ({ calendarDate, refreshDate }) => {
-  const notes_editable = true // TODO: Understand when a Calendar Date can be updated
   return (
     <>
       <>
@@ -96,13 +110,13 @@ const CalendarDateNotesComponent: FC<{
         <div>
           {calendarDate.date.notes ? (
             <>
-              <CalendarDayNote
+              <CalendarDayNoteSeeAndEdit
                 calendarId={calendarDate.calendar.id}
                 localDate={calendarDate.date.date}
                 notes={{
                   text: calendarDate.date.notes,
                 }}
-                editable={notes_editable}
+                editable={true} // Notes are always editable.
                 onUpdated={() => {
                   refreshDate()
                 }}
@@ -113,7 +127,6 @@ const CalendarDateNotesComponent: FC<{
               <NotesAddForm
                 calendarId={calendarDate.calendar.id}
                 localDate={calendarDate.date.date}
-                editable={notes_editable}
                 onInserted={() => {
                   refreshDate()
                 }}
@@ -126,7 +139,7 @@ const CalendarDateNotesComponent: FC<{
   )
 }
 
-const CalendarDayNote: FC<{
+const CalendarDayNoteSeeAndEdit: FC<{
   calendarId: number
   localDate: string
   notes: {
@@ -205,9 +218,8 @@ const CalendarDayNote: FC<{
 const NotesAddForm: FC<{
   calendarId: number
   localDate: string
-  editable: boolean
   onInserted: () => void
-}> = ({ calendarId, localDate, editable, onInserted }) => {
+}> = ({ calendarId, localDate, onInserted }) => {
   const { updateCalendarDateNotes } = getSDK()
   const [adding, setAdding] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -218,7 +230,7 @@ const NotesAddForm: FC<{
           <NotesForm
             initialValue=''
             loading={loading}
-            editable={editable}
+            editable
             onSubmit={_notes => {
               setLoading(true)
               updateCalendarDateNotes(
@@ -251,9 +263,7 @@ const NotesAddForm: FC<{
           <button
             className='btn-primary'
             onClick={() => {
-              if (editable) {
-                setAdding(true)
-              }
+              setAdding(true)
             }}
           >
             {'Add'}
