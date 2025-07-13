@@ -1,7 +1,6 @@
 import { FC, useRef, useState } from 'react'
 import { TCalendarDate } from '../../remote/sdk/types'
 import { displayDateFromLocalDate } from '../calendar/utils.ts'
-import { Badge } from '../calendar/Badge.tsx'
 import { getSDK } from '../../remote/remote.ts'
 import { fireEventCalendarUpdated } from '../calendar/event-calendar-updated.ts'
 
@@ -30,38 +29,31 @@ const CalendarDateNotesComponent: FC<{
 }> = ({ calendarDate, refreshDate }) => {
   return (
     <>
-      <>
-        <p>
-          <Badge>Note</Badge>
-        </p>
-        <div>
-          {calendarDate.date.notes ? (
-            <>
-              <CalendarDayNoteSeeAndEdit
-                calendarId={calendarDate.calendar.id}
-                localDate={calendarDate.date.date}
-                notes={{
-                  text: calendarDate.date.notes,
-                }}
-                editable={true} // Notes are always editable.
-                onUpdated={() => {
-                  refreshDate()
-                }}
-              />
-            </>
-          ) : (
-            <>
-              <NotesAddForm
-                calendarId={calendarDate.calendar.id}
-                localDate={calendarDate.date.date}
-                onInserted={() => {
-                  refreshDate()
-                }}
-              />
-            </>
-          )}
-        </div>
-      </>
+      {calendarDate.date.notes ? (
+        <>
+          <CalendarDayNoteSeeAndEdit
+            calendarId={calendarDate.calendar.id}
+            localDate={calendarDate.date.date}
+            notes={{
+              text: calendarDate.date.notes,
+            }}
+            editable={true} // Notes are always editable.
+            onUpdated={() => {
+              refreshDate()
+            }}
+          />
+        </>
+      ) : (
+        <>
+          <NotesAddForm
+            calendarId={calendarDate.calendar.id}
+            localDate={calendarDate.date.date}
+            onInserted={() => {
+              refreshDate()
+            }}
+          />
+        </>
+      )}
     </>
   )
 }
@@ -153,7 +145,7 @@ const NotesAddForm: FC<{
   return (
     <>
       {adding ? (
-        <>
+        <div>
           <NotesForm
             initialValue=''
             loading={loading}
@@ -184,11 +176,11 @@ const NotesAddForm: FC<{
                 })
             }}
           />
-        </>
+        </div>
       ) : (
         <>
           <button
-            className='btn-primary'
+            className='btn-primary ml-2'
             onClick={() => {
               setAdding(true)
             }}
