@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from 'react'
 import {
   getDateFromLocalDate,
   getDateWithOffsetDays,
+  getTodayDate,
   getTodayLocalDate,
 } from '../lib/utils.ts'
 import { UserLayout } from '../layout/UserLayout.tsx'
@@ -29,7 +30,7 @@ const { readAllCalendars } = getSDK()
 const InnerPage: FC = () => {
   const todayLocalDate = getTodayLocalDate()
 
-  // Weeks 4 Offsets for calendars
+  // Weeks 4 Offsets for Calendars
   const [weeks4Offsets, setWeeks4Offsets] = useState<
     Record<number, number | undefined>
   >({})
@@ -47,6 +48,13 @@ const InnerPage: FC = () => {
   const setWeeks4InTheFutureForCalendar = (id: number) => {
     setWeeks4OffsetForCalendar(id, getWeeks4OffsetFromCalendar(id) - 1)
   }
+
+  // Weeks 4 Before for Timelines
+  const [timelinesWeeks4Before, setTimelinesWeeks4Before] = useState(0)
+  const timelinesEndDate = getTodayDate()
+  timelinesEndDate.setDate(
+    timelinesEndDate.getDate() - timelinesWeeks4Before * 7
+  )
 
   // Calculating "From Dates" for calendars
   const getFromDateForCalendar = (calendarId: number) =>
@@ -112,6 +120,9 @@ const InnerPage: FC = () => {
 
       {!!dataAllCalendars?.data && (
         <Timelines
+          endDate={timelinesEndDate}
+          weeks4Before={timelinesWeeks4Before}
+          setWeeks4Before={setTimelinesWeeks4Before}
           allCalendars={dataAllCalendars.data.calendars}
           isLoading={dataAllCalendars.loading}
           pleaseUpdateCalendar={calendarId => {

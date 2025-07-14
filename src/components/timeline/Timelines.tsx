@@ -1,33 +1,29 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import {
   CalendarArrowControl,
   CalendarTitle,
 } from '../calendar/CalendarGrid.tsx'
 import { TCalendar } from '../../remote/sdk/types'
-import { getITMonthFromLocalDate, getTodayDate } from '../../lib/utils.ts'
+import { getITMonthFromLocalDate } from '../../lib/utils.ts'
 import { getFirstAndLastLocalDatesFromDayStatusRows } from '../calendar/utils.ts'
 import { Timeline } from './Timeline.tsx'
 import { createDayStatusesFromTCalendar } from './timeline-utils.ts'
 
 const defaultTimelinesNumDaysBefore = 38
 export const Timelines: FC<{
+  endDate: Date
+  weeks4Before: number
+  setWeeks4Before: (value: number) => void
   allCalendars: TCalendar[]
   isLoading: boolean
   pleaseUpdateCalendar: (calendarId: number) => void
 }> = props => {
-  const [weeks4Before, setWeeks4Before] = useState(0)
-  const endDate = (() => {
-    const todayDate = getTodayDate()
-    todayDate.setDate(todayDate.getDate() - weeks4Before * 7)
-    return todayDate
-  })()
-
   if (props.allCalendars.length < 1) {
     return <></>
   }
 
   const dayStatuses = createDayStatusesFromTCalendar(
-    endDate,
+    props.endDate,
     defaultTimelinesNumDaysBefore,
     props.allCalendars[0]
   )
@@ -44,10 +40,10 @@ export const Timelines: FC<{
             firstMonthLang={firstMonthLang}
             lastMonthLang={lastMonthLang}
             goInThePast={() => {
-              setWeeks4Before(weeks4Before + 1)
+              props.setWeeks4Before(props.weeks4Before + 1)
             }}
             goInTheFuture={() => {
-              setWeeks4Before(weeks4Before - 1)
+              props.setWeeks4Before(props.weeks4Before - 1)
             }}
           />
         </CalendarTitle>
@@ -58,7 +54,7 @@ export const Timelines: FC<{
           props.allCalendars.map((calendar, index) => (
             <div key={index}>
               <Timeline
-                endDate={endDate}
+                endDate={props.endDate}
                 numDaysBefore={defaultTimelinesNumDaysBefore}
                 calendar={calendar}
                 pleaseUpdateCalendar={() => {
