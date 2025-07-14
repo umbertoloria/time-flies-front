@@ -22,8 +22,8 @@ export default function HomePage() {
 }
 
 // One month prior, one week future
-const defaultNumWeeks = 5
-const defaultWeeksInAdvance = 1
+const defaultCalendarsNumWeeks = 5
+const defaultCalendarsWeeksInAdvance = 1
 
 const { readAllCalendars } = getSDK()
 const InnerPage: FC = () => {
@@ -39,9 +39,9 @@ const InnerPage: FC = () => {
     getDateWithOffsetDays(
       getDateFromLocalDate(todayLocalDate),
       -7 *
-        (defaultNumWeeks -
+        (defaultCalendarsNumWeeks -
           1 -
-          defaultWeeksInAdvance +
+          defaultCalendarsWeeksInAdvance +
           4 * getWeeks4OffsetFromCalendar(calendarId))
     )
   const setWeeks4OffsetForCalendar = (calendarId: number, value: number) =>
@@ -89,7 +89,7 @@ const InnerPage: FC = () => {
               <CalendarGridListening
                 calendar={calendar}
                 startWeekFromDate={getCalendarFromDate(calendar.id)}
-                numWeeks={defaultNumWeeks}
+                numWeeks={defaultCalendarsNumWeeks}
                 pleaseUpdateCalendar={() => {
                   refetchOneCalendar(calendar.id)
                 }}

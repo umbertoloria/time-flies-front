@@ -4,10 +4,14 @@ import {
   CalendarTitle,
 } from '../calendar/CalendarGrid.tsx'
 import { TCalendar } from '../../remote/sdk/types'
-import { getITMonthFromLocalDate } from '../../lib/utils.ts'
+import {
+  getDateWithOffsetDays,
+  getITMonthFromLocalDate,
+} from '../../lib/utils.ts'
 import { getFirstAndLastLocalDatesFromDayStatusRows } from '../calendar/utils.ts'
 import { Timeline } from './Timeline.tsx'
-import { createDayStatusesFromTCalendar } from './timeline-utils.ts'
+import { createDayStatusPropsListFromLogicCalendar } from './timeline-utils.ts'
+import { createLogicCalendarFromTCalendar } from '../calendar/logic-calendar.ts'
 
 const defaultTimelinesNumDaysBefore = 38
 export const Timelines: FC<{
@@ -22,13 +26,16 @@ export const Timelines: FC<{
     return <></>
   }
 
-  const dayStatuses = createDayStatusesFromTCalendar(
-    props.endDate,
-    defaultTimelinesNumDaysBefore,
-    props.allCalendars[0]
-  )
   const { firstLocalDate, lastLocalDate } =
-    getFirstAndLastLocalDatesFromDayStatusRows([{ dayStatuses }])
+    getFirstAndLastLocalDatesFromDayStatusRows([
+      {
+        dayStatuses: createDayStatusPropsListFromLogicCalendar(
+          createLogicCalendarFromTCalendar(props.allCalendars[0]),
+          getDateWithOffsetDays(props.endDate, -defaultTimelinesNumDaysBefore),
+          defaultTimelinesNumDaysBefore + 1 // "numDaysBefore + 1" meaning plus today.
+        ),
+      },
+    ])
   const firstMonthLang = getITMonthFromLocalDate(firstLocalDate)
   const lastMonthLang = getITMonthFromLocalDate(lastLocalDate)
 

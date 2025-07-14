@@ -1,19 +1,15 @@
-import { TCalendar } from '../../remote/sdk/types'
 import { DayStatusProps } from '../calendar/DayStatus.tsx'
 import {
   getDateWithOffsetDays,
   getLocalDayByDate,
   localDatesLT,
 } from '../../lib/utils.ts'
-import {
-  createLogicCalendarFromTCalendar,
-  LogicCalendar,
-} from '../calendar/logic-calendar.ts'
+import { LogicCalendar } from '../calendar/logic-calendar.ts'
 
 export function createDayStatusPropsListFromLogicCalendar(
   logicCalendar: LogicCalendar,
-  daysToShow: number,
-  fromDate: Date
+  fromDate: Date,
+  daysToShow: number
 ) {
   const result: DayStatusProps[] = []
 
@@ -91,16 +87,4 @@ export function createDayStatusPropsListFromLogicCalendar(
   }
 
   return result
-}
-
-export function createDayStatusesFromTCalendar(
-  endDate: Date,
-  numDaysBefore: number,
-  calendar: TCalendar
-): DayStatusProps[] {
-  return createDayStatusPropsListFromLogicCalendar(
-    createLogicCalendarFromTCalendar(calendar),
-    numDaysBefore + 1, // "numDaysBefore + 1" meaning plus today.
-    getDateWithOffsetDays(endDate, -numDaysBefore)
-  )
 }

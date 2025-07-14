@@ -37,8 +37,8 @@ function makeDayStatusRowsFromLogicCalendar(
   const dayStatusRows: DayStatusRow[] = []
   const dayStatusPropsList = createDayStatusPropsListFromLogicCalendar(
     logicCalendar,
-    weeksToShow * 7,
-    fromDate
+    fromDate,
+    weeksToShow * 7
   )
   for (const dayStatusProps of dayStatusPropsList) {
     if (dayStatusRows.length === 0) {
