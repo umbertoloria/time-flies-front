@@ -4,18 +4,15 @@ import {
   CalendarTitle,
 } from '../calendar/CalendarGrid.tsx'
 import { TCalendar } from '../../remote/sdk/types'
-import {
-  getDateWithOffsetDays,
-  getITMonthFromLocalDate,
-} from '../../lib/utils.ts'
+import { getITMonthFromLocalDate } from '../../lib/utils.ts'
 import { getFirstAndLastLocalDatesFromDayStatusRows } from '../calendar/utils.ts'
 import { Timeline } from './Timeline.tsx'
 import { createDayStatusPropsListFromLogicCalendar } from './timeline-utils.ts'
 import { createLogicCalendarFromTCalendar } from '../calendar/logic-calendar.ts'
 
-const defaultTimelinesNumDaysBefore = 38
 export const Timelines: FC<{
-  endDate: Date
+  fromDate: Date
+  numDaysToShow: number
   allCalendars: TCalendar[]
   isLoading: boolean
   goInThePast: () => void
@@ -31,8 +28,8 @@ export const Timelines: FC<{
       {
         dayStatuses: createDayStatusPropsListFromLogicCalendar(
           createLogicCalendarFromTCalendar(props.allCalendars[0]),
-          getDateWithOffsetDays(props.endDate, -defaultTimelinesNumDaysBefore),
-          defaultTimelinesNumDaysBefore + 1 // "numDaysBefore + 1" meaning plus today.
+          props.fromDate,
+          props.numDaysToShow
         ),
       },
     ])
@@ -57,8 +54,8 @@ export const Timelines: FC<{
           props.allCalendars.map((calendar, index) => (
             <div key={index}>
               <Timeline
-                endDate={props.endDate}
-                numDaysBefore={defaultTimelinesNumDaysBefore}
+                fromDate={props.fromDate}
+                numDaysToShow={props.numDaysToShow}
                 calendar={calendar}
                 pleaseUpdateCalendar={() => {
                   props.pleaseUpdateCalendar(calendar.id)

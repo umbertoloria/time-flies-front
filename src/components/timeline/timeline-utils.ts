@@ -9,14 +9,14 @@ import { LogicCalendar } from '../calendar/logic-calendar.ts'
 export function createDayStatusPropsListFromLogicCalendar(
   logicCalendar: LogicCalendar,
   fromDate: Date,
-  daysToShow: number
+  numDaysToShow: number
 ) {
   const result: DayStatusProps[] = []
 
   const { logicDays } = logicCalendar
 
   let iLogicDay = 0
-  for (let dayOffset = 0; dayOffset < daysToShow; ++dayOffset) {
+  for (let dayOffset = 0; dayOffset < numDaysToShow; ++dayOffset) {
     const curDate = getDateWithOffsetDays(fromDate, dayOffset)
     const curLocalDate = getLocalDayByDate(curDate)
 

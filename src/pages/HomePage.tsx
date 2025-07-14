@@ -24,6 +24,7 @@ export default function HomePage() {
 // One month prior, one week future
 const defaultCalendarsNumWeeks = 5
 const defaultCalendarsWeeksInAdvance = 1
+const defaultTimelinesNumDaysBefore = 38
 
 const { readAllCalendars } = getSDK()
 const InnerPage: FC = () => {
@@ -55,10 +56,17 @@ const InnerPage: FC = () => {
 
   // Timelines: 4 weeks before
   const [timelinesWeeksBefore, setTimelinesWeeksBefore] = useState(0)
-  const timelinesEndDate = getDateFromLocalDate(todayLocalDate)
-  timelinesEndDate.setDate(
-    timelinesEndDate.getDate() - timelinesWeeksBefore * 7
-  )
+  const timelinesFromDate = (() => {
+    const timelinesEndDate = getDateFromLocalDate(todayLocalDate)
+    timelinesEndDate.setDate(
+      timelinesEndDate.getDate() - timelinesWeeksBefore * 7
+    )
+    return getDateWithOffsetDays(
+      timelinesEndDate,
+      -defaultTimelinesNumDaysBefore
+    )
+  })()
+  const timelinesNumDaysToShow = defaultTimelinesNumDaysBefore + 1 // Days before (in the past) plus today.
 
   // Calendars
   const [dataAllCalendars, { refetch: refetchAllCalendars }] =
@@ -113,7 +121,8 @@ const InnerPage: FC = () => {
 
       {!!dataAllCalendars?.data && (
         <Timelines
-          endDate={timelinesEndDate}
+          fromDate={timelinesFromDate}
+          numDaysToShow={timelinesNumDaysToShow}
           allCalendars={dataAllCalendars.data.calendars}
           isLoading={dataAllCalendars.loading}
           goInThePast={() => {
