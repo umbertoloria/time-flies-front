@@ -4,7 +4,7 @@ import {
   getDateWithOffsetDays,
   getTodayLocalDate,
 } from '../../lib/utils.ts'
-import { CalendarForLogicCalendar } from '../calendar/Calendar.tsx'
+import { LogicCalendarGridListening } from '../calendar/CalendarGrid.tsx'
 import { LogicDay } from '../calendar/logic-calendar.ts'
 
 const defaultNumWeeks = 4 * 2 // Two months
@@ -42,7 +42,7 @@ export const CalendarForScheduler: FC<{
   })
 
   return (
-    <CalendarForLogicCalendar
+    <LogicCalendarGridListening
       startWeekFromDate={fromDate1}
       numWeeks={numWeeks}
       logicCalendar={{

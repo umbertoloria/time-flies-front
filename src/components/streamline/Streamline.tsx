@@ -1,5 +1,5 @@
 import { FC, useEffect, useMemo } from 'react'
-import { CalendarTitle } from '../calendar/Calendar.tsx'
+import { CalendarTitle } from '../calendar/CalendarGrid.tsx'
 import { getSDK } from '../../remote/remote.ts'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
 import { TEvent } from '../../remote/sdk/types'

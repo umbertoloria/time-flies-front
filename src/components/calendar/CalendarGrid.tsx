@@ -20,6 +20,10 @@ import { createDayStatusPropsListFromLogicCalendar } from '../timeline/timeline-
 import classNames from 'classnames'
 import { useDialogForDatePanel } from '../../context/dialog-date-panel/ContextDialogForDatePanel.tsx'
 
+export type DayStatusRow = {
+  dayStatuses: DayStatusProps[]
+}
+
 function makeDayStatusRowsFromLogicCalendar(
   logicCalendar: LogicCalendar,
   fromDate: Date,
@@ -55,7 +59,7 @@ function makeDayStatusRowsFromLogicCalendar(
   return dayStatusRows
 }
 
-export const CalendarFromCalendar: FC<{
+export const CalendarGridListening: FC<{
   calendar: TCalendar
   startWeekFromDate: Date
   numWeeks: number
@@ -64,7 +68,7 @@ export const CalendarFromCalendar: FC<{
   goInTheFuture: () => void
 }> = props => {
   return (
-    <CalendarForLogicCalendar
+    <LogicCalendarGridListening
       startWeekFromDate={props.startWeekFromDate}
       numWeeks={props.numWeeks}
       logicCalendar={createLogicCalendarFromTCalendar(props.calendar)}
@@ -75,7 +79,7 @@ export const CalendarFromCalendar: FC<{
   )
 }
 
-export const CalendarForLogicCalendar: FC<{
+export const LogicCalendarGridListening: FC<{
   startWeekFromDate: Date
   numWeeks: number
   logicCalendar: LogicCalendar
@@ -85,7 +89,7 @@ export const CalendarForLogicCalendar: FC<{
 }> = props => {
   const { openDialog: openDialogForDatePanel } = useDialogForDatePanel()
   return (
-    <CalendarStateless
+    <CalendarGridStatelessListening
       dayStatusRows={makeDayStatusRowsFromLogicCalendar(
         props.logicCalendar,
         moveDateToWeekStart(props.startWeekFromDate),
@@ -106,7 +110,7 @@ export const CalendarForLogicCalendar: FC<{
             }
           : undefined,
       }}
-      placeTableHeadWithWeekDays
+      showHeadRowForWeekDays
       pleaseUpdateCalendar={props.pleaseUpdateCalendar}
       goInThePast={props.goInThePast}
       goInTheFuture={props.goInTheFuture}
@@ -114,16 +118,15 @@ export const CalendarForLogicCalendar: FC<{
   )
 }
 
-export type CalendarDataProps = {
-  idForUpdate?: number
-  color: string
-  name: string
-  onClick?: () => void
-}
-export const CalendarStateless: FC<{
+export const CalendarGridStatelessListening: FC<{
   dayStatusRows: DayStatusRow[]
-  calendarData?: CalendarDataProps
-  placeTableHeadWithWeekDays?: boolean
+  calendarData?: {
+    idForUpdate?: number
+    color: string
+    name: string
+    onClick?: () => void
+  }
+  showHeadRowForWeekDays?: boolean
   pleaseUpdateCalendar: () => void
   goInThePast?: () => void
   goInTheFuture?: () => void
@@ -170,20 +173,10 @@ export const CalendarStateless: FC<{
           </CalendarTitle>
         </>
       )}
-      <table className='m-auto text-gray-700'>
-        <tbody>
-          {!!props.placeTableHeadWithWeekDays && <CalendarHead />}
-          {props.dayStatusRows.map((dayStatusRow, index) => (
-            <tr key={index}>
-              {dayStatusRow.dayStatuses.map((cell, index) => (
-                <td key={index} className='m-0 p-0'>
-                  <DayStatus {...cell} />
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <CalendarGridStatelessTable
+        dayStatusRows={props.dayStatusRows}
+        showHeadRowForWeekDays={!!props.showHeadRowForWeekDays}
+      />
     </div>
   )
 }
@@ -236,7 +229,6 @@ export const CalendarArrowControl: FC<{
     </div>
   )
 }
-
 const CalendarTimeTravelButton: FC<{
   label: string
   onClick: () => void
@@ -248,6 +240,28 @@ const CalendarTimeTravelButton: FC<{
     {props.label}
   </button>
 )
+
+const CalendarGridStatelessTable: FC<{
+  dayStatusRows: DayStatusRow[]
+  showHeadRowForWeekDays: boolean
+}> = props => {
+  return (
+    <table className='m-auto text-gray-700'>
+      <tbody>
+        {props.showHeadRowForWeekDays && <CalendarGridHeadRowForWeekDays />}
+        {props.dayStatusRows.map((dayStatusRow, index) => (
+          <tr key={index}>
+            {dayStatusRow.dayStatuses.map((cell, index) => (
+              <td key={index} className='m-0 p-0'>
+                <DayStatus {...cell} />
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
 
 const weekDays = [
   {
@@ -279,7 +293,7 @@ const weekDays = [
     display: 'Dom',
   },
 ]
-const CalendarHead: FC = () => (
+const CalendarGridHeadRowForWeekDays: FC = () => (
   <tr>
     {weekDays.map((day, index) => (
       <th className='m-0 p-0' key={index}>
@@ -288,7 +302,3 @@ const CalendarHead: FC = () => (
     ))}
   </tr>
 )
-
-export type DayStatusRow = {
-  dayStatuses: DayStatusProps[]
-}

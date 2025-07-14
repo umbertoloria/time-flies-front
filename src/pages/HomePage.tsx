@@ -6,7 +6,7 @@ import {
 } from '../lib/utils.ts'
 import { UserLayout } from '../layout/UserLayout.tsx'
 import { getSDK } from '../remote/remote.ts'
-import { CalendarFromCalendar } from '../components/calendar/Calendar.tsx'
+import { CalendarGridListening } from '../components/calendar/CalendarGrid.tsx'
 import { useWrapperForCreateResource } from '../lib/remote-resources.ts'
 import { Streamline } from '../components/streamline/Streamline.tsx'
 import { Timelines } from '../components/timeline/Timelines.tsx'
@@ -83,7 +83,7 @@ const InnerPage: FC = () => {
         {!dataAllCalendars?.loading && !!dataAllCalendars?.data ? (
           dataAllCalendars.data.calendars.map((calendar, index) => (
             <div key={index}>
-              <CalendarFromCalendar
+              <CalendarGridListening
                 calendar={calendar}
                 startWeekFromDate={getFromDateForCalendar(calendar.id)}
                 numWeeks={defaultNumWeeks}

@@ -1,5 +1,8 @@
 import { FC, useState } from 'react'
-import { CalendarArrowControl, CalendarTitle } from '../calendar/Calendar.tsx'
+import {
+  CalendarArrowControl,
+  CalendarTitle,
+} from '../calendar/CalendarGrid.tsx'
 import { TCalendar } from '../../remote/sdk/types'
 import { getITMonthFromLocalDate, getTodayDate } from '../../lib/utils.ts'
 import { getFirstAndLastLocalDatesFromDayStatusRows } from '../calendar/utils.ts'
