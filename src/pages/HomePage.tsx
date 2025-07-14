@@ -2,7 +2,6 @@ import { FC, useEffect, useState } from 'react'
 import {
   getDateFromLocalDate,
   getDateWithOffsetDays,
-  getTodayDate,
   getTodayLocalDate,
 } from '../lib/utils.ts'
 import { UserLayout } from '../layout/UserLayout.tsx'
@@ -30,34 +29,13 @@ const { readAllCalendars } = getSDK()
 const InnerPage: FC = () => {
   const todayLocalDate = getTodayLocalDate()
 
-  // Weeks 4 Offsets for Calendars
-  const [weeks4Offsets, setWeeks4Offsets] = useState<
+  // Calendars: 4 weeks offsets
+  const [calendar2monthsOffset, setCalendar2monthsOffset] = useState<
     Record<number, number | undefined>
   >({})
   const getWeeks4OffsetFromCalendar = (calendarId: number) =>
-    weeks4Offsets[calendarId] || 0
-  const setWeeks4OffsetForCalendar = (calendarId: number, value: number) => {
-    setWeeks4Offsets(old => ({
-      ...old,
-      [calendarId]: value,
-    }))
-  }
-  const setWeeks4InThePastForCalendar = (id: number) => {
-    setWeeks4OffsetForCalendar(id, getWeeks4OffsetFromCalendar(id) + 1)
-  }
-  const setWeeks4InTheFutureForCalendar = (id: number) => {
-    setWeeks4OffsetForCalendar(id, getWeeks4OffsetFromCalendar(id) - 1)
-  }
-
-  // Weeks 4 Before for Timelines
-  const [timelinesWeeks4Before, setTimelinesWeeks4Before] = useState(0)
-  const timelinesEndDate = getTodayDate()
-  timelinesEndDate.setDate(
-    timelinesEndDate.getDate() - timelinesWeeks4Before * 7
-  )
-
-  // Calculating "From Dates" for calendars
-  const getFromDateForCalendar = (calendarId: number) =>
+    calendar2monthsOffset[calendarId] || 0
+  const getCalendarFromDate = (calendarId: number) =>
     getDateWithOffsetDays(
       getDateFromLocalDate(todayLocalDate),
       -7 *
@@ -66,6 +44,21 @@ const InnerPage: FC = () => {
           defaultWeeksInAdvance +
           4 * getWeeks4OffsetFromCalendar(calendarId))
     )
+  const setWeeks4OffsetForCalendar = (calendarId: number, value: number) =>
+    setCalendar2monthsOffset(old => ({
+      ...old,
+      [calendarId]: value,
+    }))
+  const addCalendarMonthsOffset = (id: number, amount: number) => {
+    setWeeks4OffsetForCalendar(id, getWeeks4OffsetFromCalendar(id) + amount)
+  }
+
+  // Timelines: 4 weeks before
+  const [timelinesWeeksBefore, setTimelinesWeeksBefore] = useState(0)
+  const timelinesEndDate = getDateFromLocalDate(todayLocalDate)
+  timelinesEndDate.setDate(
+    timelinesEndDate.getDate() - timelinesWeeksBefore * 7
+  )
 
   // Calendars
   const [dataAllCalendars, { refetch: refetchAllCalendars }] =
@@ -95,16 +88,16 @@ const InnerPage: FC = () => {
             <div key={index}>
               <CalendarGridListening
                 calendar={calendar}
-                startWeekFromDate={getFromDateForCalendar(calendar.id)}
+                startWeekFromDate={getCalendarFromDate(calendar.id)}
                 numWeeks={defaultNumWeeks}
                 pleaseUpdateCalendar={() => {
                   refetchOneCalendar(calendar.id)
                 }}
                 goInThePast={() => {
-                  setWeeks4InThePastForCalendar(calendar.id)
+                  addCalendarMonthsOffset(calendar.id, 1)
                 }}
                 goInTheFuture={() => {
-                  setWeeks4InTheFutureForCalendar(calendar.id)
+                  addCalendarMonthsOffset(calendar.id, -1)
                 }}
               />
             </div>
@@ -121,10 +114,14 @@ const InnerPage: FC = () => {
       {!!dataAllCalendars?.data && (
         <Timelines
           endDate={timelinesEndDate}
-          weeks4Before={timelinesWeeks4Before}
-          setWeeks4Before={setTimelinesWeeks4Before}
           allCalendars={dataAllCalendars.data.calendars}
           isLoading={dataAllCalendars.loading}
+          goInThePast={() => {
+            setTimelinesWeeksBefore(timelinesWeeksBefore + 1)
+          }}
+          goInTheFuture={() => {
+            setTimelinesWeeksBefore(timelinesWeeksBefore - 1)
+          }}
           pleaseUpdateCalendar={calendarId => {
             refetchOneCalendar(calendarId)
           }}

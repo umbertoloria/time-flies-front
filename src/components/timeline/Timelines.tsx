@@ -12,10 +12,10 @@ import { createDayStatusesFromTCalendar } from './timeline-utils.ts'
 const defaultTimelinesNumDaysBefore = 38
 export const Timelines: FC<{
   endDate: Date
-  weeks4Before: number
-  setWeeks4Before: (value: number) => void
   allCalendars: TCalendar[]
   isLoading: boolean
+  goInThePast: () => void
+  goInTheFuture: () => void
   pleaseUpdateCalendar: (calendarId: number) => void
 }> = props => {
   if (props.allCalendars.length < 1) {
@@ -39,12 +39,8 @@ export const Timelines: FC<{
           <CalendarArrowControl
             firstMonthLang={firstMonthLang}
             lastMonthLang={lastMonthLang}
-            goInThePast={() => {
-              props.setWeeks4Before(props.weeks4Before + 1)
-            }}
-            goInTheFuture={() => {
-              props.setWeeks4Before(props.weeks4Before - 1)
-            }}
+            goInThePast={props.goInThePast}
+            goInTheFuture={props.goInTheFuture}
           />
         </CalendarTitle>
       </div>
