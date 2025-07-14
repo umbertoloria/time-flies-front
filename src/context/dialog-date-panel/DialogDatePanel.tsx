@@ -5,7 +5,7 @@ import { Badge } from '../../components/calendar/Badge.tsx'
 import { getSDK } from '../../remote/remote.ts'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
 import { TCalendar } from '../../remote/sdk/types'
-import { DiaryEntry, DiaryEntriesList } from '../../components/diary/Diary.tsx'
+import { DiaryEntriesList, DiaryEntry } from '../../components/diary/Diary.tsx'
 import {
   filterUnique,
   getDateFromLocalDate,
@@ -38,12 +38,12 @@ export const DialogDatePanel: FC = () => {
   )
 }
 
+const { readCalendar, readCalendarDate } = getSDK()
 const periodRefreshDateInMillis = 3 * 60 * 60 * 1000 // 3 minutes.
 export const DialogCalendarPanelInner: FC<{
   calendarId: number
   closeDialog: () => void
 }> = ({ calendarId, closeDialog }) => {
-  const { readCalendar } = getSDK()
   const [data, { refetch: refreshCalendar }] = useWrapperForCreateResource(() =>
     readCalendar(calendarId).then(response =>
       typeof response === 'object' ? response : undefined
@@ -161,7 +161,6 @@ export const DialogDatePanelInner: FC<{
   date: string
   closeDialog: () => void
 }> = ({ calendarId, date, closeDialog }) => {
-  const { readCalendarDate } = getSDK()
   const [data, { refetch: refreshDate }] = useWrapperForCreateResource(() =>
     readCalendarDate(calendarId, date)
   )

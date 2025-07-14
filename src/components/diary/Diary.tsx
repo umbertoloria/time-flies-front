@@ -75,6 +75,7 @@ const CalendarDateNotesComponent: FC<{
   )
 }
 
+const { updateCalendarDateNotes } = getSDK()
 const CalendarDayNoteSeeAndEdit: FC<{
   calendarId: number
   localDate: string
@@ -84,7 +85,6 @@ const CalendarDayNoteSeeAndEdit: FC<{
   editable: boolean
   onUpdated: () => void
 }> = ({ calendarId, localDate, notes, editable, onUpdated }) => {
-  const { updateCalendarDateNotes } = getSDK()
   const [editing, setEditing] = useState(false)
   const [loading, setLoading] = useState(false)
 
@@ -156,7 +156,6 @@ const NotesAddForm: FC<{
   localDate: string
   onInserted: () => void
 }> = ({ calendarId, localDate, onInserted }) => {
-  const { updateCalendarDateNotes } = getSDK()
   const [adding, setAdding] = useState(false)
   const [loading, setLoading] = useState(false)
   return (

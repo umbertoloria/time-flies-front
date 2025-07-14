@@ -33,11 +33,12 @@ const InnerPage: FC = () => {
   const [weeks4Offsets, setWeeks4Offsets] = useState<
     Record<number, number | undefined>
   >({})
-  const getWeeks4OffsetFromCalendar = (id: number) => weeks4Offsets[id] || 0
-  const setWeeks4OffsetForCalendar = (id: number, value: number) => {
+  const getWeeks4OffsetFromCalendar = (calendarId: number) =>
+    weeks4Offsets[calendarId] || 0
+  const setWeeks4OffsetForCalendar = (calendarId: number, value: number) => {
     setWeeks4Offsets(old => ({
       ...old,
-      [id]: value,
+      [calendarId]: value,
     }))
   }
   const setWeeks4InThePastForCalendar = (id: number) => {
@@ -48,30 +49,31 @@ const InnerPage: FC = () => {
   }
 
   // Calculating "From Dates" for calendars
-  const getFromDateForCalendar = (id: number) => {
-    return getDateWithOffsetDays(
+  const getFromDateForCalendar = (calendarId: number) =>
+    getDateWithOffsetDays(
       getDateFromLocalDate(todayLocalDate),
       -7 *
         (defaultNumWeeks -
           1 -
           defaultWeeksInAdvance +
-          4 * getWeeks4OffsetFromCalendar(id))
+          4 * getWeeks4OffsetFromCalendar(calendarId))
     )
-  }
 
   // Calendars
   const [dataAllCalendars, { refetch: refetchAllCalendars }] =
-    useWrapperForCreateResource(() => readAllCalendars())
+    useWrapperForCreateResource(() => {
+      return readAllCalendars()
+    })
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const refetchOneCalendar = (calendarId: number) => {
     // TODO: Improve partial loadings
     refetchAllCalendars()
   }
-  const refreshCalendarIntervalTimer = setInterval(() => {
-    refetchAllCalendars()
-  }, periodRefreshCalendarsInMillis)
   useEffect(() => {
+    const refreshCalendarIntervalTimer = setInterval(() => {
+      refetchAllCalendars()
+    }, periodRefreshCalendarsInMillis)
     return () => {
       clearInterval(refreshCalendarIntervalTimer)
     }
@@ -112,7 +114,9 @@ const InnerPage: FC = () => {
         <Timelines
           allCalendars={dataAllCalendars.data.calendars}
           isLoading={dataAllCalendars.loading}
-          pleaseUpdateCalendar={refetchOneCalendar}
+          pleaseUpdateCalendar={calendarId => {
+            refetchOneCalendar(calendarId)
+          }}
         />
       )}
     </section>

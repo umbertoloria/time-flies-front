@@ -9,12 +9,12 @@ import { getFirstAndLastLocalDatesFromDayStatusRows } from '../calendar/utils.ts
 import { Timeline } from './Timeline.tsx'
 import { createDayStatusesFromTCalendar } from './timeline-utils.ts'
 
+const defaultTimelinesNumDaysBefore = 38
 export const Timelines: FC<{
   allCalendars: TCalendar[]
   isLoading: boolean
   pleaseUpdateCalendar: (calendarId: number) => void
 }> = props => {
-  const [numDaysBefore] = useState(38)
   const [weeks4Before, setWeeks4Before] = useState(0)
   const endDate = (() => {
     const todayDate = getTodayDate()
@@ -28,7 +28,7 @@ export const Timelines: FC<{
 
   const dayStatuses = createDayStatusesFromTCalendar(
     endDate,
-    numDaysBefore,
+    defaultTimelinesNumDaysBefore,
     props.allCalendars[0]
   )
   const { firstLocalDate, lastLocalDate } =
@@ -59,7 +59,7 @@ export const Timelines: FC<{
             <div key={index}>
               <Timeline
                 endDate={endDate}
-                numDaysBefore={numDaysBefore}
+                numDaysBefore={defaultTimelinesNumDaysBefore}
                 calendar={calendar}
                 pleaseUpdateCalendar={() => {
                   props.pleaseUpdateCalendar(calendar.id)
