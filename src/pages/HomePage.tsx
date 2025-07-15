@@ -6,10 +6,12 @@ import {
 } from '../lib/utils.ts'
 import { UserLayout } from '../layout/UserLayout.tsx'
 import { getSDK } from '../remote/remote.ts'
-import { CalendarGridListening } from '../components/calendar/CalendarGrid.tsx'
+import { LogicCalendarGridListening } from '../components/calendar/CalendarGrid.tsx'
 import { useWrapperForCreateResource } from '../lib/remote-resources.ts'
 import { Streamline } from '../components/streamline/Streamline.tsx'
 import { Timelines } from '../components/timeline/Timelines.tsx'
+import { moveDateToClosestNonFutureMonday } from '../components/calendar/utils.ts'
+import { createLogicCalendarFromTCalendar } from '../components/calendar/logic-calendar.ts'
 
 const periodRefreshCalendarsInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 
@@ -34,24 +36,22 @@ const InnerPage: FC = () => {
   const [calendar2monthsOffset, setCalendar2monthsOffset] = useState<
     Record<number, number | undefined>
   >({})
-  const getWeeks4OffsetFromCalendar = (calendarId: number) =>
-    calendar2monthsOffset[calendarId] || 0
-  const getCalendarFromDate = (calendarId: number) =>
-    getDateWithOffsetDays(
-      getDateFromLocalDate(todayLocalDate),
-      -7 *
-        (defaultCalendarsNumWeeks -
-          1 -
-          defaultCalendarsWeeksInAdvance +
-          4 * getWeeks4OffsetFromCalendar(calendarId))
+  const getCalendarFromDateMonday = (calendarId: number) =>
+    moveDateToClosestNonFutureMonday(
+      getDateWithOffsetDays(
+        getDateFromLocalDate(todayLocalDate),
+        -7 *
+          (defaultCalendarsNumWeeks -
+            1 -
+            defaultCalendarsWeeksInAdvance +
+            4 * (calendar2monthsOffset[calendarId] || 0))
+      )
     )
-  const setWeeks4OffsetForCalendar = (calendarId: number, value: number) =>
+  const addCalendarMonthsOffset = (calendarId: number, amount: number) => {
     setCalendar2monthsOffset(old => ({
       ...old,
-      [calendarId]: value,
+      [calendarId]: (old[calendarId] || 0) + amount,
     }))
-  const addCalendarMonthsOffset = (id: number, amount: number) => {
-    setWeeks4OffsetForCalendar(id, getWeeks4OffsetFromCalendar(id) + amount)
   }
 
   // Timelines: 4 weeks before
@@ -94,9 +94,9 @@ const InnerPage: FC = () => {
         {!dataAllCalendars?.loading && !!dataAllCalendars?.data ? (
           dataAllCalendars.data.calendars.map((calendar, index) => (
             <div key={index}>
-              <CalendarGridListening
-                calendar={calendar}
-                startWeekFromDate={getCalendarFromDate(calendar.id)}
+              <LogicCalendarGridListening
+                logicCalendar={createLogicCalendarFromTCalendar(calendar)}
+                fromDateMonday={getCalendarFromDateMonday(calendar.id)}
                 numWeeks={defaultCalendarsNumWeeks}
                 pleaseUpdateCalendar={() => {
                   refetchOneCalendar(calendar.id)

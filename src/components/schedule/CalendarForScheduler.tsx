@@ -6,6 +6,7 @@ import {
 } from '../../lib/utils.ts'
 import { LogicCalendarGridListening } from '../calendar/CalendarGrid.tsx'
 import { LogicDay } from '../calendar/logic-calendar.ts'
+import { moveDateToClosestNonFutureMonday } from '../calendar/utils.ts'
 
 const defaultNumWeeks = 4 * 2 // Two months
 export const CalendarForScheduler: FC<{
@@ -14,9 +15,11 @@ export const CalendarForScheduler: FC<{
 }> = props => {
   const [numWeeks] = useState(defaultNumWeeks)
   const [weeks4Before, setWeeks4Before] = useState(0)
-  const fromDate1 = getDateWithOffsetDays(
-    getDateFromLocalDate(getTodayLocalDate()),
-    -7 * (numWeeks - 1 + 4 * weeks4Before)
+  const fromDateMonday = moveDateToClosestNonFutureMonday(
+    getDateWithOffsetDays(
+      getDateFromLocalDate(getTodayLocalDate()),
+      -7 * (numWeeks - 1 + 4 * weeks4Before)
+    )
   )
   const manualCalendarColor = '#7e9'
 
@@ -43,8 +46,6 @@ export const CalendarForScheduler: FC<{
 
   return (
     <LogicCalendarGridListening
-      startWeekFromDate={fromDate1}
-      numWeeks={numWeeks}
       logicCalendar={{
         color: manualCalendarColor,
         name: 'Calendario',
@@ -52,6 +53,8 @@ export const CalendarForScheduler: FC<{
         // apiCalendar: undefined,
         logicDays,
       }}
+      fromDateMonday={fromDateMonday}
+      numWeeks={numWeeks}
       pleaseUpdateCalendar={() => {
         // No Calendar ID so no update requests...
       }}

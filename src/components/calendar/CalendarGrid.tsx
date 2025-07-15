@@ -7,15 +7,8 @@ import {
   subscribeToCalendarUpdates,
   unsubscribeToCalendarUpdates,
 } from './event-calendar-updated.ts'
-import {
-  getFirstAndLastLocalDatesFromDayStatusRows,
-  moveDateToWeekStart,
-} from './utils'
-import {
-  createLogicCalendarFromTCalendar,
-  LogicCalendar,
-} from './logic-calendar.ts'
-import { TCalendar } from '../../remote/sdk/types'
+import { getFirstAndLastLocalDatesFromDayStatusRows } from './utils'
+import { LogicCalendar } from './logic-calendar.ts'
 import { createDayStatusPropsListFromLogicCalendar } from '../timeline/timeline-utils.ts'
 import classNames from 'classnames'
 import { useDialogForDatePanel } from '../../context/dialog-date-panel/ContextDialogForDatePanel.tsx'
@@ -26,18 +19,18 @@ export type DayStatusRow = {
 
 function makeDayStatusRowsFromLogicCalendar(
   logicCalendar: LogicCalendar,
-  fromDate: Date,
+  fromDateMonday: Date,
   weeksToShow: number
 ): DayStatusRow[] {
   // Requirements:
   // 1. Logic Days must be sorted in Date
-  // 2. "fromDate" must be a Monday
+  // 2. "fromDateMonday" must be a Monday
 
   const fillingCellsCount = 7 as const // 7 days per week.
   const dayStatusRows: DayStatusRow[] = []
   const dayStatusPropsList = createDayStatusPropsListFromLogicCalendar(
     logicCalendar,
-    fromDate,
+    fromDateMonday,
     weeksToShow * 7
   )
   for (const dayStatusProps of dayStatusPropsList) {
@@ -59,30 +52,10 @@ function makeDayStatusRowsFromLogicCalendar(
   return dayStatusRows
 }
 
-export const CalendarGridListening: FC<{
-  calendar: TCalendar
-  startWeekFromDate: Date
-  numWeeks: number
-  pleaseUpdateCalendar: () => void
-  goInThePast: () => void
-  goInTheFuture: () => void
-}> = props => {
-  return (
-    <LogicCalendarGridListening
-      startWeekFromDate={props.startWeekFromDate}
-      numWeeks={props.numWeeks}
-      logicCalendar={createLogicCalendarFromTCalendar(props.calendar)}
-      pleaseUpdateCalendar={props.pleaseUpdateCalendar}
-      goInThePast={props.goInThePast}
-      goInTheFuture={props.goInTheFuture}
-    />
-  )
-}
-
 export const LogicCalendarGridListening: FC<{
-  startWeekFromDate: Date
-  numWeeks: number
   logicCalendar: LogicCalendar
+  fromDateMonday: Date // Use "moveDateToClosestNonFutureMonday" for that.
+  numWeeks: number
   pleaseUpdateCalendar: () => void
   goInThePast: () => void
   goInTheFuture: () => void
@@ -92,7 +65,7 @@ export const LogicCalendarGridListening: FC<{
     <CalendarGridStatelessListening
       dayStatusRows={makeDayStatusRowsFromLogicCalendar(
         props.logicCalendar,
-        moveDateToWeekStart(props.startWeekFromDate),
+        props.fromDateMonday,
         props.numWeeks
       )}
       calendarData={{

@@ -39,7 +39,7 @@ export function displayDateFromLocalDate(localDate: string) {
   return formatter.format(new Date(localDate))
 }
 
-export function moveDateToWeekStart(date: Date) {
+export function moveDateToClosestNonFutureMonday(date: Date) {
   const weekday = date.getDay() // 0 => sunday
   const numDaysFromMonday = (7 + weekday - 1) % 7
 
