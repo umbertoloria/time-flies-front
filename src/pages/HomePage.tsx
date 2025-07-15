@@ -125,46 +125,44 @@ const InnerPage: FC = () => {
   return (
     <section className='p-8'>
       <div className='main-section-grids'>
-        {/* All Calendars Grids */}
-        {!dataAllCalendars?.loading && !!dataAllCalendars?.data ? (
-          dataAllCalendars.data.calendars.map((calendar, index) => (
-            <div key={index}>
-              <LogicCalendarGridListening
-                logicCalendar={createLogicCalendarFromTCalendar(calendar)}
-                fromDateMonday={getCalendarFromDateMonday(calendar.id)}
-                numWeeks={defaultCalendarsNumWeeks}
-                pleaseUpdateCalendar={() => {
-                  refetchOneCalendar(calendar.id)
-                }}
-                goInThePast={() => {
-                  addCalendarMonthsOffset(calendar.id, 1)
-                }}
-                goInTheFuture={() => {
-                  addCalendarMonthsOffset(calendar.id, -1)
-                }}
-              />
-            </div>
-          ))
-        ) : (
-          <>Searching...</>
-        )}
-
-        {/* Timelines Grids */}
         {!!dataAllCalendars?.data && (
-          <Timelines
-            fromDate={timelinesFromDate}
-            allCalendars={dataAllCalendars.data.calendars}
-            isLoading={dataAllCalendars.loading}
-            goInThePast={() => {
-              setTimelinesWeeksBefore(timelinesWeeksBefore + 1)
-            }}
-            goInTheFuture={() => {
-              setTimelinesWeeksBefore(timelinesWeeksBefore - 1)
-            }}
-            pleaseUpdateCalendar={calendarId => {
-              refetchOneCalendar(calendarId)
-            }}
-          />
+          <>
+            {/* All Calendars Grids */}
+            {dataAllCalendars.data.calendars.map((calendar, index) => (
+              <div key={index}>
+                <LogicCalendarGridListening
+                  logicCalendar={createLogicCalendarFromTCalendar(calendar)}
+                  fromDateMonday={getCalendarFromDateMonday(calendar.id)}
+                  numWeeks={defaultCalendarsNumWeeks}
+                  pleaseUpdateCalendar={() => {
+                    refetchOneCalendar(calendar.id)
+                  }}
+                  goInThePast={() => {
+                    addCalendarMonthsOffset(calendar.id, 1)
+                  }}
+                  goInTheFuture={() => {
+                    addCalendarMonthsOffset(calendar.id, -1)
+                  }}
+                />
+              </div>
+            ))}
+
+            {/* Timelines Grids */}
+            <Timelines
+              fromDate={timelinesFromDate}
+              allCalendars={dataAllCalendars.data.calendars}
+              isLoading={dataAllCalendars.loading}
+              goInThePast={() => {
+                setTimelinesWeeksBefore(timelinesWeeksBefore + 1)
+              }}
+              goInTheFuture={() => {
+                setTimelinesWeeksBefore(timelinesWeeksBefore - 1)
+              }}
+              pleaseUpdateCalendar={calendarId => {
+                refetchOneCalendar(calendarId)
+              }}
+            />
+          </>
         )}
 
         {/* Streamline */}
