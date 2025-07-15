@@ -27,10 +27,15 @@ export const DialogDatePanel: FC = () => {
             />
           )}
           {data.mode == 'calendar-panel' && (
-            <DialogCalendarPanelInner
-              calendarId={data.calendarId}
-              closeDialog={closeDialog}
-            />
+            <GenericDialog
+              onClose={closeDialog}
+              labelOnClose='Indietro'
+              title='Attività'
+            >
+              <div className='p-4 flex flex-col gap-1'>
+                <CalendarLoaderComponent calendarId={data.calendarId} />
+              </div>
+            </GenericDialog>
           )}
         </>
       )}
@@ -38,12 +43,11 @@ export const DialogDatePanel: FC = () => {
   )
 }
 
-const { readCalendar, readCalendarDate } = getSDK()
 const periodRefreshDateInMillis = 3 * 60 * 60 * 1000 // 3 minutes.
-export const DialogCalendarPanelInner: FC<{
+const { readCalendar, readCalendarDate } = getSDK()
+const CalendarLoaderComponent: FC<{
   calendarId: number
-  closeDialog: () => void
-}> = ({ calendarId, closeDialog }) => {
+}> = ({ calendarId }) => {
   const [data, { refetch: refreshCalendar }] = useWrapperForCreateResource(() =>
     readCalendar(calendarId).then(response =>
       typeof response === 'object' ? response : undefined
@@ -58,31 +62,24 @@ export const DialogCalendarPanelInner: FC<{
       clearInterval(refreshDateIntervalTimer)
     }
   }, [])
-
   const calendar = data?.data
 
   return (
-    <GenericDialog
-      onClose={closeDialog}
-      labelOnClose='Indietro'
-      title='Attività'
-    >
-      <div className='p-4 flex flex-col gap-1'>
-        {data?.loading && (
-          <>
-            <Badge>Caricamento...</Badge>
-          </>
-        )}
-        {!!calendar && (
-          <>
-            <CalendarComponent
-              calendar={calendar}
-              refreshCalendar={refreshCalendar}
-            />
-          </>
-        )}
-      </div>
-    </GenericDialog>
+    <>
+      {data?.loading && (
+        <>
+          <Badge>Caricamento...</Badge>
+        </>
+      )}
+      {!!calendar && (
+        <>
+          <CalendarComponent
+            calendar={calendar}
+            refreshCalendar={refreshCalendar}
+          />
+        </>
+      )}
+    </>
   )
 }
 const CalendarComponent: FC<{
@@ -98,6 +95,7 @@ const CalendarComponent: FC<{
     return (
       <>
         <DiaryEntriesList
+          initialOpen
           dates={calendar.days.map(date => ({
             calendar: {
               id: calendar.id,
@@ -120,6 +118,7 @@ const CalendarComponent: FC<{
         {!!currentYearDates.length && (
           <DiaryEntriesList
             title={todayYear.toString()}
+            initialOpen
             dates={currentYearDates.map(date => ({
               calendar: {
                 id: calendar.id,
@@ -135,6 +134,7 @@ const CalendarComponent: FC<{
           <div key={index}>
             <DiaryEntriesList
               title={year.toString()}
+              initialOpen={false}
               dates={calendar.days
                 .filter(
                   date => getDateFromLocalDate(date.date).getFullYear() === year

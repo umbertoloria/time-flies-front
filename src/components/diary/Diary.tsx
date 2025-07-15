@@ -6,18 +6,37 @@ import { fireEventCalendarUpdated } from '../calendar/event-calendar-updated.ts'
 
 export const DiaryEntriesList: FC<{
   title?: string
+  initialOpen?: boolean
   dates: TCalendarDate[]
   refreshDate: () => void
-}> = ({ title, dates, refreshDate }) => {
+}> = ({ title, initialOpen, dates, refreshDate }) => {
+  const [isOpen, setOpen] = useState(
+    initialOpen === undefined ? true : initialOpen
+  )
   return (
-    <>
-      {!!title && <h1>{title}</h1>}
-      {dates.map((date, index) => (
-        <div key={index}>
-          <DiaryEntry date={date} refreshDate={refreshDate} />
-        </div>
-      ))}
-    </>
+    <div>
+      {!!title && (
+        <>
+          <a
+            className='inline font-bold bg-gray-300 p-0.5 rounded cursor-pointer'
+            onClick={() => {
+              setOpen(!isOpen)
+            }}
+          >
+            {title}
+          </a>
+        </>
+      )}
+      {isOpen && (
+        <>
+          {dates.map((date, index) => (
+            <div key={index}>
+              <DiaryEntry date={date} refreshDate={refreshDate} />
+            </div>
+          ))}
+        </>
+      )}
+    </div>
   )
 }
 
