@@ -66,7 +66,9 @@ export const getSDK = () => {
             }),
 
     // Calendar
-    readAllCalendars: (): Promise<{ calendars: TCalendar[] }> =>
+    readAllCalendars: (filters: {
+      dateFrom: string
+    }): Promise<{ calendars: TCalendar[] }> =>
       debugMode
         ? Promise.resolve({
             calendars: [
@@ -98,8 +100,13 @@ export const getSDK = () => {
               },
             ],
           })
-        : api.get('?a=calendars-read').then(({ data }) => data),
-    // TODO: All these calendars data may be too much...
+        : api
+            .get(
+              // When "date-from" filter is optional:
+              //   `?a=calendars-read${typeof filters.dateFrom === 'string' ? `&date-from=${filters.dateFrom}` : ''}`
+              `?a=calendars-read&date-from=${filters.dateFrom}`
+            )
+            .then(({ data }) => data),
     readCalendar: (id: number): Promise<TCalendar | 'unable'> =>
       debugMode
         ? (() => {

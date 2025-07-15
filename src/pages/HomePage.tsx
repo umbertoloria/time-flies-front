@@ -1,8 +1,10 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import {
   getDateFromLocalDate,
   getDateWithOffsetDays,
+  getLocalDayByDate,
   getTodayLocalDate,
+  localDatesLT,
 } from '../lib/utils.ts'
 import { UserLayout } from '../layout/UserLayout.tsx'
 import { getSDK } from '../remote/remote.ts'
@@ -53,7 +55,6 @@ const InnerPage: FC = () => {
       [calendarId]: (old[calendarId] || 0) + amount,
     }))
   }
-
   // Timelines: 4 weeks before
   const [timelinesWeeksBefore, setTimelinesWeeksBefore] = useState(0)
   const timelinesFromDate = (() => {
@@ -67,11 +68,40 @@ const InnerPage: FC = () => {
     )
   })()
   const timelinesNumDaysToShow = defaultTimelinesNumDaysBefore + 1 // Days before (in the past) plus today.
+  // Calculated "Minimum From Date"
+  const minFromDate = useMemo(() => {
+    let result = todayLocalDate
+    // Calendars (default dates): always mondays
+    const calendarDefaultFromDateMonday = getLocalDayByDate(
+      getCalendarFromDateMonday(-1) // Fake Calendar ID
+    )
+    if (localDatesLT(calendarDefaultFromDateMonday, result)) {
+      result = calendarDefaultFromDateMonday
+    }
+    // Calendars (custom dates): always mondays
+    for (const strCalendarId of Object.keys(calendar2monthsOffset)) {
+      const calendarId = parseInt(strCalendarId)
+      const calendarFromDateMonday = getLocalDayByDate(
+        getCalendarFromDateMonday(calendarId)
+      )
+      if (localDatesLT(calendarFromDateMonday, result)) {
+        result = calendarFromDateMonday
+      }
+    }
+    // Timelines: *not* always mondays
+    const timelinesFromLocalDate = getLocalDayByDate(timelinesFromDate)
+    if (localDatesLT(timelinesFromLocalDate, result)) {
+      result = timelinesFromLocalDate
+    }
+    return result
+  }, [calendar2monthsOffset, timelinesWeeksBefore])
 
   // Calendars
   const [dataAllCalendars, { refetch: refetchAllCalendars }] =
     useWrapperForCreateResource(() => {
-      return readAllCalendars()
+      return readAllCalendars({
+        dateFrom: minFromDate,
+      })
     })
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -87,6 +117,9 @@ const InnerPage: FC = () => {
       clearInterval(refreshCalendarIntervalTimer)
     }
   }, [])
+  useEffect(() => {
+    refetchAllCalendars()
+  }, [minFromDate])
 
   return (
     <section className='p-8'>
