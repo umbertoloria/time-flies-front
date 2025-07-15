@@ -161,7 +161,7 @@ export const CalendarTitle: FC<
     onClick?: () => void
   }>
 > = props => (
-  <div className='bg-gray-500 rounded mb-2 mx-auto px-2.5 py-1.5 max-w-96 flex flex-wrap items-center justify-between'>
+  <div className='calendar-title bg-gray-500 rounded mb-2 mx-auto px-2.5 py-1.5 flex flex-wrap items-center justify-between'>
     <a
       className={classNames(
         'bg-gray-600 px-1 rounded text-lg font-semibold text-gray-700',
@@ -219,13 +219,13 @@ const CalendarGridStatelessTable: FC<{
   showHeadRowForWeekDays: boolean
 }> = props => {
   return (
-    <table className='m-auto text-gray-700'>
+    <table className='calendar-grid m-auto text-gray-700'>
       <tbody>
         {props.showHeadRowForWeekDays && <CalendarGridHeadRowForWeekDays />}
         {props.dayStatusRows.map((dayStatusRow, index) => (
           <tr key={index}>
             {dayStatusRow.dayStatuses.map((cell, index) => (
-              <td key={index} className='m-0 p-0'>
+              <td key={index}>
                 <DayStatus {...cell} />
               </td>
             ))}

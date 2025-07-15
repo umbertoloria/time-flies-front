@@ -54,7 +54,7 @@ export const Streamline: FC = () => {
   }, [dataStreamline])
 
   return (
-    <div>
+    <div className='streamline'>
       <CalendarTitle textColor='#fff' label='Streamline' />
       {!actualEvents ? (
         <>Searching...</>

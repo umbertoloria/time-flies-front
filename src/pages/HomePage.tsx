@@ -11,7 +11,10 @@ import { getSDK } from '../remote/remote.ts'
 import { LogicCalendarGridListening } from '../components/calendar/CalendarGrid.tsx'
 import { useWrapperForCreateResource } from '../lib/remote-resources.ts'
 import { Streamline } from '../components/streamline/Streamline.tsx'
-import { Timelines } from '../components/timeline/Timelines.tsx'
+import {
+  defaultTimelinesNumDaysBefore,
+  Timelines,
+} from '../components/timeline/Timelines.tsx'
 import { moveDateToClosestNonFutureMonday } from '../components/calendar/utils.ts'
 import { createLogicCalendarFromTCalendar } from '../components/calendar/logic-calendar.ts'
 
@@ -28,7 +31,6 @@ export default function HomePage() {
 // One month prior, one week future
 const defaultCalendarsNumWeeks = 5
 const defaultCalendarsWeeksInAdvance = 1
-const defaultTimelinesNumDaysBefore = 38
 
 const { readAllCalendars } = getSDK()
 const InnerPage: FC = () => {
@@ -67,7 +69,6 @@ const InnerPage: FC = () => {
       -defaultTimelinesNumDaysBefore
     )
   })()
-  const timelinesNumDaysToShow = defaultTimelinesNumDaysBefore + 1 // Days before (in the past) plus today.
   // Calculated "Minimum From Date"
   const minFromDate = useMemo(() => {
     let result = todayLocalDate
@@ -123,7 +124,8 @@ const InnerPage: FC = () => {
 
   return (
     <section className='p-8'>
-      <div className='flex flex-wrap justify-center gap-10 w-100'>
+      <div className='main-section-grids'>
+        {/* All Calendars Grids */}
         {!dataAllCalendars?.loading && !!dataAllCalendars?.data ? (
           dataAllCalendars.data.calendars.map((calendar, index) => (
             <div key={index}>
@@ -147,28 +149,27 @@ const InnerPage: FC = () => {
           <>Searching...</>
         )}
 
-        <div>
-          <Streamline />
-        </div>
-      </div>
+        {/* Timelines Grids */}
+        {!!dataAllCalendars?.data && (
+          <Timelines
+            fromDate={timelinesFromDate}
+            allCalendars={dataAllCalendars.data.calendars}
+            isLoading={dataAllCalendars.loading}
+            goInThePast={() => {
+              setTimelinesWeeksBefore(timelinesWeeksBefore + 1)
+            }}
+            goInTheFuture={() => {
+              setTimelinesWeeksBefore(timelinesWeeksBefore - 1)
+            }}
+            pleaseUpdateCalendar={calendarId => {
+              refetchOneCalendar(calendarId)
+            }}
+          />
+        )}
 
-      {!!dataAllCalendars?.data && (
-        <Timelines
-          fromDate={timelinesFromDate}
-          numDaysToShow={timelinesNumDaysToShow}
-          allCalendars={dataAllCalendars.data.calendars}
-          isLoading={dataAllCalendars.loading}
-          goInThePast={() => {
-            setTimelinesWeeksBefore(timelinesWeeksBefore + 1)
-          }}
-          goInTheFuture={() => {
-            setTimelinesWeeksBefore(timelinesWeeksBefore - 1)
-          }}
-          pleaseUpdateCalendar={calendarId => {
-            refetchOneCalendar(calendarId)
-          }}
-        />
-      )}
+        {/* Streamline */}
+        <Streamline />
+      </div>
     </section>
   )
 }

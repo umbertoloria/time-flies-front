@@ -120,7 +120,7 @@ export const DayStatus: FC<DayStatusProps> = props => {
 
   return (
     <div
-      className='w-10 h-9 p-1'
+      className='date-div'
       title={displayDate} // As tooltip.
     >
       <div

@@ -10,15 +10,17 @@ import { Timeline } from './Timeline.tsx'
 import { createDayStatusPropsListFromLogicCalendar } from './timeline-utils.ts'
 import { createLogicCalendarFromTCalendar } from '../calendar/logic-calendar.ts'
 
+export const defaultTimelinesNumDaysBefore = 14 // 14 days before + today => correct "width"
+
 export const Timelines: FC<{
   fromDate: Date
-  numDaysToShow: number
   allCalendars: TCalendar[]
   isLoading: boolean
   goInThePast: () => void
   goInTheFuture: () => void
   pleaseUpdateCalendar: (calendarId: number) => void
 }> = props => {
+  const numDaysToShow = defaultTimelinesNumDaysBefore + 1 // before + today
   if (props.allCalendars.length < 1) {
     return <></>
   }
@@ -29,7 +31,7 @@ export const Timelines: FC<{
         dayStatuses: createDayStatusPropsListFromLogicCalendar(
           createLogicCalendarFromTCalendar(props.allCalendars[0]),
           props.fromDate,
-          props.numDaysToShow
+          numDaysToShow
         ),
       },
     ])
@@ -37,8 +39,8 @@ export const Timelines: FC<{
   const lastMonthLang = getITMonthFromLocalDate(lastLocalDate)
 
   return (
-    <>
-      <div className='pt-2 w-full text-center'>
+    <div className='timelines-grids'>
+      <div className='w-full text-center'>
         <CalendarTitle textColor='#ddd' label='Timeline'>
           <CalendarArrowControl
             firstMonthLang={firstMonthLang}
@@ -48,14 +50,13 @@ export const Timelines: FC<{
           />
         </CalendarTitle>
       </div>
-
       <div className='overflow-y-auto'>
         {!props.isLoading ? (
           props.allCalendars.map((calendar, index) => (
             <div key={index}>
               <Timeline
                 fromDate={props.fromDate}
-                numDaysToShow={props.numDaysToShow}
+                numDaysToShow={numDaysToShow}
                 calendar={calendar}
                 pleaseUpdateCalendar={() => {
                   props.pleaseUpdateCalendar(calendar.id)
@@ -67,6 +68,6 @@ export const Timelines: FC<{
           <>Searching...</>
         )}
       </div>
-    </>
+    </div>
   )
 }
