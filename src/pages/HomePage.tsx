@@ -15,8 +15,8 @@ import {
   defaultTimelinesNumDaysBefore,
   Timelines,
 } from '../components/timeline/Timelines.tsx'
-import { moveDateToClosestNonFutureMonday } from '../components/calendar/utils.ts'
 import { createLogicCalendarFromTCalendar } from '../components/calendar/logic-calendar.ts'
+import { moveDateToClosestNonFutureMonday } from '../components/calendar/utils.ts'
 
 const periodRefreshCalendarsInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 
@@ -28,9 +28,23 @@ export default function HomePage() {
   )
 }
 
+// Calendars Grids
 // One month prior, one week future
-const defaultCalendarsNumWeeks = 5
-const defaultCalendarsWeeksInAdvance = 1
+const defaultCalendarGridNumWeeks = 5
+const defaultCalendarGridWeeksInAdvance = 1
+export const getCalendarGridFromDateMondayOnMonthsOffset = (
+  monthsOffset: number
+) =>
+  moveDateToClosestNonFutureMonday(
+    getDateWithOffsetDays(
+      getDateFromLocalDate(getTodayLocalDate()),
+      -7 *
+        (defaultCalendarGridNumWeeks -
+          1 -
+          defaultCalendarGridWeeksInAdvance +
+          4 * monthsOffset)
+    )
+  )
 
 const { readAllCalendars } = getSDK()
 const InnerPage: FC = () => {
@@ -41,15 +55,8 @@ const InnerPage: FC = () => {
     Record<number, number | undefined>
   >({})
   const getCalendarFromDateMonday = (calendarId: number) =>
-    moveDateToClosestNonFutureMonday(
-      getDateWithOffsetDays(
-        getDateFromLocalDate(todayLocalDate),
-        -7 *
-          (defaultCalendarsNumWeeks -
-            1 -
-            defaultCalendarsWeeksInAdvance +
-            4 * (calendar2monthsOffset[calendarId] || 0))
-      )
+    getCalendarGridFromDateMondayOnMonthsOffset(
+      calendar2monthsOffset[calendarId] || 0
     )
   const addCalendarMonthsOffset = (calendarId: number, amount: number) => {
     setCalendar2monthsOffset(old => ({
@@ -74,7 +81,7 @@ const InnerPage: FC = () => {
     let result = todayLocalDate
     // Calendars (default dates): always mondays
     const calendarDefaultFromDateMonday = getLocalDayByDate(
-      getCalendarFromDateMonday(-1) // Fake Calendar ID
+      getCalendarGridFromDateMondayOnMonthsOffset(0) // Fake Calendar ID
     )
     if (localDatesLT(calendarDefaultFromDateMonday, result)) {
       result = calendarDefaultFromDateMonday
@@ -133,7 +140,7 @@ const InnerPage: FC = () => {
                 <LogicCalendarGridListening
                   logicCalendar={createLogicCalendarFromTCalendar(calendar)}
                   fromDateMonday={getCalendarFromDateMonday(calendar.id)}
-                  numWeeks={defaultCalendarsNumWeeks}
+                  numWeeks={defaultCalendarGridNumWeeks}
                   pleaseUpdateCalendar={() => {
                     refetchOneCalendar(calendar.id)
                   }}
