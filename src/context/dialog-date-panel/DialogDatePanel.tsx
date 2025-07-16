@@ -26,6 +26,7 @@ export const DialogDatePanel: FC = () => {
               closeDialog={closeDialog}
             />
           )}
+          {/*
           {data.mode == 'calendar-panel' && (
             <GenericDialog
               onClose={closeDialog}
@@ -37,6 +38,7 @@ export const DialogDatePanel: FC = () => {
               </div>
             </GenericDialog>
           )}
+          */}
         </>
       )}
     </>
@@ -45,7 +47,7 @@ export const DialogDatePanel: FC = () => {
 
 const periodRefreshDateInMillis = 3 * 60 * 60 * 1000 // 3 minutes.
 const { readCalendar, readCalendarDate } = getSDK()
-const CalendarLoaderComponent: FC<{
+export const CalendarLoaderComponent: FC<{
   calendarId: number
 }> = ({ calendarId }) => {
   const [data, { refetch: refreshCalendar }] = useWrapperForCreateResource(() =>
@@ -62,6 +64,9 @@ const CalendarLoaderComponent: FC<{
       clearInterval(refreshDateIntervalTimer)
     }
   }, [])
+  useEffect(() => {
+    refreshCalendar()
+  }, [calendarId])
   const calendar = data?.data
 
   return (

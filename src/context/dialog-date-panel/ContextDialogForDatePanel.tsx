@@ -36,9 +36,11 @@ export const useUXContextDialogForDatePanelForUX = (): {
       isOpen: dialog.isOpen,
       data: dialog.data,
       openDialog(data) {
+        /*
         if (dialog.isOpen) {
           return
         }
+        */
         setDialog({
           ...dialog,
           isOpen: true,

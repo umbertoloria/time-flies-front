@@ -161,7 +161,7 @@ export const CalendarTitle: FC<
     onClick?: () => void
   }>
 > = props => (
-  <div className='calendar-title bg-gray-500 rounded mb-2 mx-auto px-2.5 py-1.5 flex flex-wrap items-center justify-between'>
+  <div className='calendar-title'>
     <a
       className={classNames(
         'bg-gray-600 px-1 rounded text-lg font-semibold text-gray-700',
@@ -267,9 +267,9 @@ const weekDays = [
   },
 ]
 const CalendarGridHeadRowForWeekDays: FC = () => (
-  <tr>
+  <tr className='head-row'>
     {weekDays.map((day, index) => (
-      <th className='m-0 p-0' key={index}>
+      <th key={index}>
         <span>{day.display}</span>
       </th>
     ))}

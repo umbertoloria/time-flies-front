@@ -15,8 +15,9 @@ import {
   defaultTimelinesNumDaysBefore,
   Timelines,
 } from '../components/timeline/Timelines.tsx'
-import { createLogicCalendarFromTCalendar } from '../components/calendar/logic-calendar.ts'
 import { moveDateToClosestNonFutureMonday } from '../components/calendar/utils.ts'
+import { createLogicCalendarFromTCalendar } from '../components/calendar/logic-calendar.ts'
+import { PlacedCalendarManagement } from '../components/calendar/PlacedCalendarManagement.tsx'
 
 const periodRefreshCalendarsInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 
@@ -134,8 +135,33 @@ const InnerPage: FC = () => {
       <div className='main-section-grids'>
         {!!dataAllCalendars?.data && (
           <>
-            {/* All Calendars Grids */}
-            {dataAllCalendars.data.calendars.map((calendar, index) => (
+            {dataAllCalendars.data.calendars.length >= 2 && (
+              <>
+                {[
+                  dataAllCalendars.data.calendars[0],
+                  dataAllCalendars.data.calendars[1],
+                ].map((calendar, index) => (
+                  <div key={index}>
+                    <LogicCalendarGridListening
+                      logicCalendar={createLogicCalendarFromTCalendar(calendar)}
+                      fromDateMonday={getCalendarFromDateMonday(calendar.id)}
+                      numWeeks={defaultCalendarGridNumWeeks}
+                      pleaseUpdateCalendar={() => {
+                        refetchOneCalendar(calendar.id)
+                      }}
+                      goInThePast={() => {
+                        addCalendarMonthsOffset(calendar.id, 1)
+                      }}
+                      goInTheFuture={() => {
+                        addCalendarMonthsOffset(calendar.id, -1)
+                      }}
+                    />
+                  </div>
+                ))}
+              </>
+            )}
+            <PlacedCalendarManagement />
+            {dataAllCalendars.data.calendars.slice(2).map((calendar, index) => (
               <div key={index}>
                 <LogicCalendarGridListening
                   logicCalendar={createLogicCalendarFromTCalendar(calendar)}

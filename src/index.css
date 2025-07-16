@@ -45,6 +45,8 @@
     }
 
     .calendar-grid {
+        width: 280px;
+
         tr {
             width: 280px;
 
@@ -59,19 +61,36 @@
                 }
             }
         }
-    }
 
-    .calendar-grid {
-        width: 280px;
-    }
-
-    .streamline,
-    .timelines-grids {
-        width: calc(280px * 2 + 40px);
+        .head-row {
+            th {
+                padding: 0;
+                height: 24px;
+            }
+        }
     }
 
     .calendar-title {
         height: 44px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0 4px 4px 4px;
+        padding: 6px 10px;
+        border-radius: 3px;
+        @apply bg-gray-500
+    }
+
+    .streamline,
+    .timelines-grids,
+    .placed-calendar-management {
+        width: calc(280px * 2 + 40px);
+    }
+
+    .placed-calendar-management {
+        height: 252px;
+        overflow-y: auto;
     }
 
 }
