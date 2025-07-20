@@ -76,7 +76,8 @@
         flex-wrap: wrap;
         align-items: center;
         justify-content: space-between;
-        margin: 0 4px 4px 4px;
+        /*margin: 0 4px 4px 4px;*/
+        margin: 0 0 4px 0;
         padding: 6px 10px;
         border-radius: 3px;
         @apply bg-gray-500

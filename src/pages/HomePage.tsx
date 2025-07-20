@@ -133,35 +133,13 @@ const InnerPage: FC = () => {
   return (
     <section className='p-8'>
       <div className='main-section-grids'>
+        <Streamline />
+
+        <PlacedCalendarManagement />
+
         {!!dataAllCalendars?.data && (
           <>
-            {dataAllCalendars.data.calendars.length >= 2 && (
-              <>
-                {[
-                  dataAllCalendars.data.calendars[0],
-                  dataAllCalendars.data.calendars[1],
-                ].map((calendar, index) => (
-                  <div key={index}>
-                    <LogicCalendarGridListening
-                      logicCalendar={createLogicCalendarFromTCalendar(calendar)}
-                      fromDateMonday={getCalendarFromDateMonday(calendar.id)}
-                      numWeeks={defaultCalendarGridNumWeeks}
-                      pleaseUpdateCalendar={() => {
-                        refetchOneCalendar(calendar.id)
-                      }}
-                      goInThePast={() => {
-                        addCalendarMonthsOffset(calendar.id, 1)
-                      }}
-                      goInTheFuture={() => {
-                        addCalendarMonthsOffset(calendar.id, -1)
-                      }}
-                    />
-                  </div>
-                ))}
-              </>
-            )}
-            <PlacedCalendarManagement />
-            {dataAllCalendars.data.calendars.slice(2).map((calendar, index) => (
+            {dataAllCalendars.data.calendars.map((calendar, index) => (
               <div key={index}>
                 <LogicCalendarGridListening
                   logicCalendar={createLogicCalendarFromTCalendar(calendar)}
@@ -180,7 +158,6 @@ const InnerPage: FC = () => {
               </div>
             ))}
 
-            {/* Timelines Grids */}
             <Timelines
               fromDate={timelinesFromDate}
               allCalendars={dataAllCalendars.data.calendars}
@@ -197,9 +174,6 @@ const InnerPage: FC = () => {
             />
           </>
         )}
-
-        {/* Streamline */}
-        <Streamline />
       </div>
     </section>
   )

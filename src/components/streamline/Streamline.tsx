@@ -73,22 +73,20 @@ export const Streamline: FC = () => {
 
 const StreamlineItem: FC<{
   event: TEvent
-}> = props => {
+}> = ({ event }) => {
   const { openDialog } = useDialogForCheckPlannedEvent()
 
   return (
     <div className='min-h-11 p-2 rounded-sm bg-gray-200 flex flex-wrap gap-2 justify-between'>
       <div className='flex gap-2'>
-        <ColouredQuad color={props.event.calendar.color} />
+        <ColouredQuad color={event.calendar.color} />
 
         <div>
-          <ColouredLabel bold>{props.event.calendar.name}</ColouredLabel>
+          <ColouredLabel bold>{event.calendar.name}</ColouredLabel>
         </div>
 
         <div>
-          <ColouredLabel>
-            {displayDateFromLocalDate(props.event.date)}
-          </ColouredLabel>
+          <ColouredLabel>{displayDateFromLocalDate(event.date)}</ColouredLabel>
         </div>
       </div>
 
@@ -96,7 +94,7 @@ const StreamlineItem: FC<{
         <button
           className='btn-primary'
           onClick={() => {
-            openDialog(props.event.calendar.id, props.event.id, 'done')
+            openDialog(event.calendar.id, event.id, 'done')
           }}
         >
           {'Done?'}
@@ -104,7 +102,7 @@ const StreamlineItem: FC<{
         <button
           className='btn-warning ml-1'
           onClick={() => {
-            openDialog(props.event.calendar.id, props.event.id, 'missed')
+            openDialog(event.calendar.id, event.id, 'missed')
           }}
         >
           {'Salta?'}

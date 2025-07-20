@@ -2,6 +2,7 @@ import { FC, useState } from 'react'
 import { useDialogForDatePanel } from '../../context/dialog-date-panel/ContextDialogForDatePanel.tsx'
 import { CalendarLoaderComponent } from '../../context/dialog-date-panel/DialogDatePanel.tsx'
 import classNames from 'classnames'
+import { CalendarTitle } from './CalendarGrid.tsx'
 
 const TAB_HISTORY = 'tab-history'
 const TAB_TODOS = 'tab-todos'
@@ -9,33 +10,30 @@ const TAB_TODOS = 'tab-todos'
 export const PlacedCalendarManagement: FC = () => {
   const { isOpen, data, closeDialog } = useDialogForDatePanel()
   const [tab, setTab] = useState(TAB_TODOS)
-
-  if (!isOpen || data?.mode !== 'calendar-panel') {
-    return (
-      <>
-        <div className='placed-calendar-management'>{/* Empty */}</div>
-      </>
-    )
-  }
-
   return (
     <>
       <div className='placed-calendar-management'>
-        <button
-          className='close-btn'
-          onClick={() => {
-            closeDialog()
-          }}
-        >
-          {'Close X'}
-        </button>
-        <TabsList tab={tab} setTab={setTab} />
-        <div className='tabs-content'>
-          {tab === TAB_HISTORY && (
-            <CalendarLoaderComponent calendarId={data.calendarId} />
-          )}
-          {tab === TAB_TODOS && <TabTodos />}
-        </div>
+        {isOpen && data?.mode === 'calendar-panel' && (
+          <>
+            <CalendarTitle textColor='#fff' label='Calendario'>
+              <button
+                className='close-btn'
+                onClick={() => {
+                  closeDialog()
+                }}
+              >
+                {'Close X'}
+              </button>
+            </CalendarTitle>
+            <TabsList tab={tab} setTab={setTab} />
+            <div className='tabs-content'>
+              {tab === TAB_HISTORY && (
+                <CalendarLoaderComponent calendarId={data.calendarId} />
+              )}
+              {tab === TAB_TODOS && <TabTodos />}
+            </div>
+          </>
+        )}
       </div>
     </>
   )
