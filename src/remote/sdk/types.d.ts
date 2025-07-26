@@ -1,6 +1,6 @@
 // Types
-// 2025-07-06T10:46:24Z
-// v3.1
+// 2025-07-26T09:27:24Z
+// v3.2
 
 // Calendar
 export type TCalendar = TCalendarCh & {
@@ -57,16 +57,6 @@ export type TExerciseRecord = {
   ts_above?: number
   ts_below?: number
 }
-export type TEvent = {
-  id: number
-  date: string
-  done_date?: string
-  calendar: {
-    id: number
-    name: string
-    color: string
-  }
-}
 
 // Auth
 export type TAuthStatus = {
@@ -85,10 +75,20 @@ export namespace TScheduleSDK {
   }
 }
 export namespace TCalendarSDK {
-  export type ReadPlannedEventsRequest = {
-    onlyToday?: boolean
-  }
   export type ReadPlannedEventsResponse = {
-    events: TEvent[]
+    dates: {
+      date: string
+      calendars: ReadPlannedEventsResponseCalendar[]
+    }[]
+  }
+  export type ReadPlannedEventsResponseCalendar = {
+    id: number
+    name: string
+    color: string
+    dates: ReadPlannedEventsResponseDate[]
+  }
+  export type ReadPlannedEventsResponseDate = {
+    id: number
+    date: string
   }
 }
