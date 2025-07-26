@@ -76,10 +76,11 @@ export namespace TScheduleSDK {
 }
 export namespace TCalendarSDK {
   export type ReadPlannedEventsResponse = {
-    dates: {
-      date: string
-      calendars: ReadPlannedEventsResponseCalendar[]
-    }[]
+    dates: ReadPlannedEventsResponseDateBox[]
+  }
+  export type ReadPlannedEventsResponseDateBox = {
+    date: string
+    calendars: ReadPlannedEventsResponseCalendar[]
   }
   export type ReadPlannedEventsResponseCalendar = {
     id: number
@@ -89,6 +90,7 @@ export namespace TCalendarSDK {
   }
   export type ReadPlannedEventsResponseDate = {
     id: number
-    date: string
+    // date: string
+    notes?: string
   }
 }

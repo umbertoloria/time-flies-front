@@ -3,7 +3,6 @@ import { CalendarTitle } from '../calendar/CalendarGrid.tsx'
 import { getSDK } from '../../remote/remote.ts'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
 import { TCalendarSDK } from '../../remote/sdk/types'
-import { ColouredLabel } from '../coloured/ColouredLabel.tsx'
 import { displayDateFromLocalDate } from '../calendar/utils.ts'
 import { useDialogForCheckPlannedEvent } from '../../context/dialog-check-planned-events/ContextDialogForCheckPlannedEvents.tsx'
 import { CustomEventFnType } from '../../events/event-builder.ts'
@@ -11,7 +10,6 @@ import {
   subscribeToStreamlineUpdates,
   unsubscribeToStreamlineUpdates,
 } from './event-streamline-updated.ts'
-import { ColouredQuad } from '../coloured/ColouredQuad.tsx'
 
 const { readStreamline } = getSDK()
 export const Streamline: FC = () => {
@@ -50,15 +48,31 @@ const StreamlineStateless: FC<{
 }> = ({ response }) => {
   return (
     <div className='streamline'>
-      {response.dates.map((date, index) => (
-        <div key={index}>
-          <b>{displayDateFromLocalDate(date.date)}</b>
-          {date.calendars.map((calendar, index) => (
-            <StreamlineCalendar key={index} calendar={calendar} />
-          ))}
-        </div>
-      ))}
+      <pre>
+        {response.dates.map((date, index) => (
+          <StreamlineDateBox key={index} date={date} />
+        ))}
+      </pre>
     </div>
+  )
+}
+
+const StreamlineDateBox: FC<{
+  date: TCalendarSDK.ReadPlannedEventsResponseDateBox
+}> = ({ date }) => {
+  return (
+    <>
+      <>
+        <u>Date</u>: <b>{displayDateFromLocalDate(date.date)}</b>
+      </>
+      {'\n'}
+      {date.calendars.map((calendar, index) => (
+        <>
+          <StreamlineCalendar key={index} calendar={calendar} />
+          {'\n'}
+        </>
+      ))}
+    </>
   )
 }
 
@@ -66,11 +80,16 @@ const StreamlineCalendar: FC<{
   calendar: TCalendarSDK.ReadPlannedEventsResponseCalendar
 }> = ({ calendar }) => {
   return (
-    <div>
+    <>
+      {'  '}
+      <u>Calendar</u>:{' '}
+      <span style={{ color: calendar.color }}>{calendar.name}</span>
+      {'\n'}
       {calendar.dates.map((date, index) => (
         <StreamlineDate key={index} calendar={calendar} date={date} />
       ))}
-    </div>
+      {'\n'}
+    </>
   )
 }
 
@@ -81,37 +100,30 @@ const StreamlineDate: FC<{
   const { openDialog } = useDialogForCheckPlannedEvent()
 
   return (
-    <div className='min-h-11 p-2 rounded-sm bg-gray-200 flex flex-wrap gap-2 justify-between'>
-      <div className='flex gap-2'>
-        <ColouredQuad color={calendar.color} />
-
-        <div>
-          <ColouredLabel bold>{calendar.name}</ColouredLabel>
-        </div>
-
-        <div>
-          <ColouredLabel>{displayDateFromLocalDate(date.date)}</ColouredLabel>
-        </div>
-      </div>
-
-      <div>
-        <button
-          className='btn-primary'
-          onClick={() => {
-            openDialog(calendar.id, date.id, 'done')
-          }}
-        >
-          {'Done?'}
-        </button>
-        <button
-          className='btn-warning ml-1'
-          onClick={() => {
-            openDialog(calendar.id, date.id, 'missed')
-          }}
-        >
-          {'Salta?'}
-        </button>
-      </div>
-    </div>
+    <>
+      {'  *:\n'}
+      {'    '}
+      <>Notes</>
+      {': '}
+      <>{typeof date.notes === 'string' ? <>{date.notes}</> : <i>null</i>}</>
+      {'\n'}
+      {'    '}
+      <span
+        className='pre-btn'
+        onClick={() => {
+          openDialog(calendar.id, date.id, 'done')
+        }}
+      >
+        {'[Done?]'}
+      </span>{' '}
+      <span
+        className='pre-btn'
+        onClick={() => {
+          openDialog(calendar.id, date.id, 'missed')
+        }}
+      >
+        {'[Salta?]'}
+      </span>
+    </>
   )
 }
