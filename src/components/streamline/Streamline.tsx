@@ -101,8 +101,7 @@ const StreamlineDate: FC<{
   return (
     <>
       {'  *: '}
-      <>notes</>
-      {': '}
+      {'notes: '}
       <>
         {typeof date.notes === 'string' ? (
           <>{date.notes}</>

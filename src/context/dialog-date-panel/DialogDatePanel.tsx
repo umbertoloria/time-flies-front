@@ -1,6 +1,5 @@
 import { FC, useEffect } from 'react'
 import { useDialogForDatePanel } from './ContextDialogForDatePanel.tsx'
-import { GenericDialog } from '../../components/calendar/GenericDialog.tsx'
 import { Badge } from '../../components/calendar/Badge.tsx'
 import { getSDK } from '../../remote/remote.ts'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
@@ -13,19 +12,28 @@ import {
 } from '../../lib/utils.ts'
 
 export const DialogDatePanel: FC = () => {
-  const { isOpen, data, closeDialog } = useDialogForDatePanel()
+  // TODO: Deprecate Dialog for Calendar Date management
+  const { isOpen, data } = useDialogForDatePanel()
 
   return (
     <>
       {isOpen && !!data && (
         <>
-          {data.mode == 'calendar-date-panel' && (
-            <DialogDatePanelInner
-              calendarId={data.calendarId}
-              date={data.date}
-              closeDialog={closeDialog}
-            />
-          )}
+          {/*{data.mode == 'calendar-date-panel' && (
+            <GenericDialog
+              onClose={closeDialog}
+              labelOnClose='Indietro'
+              title='Attività'
+            >
+              <div className='p-4 flex flex-col gap-1'>
+                <DatePanelInner
+                  //
+                  calendarId={data.calendarId}
+                  date={data.date}
+                />
+              </div>
+            </GenericDialog>
+          )}*/}
           {/*
           {data.mode == 'calendar-panel' && (
             <GenericDialog
@@ -161,11 +169,10 @@ const CalendarComponent: FC<{
   }
 }
 
-export const DialogDatePanelInner: FC<{
+export const DatePanelInner: FC<{
   calendarId: number
   date: string
-  closeDialog: () => void
-}> = ({ calendarId, date, closeDialog }) => {
+}> = ({ calendarId, date }) => {
   const [data, { refetch: refreshDate }] = useWrapperForCreateResource(() =>
     readCalendarDate(calendarId, date)
   )
@@ -177,30 +184,28 @@ export const DialogDatePanelInner: FC<{
     return () => {
       clearInterval(refreshDateIntervalTimer)
     }
-  }, [])
+  }, [calendarId, date])
+  useEffect(() => {
+    // TODO: Go in loading if calendar/date is changing
+    refreshDate()
+  }, [calendarId, date])
 
   return (
-    <GenericDialog
-      onClose={closeDialog}
-      labelOnClose='Indietro'
-      title='Attività'
-    >
-      <div className='p-4 flex flex-col gap-1'>
-        {data?.loading && (
-          <>
-            <Badge>Caricamento...</Badge>
-          </>
-        )}
-        {!!data?.data && (
-          <>
-            <DiaryEntry
-              //
-              date={data.data}
-              refreshDate={refreshDate}
-            />
-          </>
-        )}
-      </div>
-    </GenericDialog>
+    <>
+      {data?.loading && (
+        <>
+          <Badge>Caricamento...</Badge>
+        </>
+      )}
+      {!!data?.data && (
+        <>
+          <DiaryEntry
+            //
+            date={data.data}
+            refreshDate={refreshDate}
+          />
+        </>
+      )}
+    </>
   )
 }

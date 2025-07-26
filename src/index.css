@@ -95,7 +95,6 @@
         .close-btn {
             @apply btn-primary;
             height: 30px;
-            margin-bottom: 8px;
         }
 
         .tabs-content {

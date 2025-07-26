@@ -1,6 +1,5 @@
 import { createContext, FC, PropsWithChildren, useContext } from 'react'
 import { DialogForInsertNewGoal } from './dialog-insert-new-goal/DialogForInsertNewGoal.tsx'
-import { DialogDatePanel } from './dialog-date-panel/DialogDatePanel.tsx'
 import { DialogForGroover } from './dialog-groover/DialogForGroover.tsx'
 import { DialogCheckPlannedEvent } from './dialog-check-planned-events/DialogCheckPlannedEvent.tsx'
 import {
@@ -65,7 +64,7 @@ export const UXProvider: FC<PropsWithChildren> = props => {
       }}
     >
       <DialogForInsertNewGoal />
-      <DialogDatePanel />
+      {/*<DialogDatePanel />*/}
       <DialogForGroover />
       <DialogCheckPlannedEvent />
       <DialogForInsertNewPlannedEvent />

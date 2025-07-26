@@ -1,8 +1,12 @@
 import { FC, useState } from 'react'
 import { useDialogForDatePanel } from '../../context/dialog-date-panel/ContextDialogForDatePanel.tsx'
-import { CalendarLoaderComponent } from '../../context/dialog-date-panel/DialogDatePanel.tsx'
+import {
+  CalendarLoaderComponent,
+  DatePanelInner,
+} from '../../context/dialog-date-panel/DialogDatePanel.tsx'
 import classNames from 'classnames'
 import { CalendarTitle } from './CalendarGrid.tsx'
+import { displayDateFromLocalDate } from './utils.ts'
 
 const TAB_HISTORY = 'tab-history'
 const TAB_TODOS = 'tab-todos'
@@ -16,12 +20,7 @@ export const PlacedCalendarManagement: FC = () => {
         {isOpen && data?.mode === 'calendar-panel' && (
           <>
             <CalendarTitle textColor='#fff' label='Calendario'>
-              <button
-                className='close-btn'
-                onClick={() => {
-                  closeDialog()
-                }}
-              >
+              <button className='close-btn' onClick={closeDialog}>
                 {'Close X'}
               </button>
             </CalendarTitle>
@@ -32,6 +31,23 @@ export const PlacedCalendarManagement: FC = () => {
               )}
               {tab === TAB_TODOS && <TabTodos />}
             </div>
+          </>
+        )}
+        {isOpen && data?.mode === 'calendar-date-panel' && (
+          <>
+            <CalendarTitle
+              textColor='#fff'
+              label={displayDateFromLocalDate(data.date)}
+            >
+              <button className='close-btn' onClick={closeDialog}>
+                {'Close X'}
+              </button>
+            </CalendarTitle>
+            <DatePanelInner
+              //
+              calendarId={data.calendarId}
+              date={data.date}
+            />
           </>
         )}
       </div>
