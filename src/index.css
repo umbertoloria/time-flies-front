@@ -99,7 +99,7 @@
         }
 
         .tabs-content {
-            height: calc(252px - 76px);
+            height: 166px;
             overflow-y: auto;
         }
     }
