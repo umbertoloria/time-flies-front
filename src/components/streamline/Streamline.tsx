@@ -32,15 +32,13 @@ export const Streamline: FC = () => {
   }, [])
 
   return (
-    <div className='streamline'>
+    <div className='streamline-box'>
       <CalendarTitle textColor='#fff' label='Streamline' />
       {!dataStreamline?.data ? (
         <>Searching...</>
       ) : (
         <>
-          <div className='m-auto text-gray-700 flex flex-col gap-2 overflow-y-scroll max-h-96 rounded-sm'>
-            <StreamlineStateless response={dataStreamline.data} />
-          </div>
+          <StreamlineStateless response={dataStreamline.data} />
         </>
       )}
     </div>
@@ -51,16 +49,12 @@ const StreamlineStateless: FC<{
   response: TCalendarSDK.ReadPlannedEventsResponse
 }> = ({ response }) => {
   return (
-    <div>
+    <div className='streamline'>
       {response.dates.map((date, index) => (
         <div key={index}>
           <b>{displayDateFromLocalDate(date.date)}</b>
           {date.calendars.map((calendar, index) => (
-            <div key={index}>
-              {calendar.dates.map((date, index) => (
-                <StreamlineItem key={index} calendar={calendar} date={date} />
-              ))}
-            </div>
+            <StreamlineCalendar key={index} calendar={calendar} />
           ))}
         </div>
       ))}
@@ -68,7 +62,19 @@ const StreamlineStateless: FC<{
   )
 }
 
-const StreamlineItem: FC<{
+const StreamlineCalendar: FC<{
+  calendar: TCalendarSDK.ReadPlannedEventsResponseCalendar
+}> = ({ calendar }) => {
+  return (
+    <div>
+      {calendar.dates.map((date, index) => (
+        <StreamlineDate key={index} calendar={calendar} date={date} />
+      ))}
+    </div>
+  )
+}
+
+const StreamlineDate: FC<{
   calendar: TCalendarSDK.ReadPlannedEventsResponseCalendar
   date: TCalendarSDK.ReadPlannedEventsResponseDate
 }> = ({ calendar, date }) => {

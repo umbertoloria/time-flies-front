@@ -83,7 +83,7 @@
         @apply bg-gray-500
     }
 
-    .streamline,
+    .streamline-box,
     .timelines-grids,
     .placed-calendar-management {
         width: calc(280px * 2 + 40px);
@@ -125,6 +125,16 @@
                 @apply bg-blue-400;
             }
         }
+    }
+
+    .streamline {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin: auto;
+        overflow-y: scroll;
+        width: 100%;
+        @apply text-gray-700;
     }
 
 }
