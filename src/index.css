@@ -136,15 +136,26 @@
         overflow-y: scroll;
         width: 100%;
         @apply text-gray-700;
-    }
 
-    .pre-btn {
-        font-weight: 600;
-        cursor: pointer;
+        .streamline-pre {
+            font-family: monospace;
+            font-weight: 300;
+            font-size: 15px;
+            padding: 8px;
+            background: #444;
+            color: #eee;
 
-        &:hover {
-            text-decoration: underline;
+            .pre-btn {
+                font-weight: 700;
+                cursor: pointer;
+
+                &:hover {
+                    color: #555;
+                    background: #eee;
+                }
+            }
+
         }
-    }
 
+    }
 }

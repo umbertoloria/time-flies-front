@@ -48,7 +48,7 @@ const StreamlineStateless: FC<{
 }> = ({ response }) => {
   return (
     <div className='streamline'>
-      <pre>
+      <pre className='streamline-pre'>
         {response.dates.map((date, index) => (
           <StreamlineDateBox key={index} date={date} />
         ))}
@@ -62,9 +62,8 @@ const StreamlineDateBox: FC<{
 }> = ({ date }) => {
   return (
     <>
-      <>
-        <u>Date</u>: <b>{displayDateFromLocalDate(date.date)}</b>
-      </>
+      {'Data: '}
+      {displayDateFromLocalDate(date.date)}
       {'\n'}
       {date.calendars.map((calendar, index) => (
         <>
@@ -82,7 +81,7 @@ const StreamlineCalendar: FC<{
   return (
     <>
       {'  '}
-      <u>Calendar</u>:{' '}
+      {'Calendario: '}
       <span style={{ color: calendar.color }}>{calendar.name}</span>
       {'\n'}
       {calendar.dates.map((date, index) => (
@@ -101,11 +100,16 @@ const StreamlineDate: FC<{
 
   return (
     <>
-      {'  *:\n'}
-      {'    '}
-      <>Notes</>
+      {'  *: '}
+      <>notes</>
       {': '}
-      <>{typeof date.notes === 'string' ? <>{date.notes}</> : <i>null</i>}</>
+      <>
+        {typeof date.notes === 'string' ? (
+          <>{date.notes}</>
+        ) : (
+          <span style={{ opacity: 0.6 }}>null</span>
+        )}
+      </>
       {'\n'}
       {'    '}
       <span
