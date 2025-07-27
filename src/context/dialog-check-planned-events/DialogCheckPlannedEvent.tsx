@@ -28,7 +28,16 @@ export const DialogCheckPlannedEvent: FC = () => {
   const [dateInputValue, setDateInputValue] = useState(getTodayLocalDate())
   useEffect(() => {
     if (isOpen) {
-      if (data?.mode === 'move') {
+      if (data?.mode === 'done') {
+        // This helps to copy Planned Event Notes into Date Notes.
+        if (data.todo.notes) {
+          setEnableNoteInput(true)
+          setNotesInputValue(data.todo.notes)
+        } else {
+          setEnableNoteInput(false)
+          setNotesInputValue('')
+        }
+      } else if (data?.mode === 'move') {
         setDateInputValue(data.date)
       } else if (data?.mode === 'update-notes') {
         if (data.todo.notes) {
