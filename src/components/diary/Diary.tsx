@@ -4,7 +4,7 @@ import { displayDateFromLocalDate } from '../calendar/utils.ts'
 import { getSDK } from '../../remote/remote.ts'
 import { fireEventCalendarUpdated } from '../calendar/event-calendar-updated.ts'
 
-export const DiaryEntriesList: FC<{
+export const DiaryEntriesListAccordion: FC<{
   title?: string
   initialOpen?: boolean
   dates: TCalendarDate[]
@@ -31,7 +31,13 @@ export const DiaryEntriesList: FC<{
         <>
           {dates.map((date, index) => (
             <div key={index}>
-              <DiaryEntry date={date} refreshDate={refreshDate} />
+              <DiaryEntry
+                calendarId={date.calendar.id}
+                calendarUsesNotes={!!date.calendar.usesNotes}
+                date={date.date.date}
+                dateNotes={date.date.notes}
+                refreshDate={refreshDate}
+              />
             </div>
           ))}
         </>
@@ -41,16 +47,21 @@ export const DiaryEntriesList: FC<{
 }
 
 export const DiaryEntry: FC<{
-  date: TCalendarDate
+  calendarId: number
+  calendarUsesNotes: boolean
+  date: string
+  dateNotes?: string
   refreshDate: () => void
-}> = ({ date, refreshDate }) => {
+}> = ({ date, calendarId, calendarUsesNotes, dateNotes, refreshDate }) => {
   return (
     <>
-      <i className='underline'>{displayDateFromLocalDate(date.date.date)}</i>
-      {date.calendar.usesNotes && (
+      <i className='underline'>{displayDateFromLocalDate(date)}</i>
+      {calendarUsesNotes && (
         <>
           <CalendarDateNotesComponent
-            calendarDate={date}
+            calendarId={calendarId}
+            date={date}
+            dateNotes={dateNotes}
             refreshDate={refreshDate}
           />
         </>
@@ -60,33 +71,32 @@ export const DiaryEntry: FC<{
 }
 
 const CalendarDateNotesComponent: FC<{
-  calendarDate: TCalendarDate
+  calendarId: number
+  date: string
+  dateNotes?: string
   refreshDate: () => void
-}> = ({ calendarDate, refreshDate }) => {
+}> = ({ calendarId, date, dateNotes, refreshDate }) => {
+  // Assuming Calendar Uses Notes.
   return (
     <>
-      {calendarDate.date.notes ? (
+      {dateNotes ? (
         <>
           <CalendarDayNoteSeeAndEdit
-            calendarId={calendarDate.calendar.id}
-            localDate={calendarDate.date.date}
+            calendarId={calendarId}
+            localDate={date}
             notes={{
-              text: calendarDate.date.notes,
+              text: dateNotes,
             }}
             editable={true} // Notes are always editable.
-            onUpdated={() => {
-              refreshDate()
-            }}
+            onUpdated={refreshDate}
           />
         </>
       ) : (
         <>
           <NotesAddForm
-            calendarId={calendarDate.calendar.id}
-            localDate={calendarDate.date.date}
-            onInserted={() => {
-              refreshDate()
-            }}
+            calendarId={calendarId}
+            localDate={date}
+            onInserted={refreshDate}
           />
         </>
       )}

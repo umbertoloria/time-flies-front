@@ -1,8 +1,8 @@
 import { FC, useState } from 'react'
 import { useDialogForDatePanel } from '../../context/dialog-date-panel/ContextDialogForDatePanel.tsx'
 import {
-  CalendarLoaderComponent,
   DatePanelInner,
+  TabHistoryCalendarLoaderComponent,
 } from '../../context/dialog-date-panel/DialogDatePanel.tsx'
 import classNames from 'classnames'
 import { CalendarTitle } from './CalendarGrid.tsx'
@@ -27,7 +27,9 @@ export const PlacedCalendarManagement: FC = () => {
             <TabsList tab={tab} setTab={setTab} />
             <div className='tabs-content'>
               {tab === TAB_HISTORY && (
-                <CalendarLoaderComponent calendarId={data.calendarId} />
+                <TabHistoryCalendarLoaderComponent
+                  calendarId={data.calendarId}
+                />
               )}
               {tab === TAB_TODOS && <TabTodos />}
             </div>

@@ -1,6 +1,6 @@
 // Types
-// 2025-07-26T09:27:24Z
-// v3.2
+// 2025-07-27T14:27:54Z
+// v3.3
 
 // Calendar
 export type TCalendar = TCalendarCh & {
@@ -75,6 +75,7 @@ export namespace TScheduleSDK {
   }
 }
 export namespace TCalendarSDK {
+  // Read Planned Events Response
   export type ReadPlannedEventsResponse = {
     dates: ReadPlannedEventsResponseDateBox[]
   }
@@ -93,4 +94,16 @@ export namespace TCalendarSDK {
     // date: string
     notes?: string
   }
+  // Read Date Response
+  export type ReadDateResponse = {
+    date: string
+    calendar: {
+      id: number
+      name: string
+      usesNotes?: boolean
+    }
+    dates: ReadDateResponseDate[]
+    plannedEvents: ReadDateResponseDate[]
+  }
+  export type ReadDateResponseDate = ReadPlannedEventsResponseDate
 }

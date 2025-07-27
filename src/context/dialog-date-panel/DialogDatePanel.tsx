@@ -4,7 +4,10 @@ import { Badge } from '../../components/calendar/Badge.tsx'
 import { getSDK } from '../../remote/remote.ts'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
 import { TCalendar } from '../../remote/sdk/types'
-import { DiaryEntriesList, DiaryEntry } from '../../components/diary/Diary.tsx'
+import {
+  DiaryEntriesListAccordion,
+  DiaryEntry,
+} from '../../components/diary/Diary.tsx'
 import {
   filterUnique,
   getDateFromLocalDate,
@@ -55,7 +58,7 @@ export const DialogDatePanel: FC = () => {
 
 const periodRefreshDateInMillis = 3 * 60 * 60 * 1000 // 3 minutes.
 const { readCalendar, readCalendarDate } = getSDK()
-export const CalendarLoaderComponent: FC<{
+export const TabHistoryCalendarLoaderComponent: FC<{
   calendarId: number
 }> = ({ calendarId }) => {
   const [data, { refetch: refreshCalendar }] = useWrapperForCreateResource(() =>
@@ -86,7 +89,7 @@ export const CalendarLoaderComponent: FC<{
       )}
       {!!calendar && (
         <>
-          <CalendarComponent
+          <TabHistoryCalendarComponent
             calendar={calendar}
             refreshCalendar={refreshCalendar}
           />
@@ -95,7 +98,7 @@ export const CalendarLoaderComponent: FC<{
     </>
   )
 }
-const CalendarComponent: FC<{
+const TabHistoryCalendarComponent: FC<{
   calendar: TCalendar
   refreshCalendar: () => void
 }> = ({ calendar, refreshCalendar }) => {
@@ -107,7 +110,7 @@ const CalendarComponent: FC<{
   if (allYears.length === 1) {
     return (
       <>
-        <DiaryEntriesList
+        <DiaryEntriesListAccordion
           initialOpen
           dates={calendar.days.map(date => ({
             calendar: {
@@ -129,7 +132,7 @@ const CalendarComponent: FC<{
     return (
       <>
         {!!currentYearDates.length && (
-          <DiaryEntriesList
+          <DiaryEntriesListAccordion
             title={todayYear.toString()}
             initialOpen
             dates={currentYearDates.map(date => ({
@@ -145,7 +148,7 @@ const CalendarComponent: FC<{
         )}
         {allPastYears.map((year, index) => (
           <div key={index}>
-            <DiaryEntriesList
+            <DiaryEntriesListAccordion
               title={year.toString()}
               initialOpen={false}
               dates={calendar.days
@@ -199,11 +202,17 @@ export const DatePanelInner: FC<{
       )}
       {!!data?.data && (
         <>
-          <DiaryEntry
-            //
-            date={data.data}
-            refreshDate={refreshDate}
-          />
+          {data.data.dates.map((date, index) => (
+            <DiaryEntry
+              key={index}
+              calendarId={data.data.calendar.id}
+              calendarUsesNotes={!!data.data.calendar.usesNotes}
+              date={data.data.date}
+              dateNotes={date.notes}
+              refreshDate={refreshDate}
+            />
+          ))}
+          {/* TODO: Show Planned Events as well */}
         </>
       )}
     </>

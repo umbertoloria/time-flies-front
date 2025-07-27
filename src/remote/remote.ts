@@ -1,11 +1,5 @@
 import axios from 'axios'
-import {
-  TAuthStatus,
-  TCalendar,
-  TCalendarDate,
-  TCalendarSDK,
-  TScheduleSDK,
-} from './sdk/types'
+import { TAuthStatus, TCalendar, TCalendarSDK, TScheduleSDK } from './sdk/types'
 import { getTodayLocalDate } from '../lib/utils.ts'
 
 const backendURL = import.meta.env.VITE_BACKEND_ENDPOINT
@@ -150,19 +144,31 @@ export const getSDK = () => {
     readCalendarDate: (
       calendarId: number,
       date: string
-    ): Promise<TCalendarDate> =>
+    ): Promise<TCalendarSDK.ReadDateResponse> =>
       debugMode
         ? (() => {
             if (calendarId === 1) {
-              return Promise.resolve<TCalendarDate>({
+              return Promise.resolve<TCalendarSDK.ReadDateResponse>({
+                date: getTodayLocalDate(),
                 calendar: {
                   id: 1,
                   name: 'Debug calendar 1',
+                  usesNotes: true,
                 },
-                date: {
-                  date: getTodayLocalDate(),
-                  notes: 'Debug notes',
-                },
+                dates: [
+                  {
+                    id: 1,
+                    // date: getTodayLocalDate(),
+                    notes: 'Debug notes',
+                  },
+                ],
+                plannedEvents: [
+                  {
+                    id: 1,
+                    // date: getTodayLocalDate(),
+                    notes: 'Debug planned notes',
+                  },
+                ],
               })
             }
             return Promise.reject(new Error('Calendar not found (debug mode)'))
