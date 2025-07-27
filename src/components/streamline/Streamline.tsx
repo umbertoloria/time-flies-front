@@ -52,7 +52,7 @@ const StreamlineStateless: FC<{
       <pre className='streamline-pre'>
         {response.dates.map((plannedEventDateInfo, index) => (
           <StreamlineDateBox
-            key={index}
+            key={index} // Doesn't work: this uses a Fragment as Root Tag.
             plannedEventDateInfo={plannedEventDateInfo}
           />
         ))}

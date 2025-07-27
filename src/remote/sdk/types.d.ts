@@ -1,19 +1,21 @@
 // Types
-// 2025-07-27T14:27:54Z
-// v3.3
+// 2025-07-27T17:06:34Z
+// v3.4
 
 // Calendar
 export type TCalendar = TCalendarCh & {
   children?: TCalendarCh[]
 }
-type TCalendarCh = {
+type TCalendarCh = TCalendarRcd & {
+  days: TDay[]
+  plannedDays?: TDay[]
+}
+type TCalendarRcd = {
   id: number
   name: string
   color: string
   plannedColor: string
   usesNotes?: boolean
-  days: TDay[]
-  plannedDays?: TDay[]
 }
 export type TDay = {
   date: string // Es. "2023-01-01"
@@ -86,20 +88,13 @@ export namespace TCalendarSDK {
     date: string
     calendars: ReadPlannedEventsResponseCalendar[]
   }
-  export type ReadPlannedEventsResponseCalendar = {
-    id: number
-    name: string
-    color: string
+  export type ReadPlannedEventsResponseCalendar = TCalendarRcd & {
     todos: TNewTodo[]
   }
   // Read Date Response
   export type ReadDateResponse = {
     date: string
-    calendar: {
-      id: number
-      name: string
-      usesNotes?: boolean
-    }
+    calendar: TCalendarRcd
     doneTasks: TNewDoneTask[]
     todos: TNewTodo[]
   }

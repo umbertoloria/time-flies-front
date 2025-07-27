@@ -71,6 +71,7 @@ export const getSDK = () => {
                 name: 'Debug calendar 1',
                 color: '#f77',
                 plannedColor: '#fee',
+                usesNotes: true,
                 days: [
                   {
                     date: getTodayLocalDate(),
@@ -84,6 +85,7 @@ export const getSDK = () => {
                 name: 'Debug calendar 2',
                 color: '#77f',
                 plannedColor: '#eef',
+                usesNotes: true,
                 days: [
                   {
                     date: getTodayLocalDate(),
@@ -110,6 +112,7 @@ export const getSDK = () => {
                 name: 'Debug calendar 1',
                 color: '#f77',
                 plannedColor: '#fee',
+                usesNotes: true,
                 days: [
                   {
                     date: getTodayLocalDate(),
@@ -124,6 +127,7 @@ export const getSDK = () => {
                 name: 'Debug calendar 2',
                 color: '#77f',
                 plannedColor: '#eef',
+                usesNotes: true,
                 days: [
                   {
                     date: getTodayLocalDate(),
@@ -153,6 +157,8 @@ export const getSDK = () => {
                 calendar: {
                   id: 1,
                   name: 'Debug calendar 1',
+                  color: '#f77',
+                  plannedColor: '#fee',
                   usesNotes: true,
                 },
                 doneTasks: [
@@ -216,6 +222,29 @@ export const getSDK = () => {
               })
             )
             .then<'ok'>(() => 'ok'),
+    updatePlannedEvent: (
+      calendarId: number,
+      eventId: number,
+      notes: undefined | string
+    ) =>
+      debugMode
+        ? Promise.resolve('ok')
+        : api
+            .post(
+              '?a=planned-event-update-notes',
+              makeFormData({
+                cid: `${calendarId}`,
+                eid: `${eventId}`,
+                notes,
+              })
+            )
+            .then<'ok'>(() => 'ok')
+            .catch<'invalid'>(err => {
+              if (err.response?.data === 'invalid') {
+                return 'invalid'
+              }
+              throw err
+            }),
     setDateAsPlannedEvent: (
       id: number,
       localDate: string,
@@ -337,25 +366,38 @@ throw err
       TCalendarSDK.ReadPlannedEventsResponse | 'unable'
     > =>
       debugMode
-        ? Promise.resolve({
-            events: [
+        ? Promise.resolve<TCalendarSDK.ReadPlannedEventsResponse>({
+            dates: [
               {
-                id: 1,
                 date: getTodayLocalDate(),
-                calendar: {
-                  id: 1,
-                  name: 'Debug calendar 1',
-                  color: '#f77',
-                },
-              },
-              {
-                id: 2,
-                date: getTodayLocalDate(),
-                calendar: {
-                  id: 2,
-                  name: 'Debug calendar 2',
-                  color: '#77f',
-                },
+                calendars: [
+                  {
+                    id: 1,
+                    name: 'Debug calendar 1',
+                    color: '#f77',
+                    plannedColor: '#fee',
+                    usesNotes: true,
+                    todos: [
+                      {
+                        id: 1,
+                        notes: 'Debug notes',
+                      },
+                    ],
+                  },
+                  {
+                    id: 2,
+                    name: 'Debug calendar 2',
+                    color: '#77f',
+                    plannedColor: '#eef',
+                    usesNotes: true,
+                    todos: [
+                      {
+                        id: 2,
+                        notes: 'Debug notes',
+                      },
+                    ],
+                  },
+                ],
               },
             ],
           })

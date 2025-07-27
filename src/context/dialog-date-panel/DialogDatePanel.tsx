@@ -183,16 +183,18 @@ export const DatePanelInner: FC<{
       {!!data?.data && (
         <>
           <DiaryEntryDate
-            calendarId={data.data.calendar.id}
-            calendarUsesNotes={!!data.data.calendar.usesNotes}
+            calendar={data.data.calendar}
             date={data.data.date}
             doneTasks={data.data.doneTasks.map(doneTask => ({
               id: doneTask.id,
               notes: doneTask.notes,
             }))}
+            todos={data.data.todos.map(todo => ({
+              id: todo.id,
+              notes: todo.notes,
+            }))}
             refreshDate={refreshDate}
           />
-          {/* TODO: Show Planned Events as well */}
         </>
       )}
     </>

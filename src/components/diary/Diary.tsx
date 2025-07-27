@@ -1,8 +1,15 @@
 import { FC, useRef, useState } from 'react'
-import { TCalendar, TDay, TNewDoneTask } from '../../remote/sdk/types'
+import {
+  TCalendar,
+  TCalendarRcd,
+  TDay,
+  TNewDoneTask,
+} from '../../remote/sdk/types'
 import { displayDateFromLocalDate } from '../calendar/utils.ts'
 import { getSDK } from '../../remote/remote.ts'
 import { fireEventCalendarUpdated } from '../calendar/event-calendar-updated.ts'
+import { fireEventStreamlineUpdated } from '../streamline/event-streamline-updated.ts'
+import { ColouredQuad } from '../coloured/ColouredQuad.tsx'
 
 export const DiaryEntriesListAccordion: FC<{
   title?: string
@@ -33,8 +40,7 @@ export const DiaryEntriesListAccordion: FC<{
           {days.map((day, index) => (
             <div key={index}>
               <DiaryEntryDate
-                calendarId={calendar.id}
-                calendarUsesNotes={!!calendar.usesNotes}
+                calendar={calendar}
                 date={day.date}
                 doneTasks={[
                   {
@@ -42,6 +48,7 @@ export const DiaryEntriesListAccordion: FC<{
                     notes: day.notes,
                   },
                 ]}
+                todos={[]}
                 refreshDate={refreshDate}
               />
             </div>
@@ -53,24 +60,27 @@ export const DiaryEntriesListAccordion: FC<{
 }
 
 export const DiaryEntryDate: FC<{
-  calendarId: number
-  calendarUsesNotes: boolean
+  calendar: TCalendarRcd
   date: string
   doneTasks: TNewDoneTask[]
+  todos: TNewDoneTask[]
   refreshDate: () => void
-}> = ({ date, calendarId, calendarUsesNotes, doneTasks, refreshDate }) => {
+}> = ({ date, calendar, doneTasks, todos, refreshDate }) => {
+  // FIXME: Improve UX here
   return (
     <>
       <i className='underline'>{displayDateFromLocalDate(date)}</i>
-      <p>Fatti:</p>
       {doneTasks.map((doneTask, index) => (
         <div key={index}>
-          <p>Task fatto.</p>
-          {calendarUsesNotes && (
+          <ColouredQuad color={calendar.color} />
+          {!!calendar.usesNotes && (
             <>
               <CalendarDateNotesComponent
-                calendarId={calendarId}
-                date={date}
+                mode={{
+                  type: 'doneTask',
+                  calendarId: calendar.id,
+                  date,
+                }}
                 dateNotes={doneTask.notes}
                 refreshDate={refreshDate}
               />
@@ -78,25 +88,51 @@ export const DiaryEntryDate: FC<{
           )}
         </div>
       ))}
-      <p>Da fare: (funzione non ancora implementata)</p>
+      {todos.map((todo, index) => (
+        <div key={index}>
+          <ColouredQuad color={calendar.plannedColor} />
+          {!!calendar.usesNotes && (
+            <>
+              <CalendarDateNotesComponent
+                mode={{
+                  type: 'todo',
+                  calendarId: calendar.id,
+                  eventId: todo.id,
+                }}
+                dateNotes={todo.notes}
+                refreshDate={refreshDate}
+              />
+            </>
+          )}
+          {/* FIXME: Insert Done/Skip buttons here */}
+        </div>
+      ))}
     </>
   )
 }
 
 const CalendarDateNotesComponent: FC<{
-  calendarId: number
-  date: string
+  mode:
+    | {
+        type: 'doneTask'
+        calendarId: number
+        date: string
+      }
+    | {
+        type: 'todo'
+        calendarId: number
+        eventId: number
+      }
   dateNotes?: string
   refreshDate: () => void
-}> = ({ calendarId, date, dateNotes, refreshDate }) => {
+}> = ({ mode, dateNotes, refreshDate }) => {
   // Assuming Calendar Uses Notes.
   return (
     <>
       {dateNotes ? (
         <>
           <CalendarDayNoteSeeAndEdit
-            calendarId={calendarId}
-            localDate={date}
+            mode={mode}
             notes={{
               text: dateNotes,
             }}
@@ -107,8 +143,8 @@ const CalendarDateNotesComponent: FC<{
       ) : (
         <>
           <NotesAddForm
-            calendarId={calendarId}
-            localDate={date}
+            //
+            mode={mode}
             onInserted={refreshDate}
           />
         </>
@@ -117,16 +153,25 @@ const CalendarDateNotesComponent: FC<{
   )
 }
 
-const { updateCalendarDateNotes } = getSDK()
+const { updateCalendarDateNotes, updatePlannedEvent } = getSDK()
 const CalendarDayNoteSeeAndEdit: FC<{
-  calendarId: number
-  localDate: string
+  mode:
+    | {
+        type: 'doneTask'
+        calendarId: number
+        date: string
+      }
+    | {
+        type: 'todo'
+        calendarId: number
+        eventId: number
+      }
   notes: {
     text: string
   }
   editable: boolean
   onUpdated: () => void
-}> = ({ calendarId, localDate, notes, editable, onUpdated }) => {
+}> = ({ mode, notes, editable, onUpdated }) => {
   const [editing, setEditing] = useState(false)
   const [loading, setLoading] = useState(false)
 
@@ -145,28 +190,51 @@ const CalendarDayNoteSeeAndEdit: FC<{
                 return
               }
               setLoading(true)
-              updateCalendarDateNotes(
-                calendarId,
-                localDate,
-                _notes || undefined
-              )
-                .then(() => {
-                  // Yay!
+              if (mode.type === 'doneTask') {
+                updateCalendarDateNotes(
+                  mode.calendarId,
+                  mode.date,
+                  _notes || undefined
+                )
+                  .then(() => {
+                    // Yay!
 
-                  fireEventCalendarUpdated({ calendarId })
-                  // fireEventStreamlineUpdated(undefined)
-                  // This wasn't a Planned Event.
+                    fireEventCalendarUpdated({ calendarId: mode.calendarId })
+                    // fireEventStreamlineUpdated(undefined)
 
-                  setLoading(false)
-                  setEditing(false)
-                  onUpdated()
-                })
-                .catch(err => {
-                  console.error(err)
-                  // TODO: Tell user all went KO
-                  alert('Errore avvenuto')
-                  setLoading(false)
-                })
+                    setLoading(false)
+                    setEditing(false)
+                    onUpdated()
+                  })
+                  .catch(err => {
+                    console.error(err)
+                    // TODO: Tell user all went KO
+                    alert('Errore avvenuto')
+                    setLoading(false)
+                  })
+              } else if (mode.type === 'todo') {
+                updatePlannedEvent(
+                  mode.calendarId,
+                  mode.eventId,
+                  _notes || undefined
+                )
+                  .then(() => {
+                    // Yay!
+
+                    // fireEventCalendarUpdated({ calendarId })
+                    fireEventStreamlineUpdated(undefined)
+
+                    setLoading(false)
+                    setEditing(false)
+                    onUpdated()
+                  })
+                  .catch(err => {
+                    console.error(err)
+                    // TODO: Tell user all went KO
+                    alert('Errore avvenuto')
+                    setLoading(false)
+                  })
+              }
             }}
           />
         </>
@@ -194,10 +262,19 @@ const CalendarDayNoteSeeAndEdit: FC<{
 }
 
 const NotesAddForm: FC<{
-  calendarId: number
-  localDate: string
+  mode:
+    | {
+        type: 'doneTask'
+        calendarId: number
+        date: string
+      }
+    | {
+        type: 'todo'
+        calendarId: number
+        eventId: number
+      }
   onInserted: () => void
-}> = ({ calendarId, localDate, onInserted }) => {
+}> = ({ mode, onInserted }) => {
   const [adding, setAdding] = useState(false)
   const [loading, setLoading] = useState(false)
   return (
@@ -210,28 +287,51 @@ const NotesAddForm: FC<{
             editable
             onSubmit={_notes => {
               setLoading(true)
-              updateCalendarDateNotes(
-                calendarId,
-                localDate,
-                _notes || undefined
-              )
-                .then(() => {
-                  // Yay!
+              if (mode.type === 'doneTask') {
+                updateCalendarDateNotes(
+                  mode.calendarId,
+                  mode.date,
+                  _notes || undefined
+                )
+                  .then(() => {
+                    // Yay!
 
-                  fireEventCalendarUpdated({ calendarId })
-                  // fireEventStreamlineUpdated(undefined)
-                  // This wasn't a Planned Event.
+                    fireEventCalendarUpdated({ calendarId: mode.calendarId })
+                    // fireEventStreamlineUpdated(undefined)
 
-                  setLoading(false)
-                  setAdding(false)
-                  onInserted()
-                })
-                .catch(err => {
-                  console.error(err)
-                  // TODO: Tell user all went KO
-                  alert('Errore avvenuto')
-                  setLoading(false)
-                })
+                    setLoading(false)
+                    setAdding(false)
+                    onInserted()
+                  })
+                  .catch(err => {
+                    console.error(err)
+                    // TODO: Tell user all went KO
+                    alert('Errore avvenuto')
+                    setLoading(false)
+                  })
+              } else if (mode.type === 'todo') {
+                updatePlannedEvent(
+                  mode.calendarId,
+                  mode.eventId,
+                  _notes || undefined
+                )
+                  .then(() => {
+                    // Yay!
+
+                    // fireEventCalendarUpdated({ calendarId })
+                    fireEventStreamlineUpdated(undefined)
+
+                    setLoading(false)
+                    setAdding(false)
+                    onInserted()
+                  })
+                  .catch(err => {
+                    console.error(err)
+                    // TODO: Tell user all went KO
+                    alert('Errore avvenuto')
+                    setLoading(false)
+                  })
+              }
             }}
           />
         </div>
@@ -269,7 +369,7 @@ const NotesForm: FC<{
           type='text'
           name='notes-text'
           ref={inputRef}
-          className='block w-full px-2 py-1  border border-gray-300 rounded-md focus:border-blue-500 focus:outline-none focus:ring-blue-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:focus:border-blue-400 dark:focus:ring-blue-900 bg-white text-gray-700'
+          className='block w-full px-2 py-1 border border-gray-300 rounded-md focus:border-blue-500 focus:outline-none focus:ring-blue-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:focus:border-blue-400 dark:focus:ring-blue-900 bg-white text-gray-700'
           defaultValue={initialValue}
           disabled={loading}
         />
