@@ -222,12 +222,10 @@ export const getSDK = () => {
               })
             )
             .then<'ok'>(() => 'ok'),
-    updatePlannedEvent: (
+    updatePlannedEventNotes: (
       calendarId: number,
       eventId: number,
-      data: {
-        notes?: string
-      }
+      notes?: string
     ) =>
       debugMode
         ? Promise.resolve('ok')
@@ -237,7 +235,26 @@ export const getSDK = () => {
               makeFormData({
                 cid: `${calendarId}`,
                 eid: `${eventId}`,
-                notes: data.notes,
+                notes,
+              })
+            )
+            .then<'ok'>(() => 'ok')
+            .catch<'invalid'>(err => {
+              if (err.response?.data === 'invalid') {
+                return 'invalid'
+              }
+              throw err
+            }),
+    movePlannedEvent: (calendarId: number, eventId: number, newDate: string) =>
+      debugMode
+        ? Promise.resolve('ok')
+        : api
+            .post(
+              '?a=planned-event-move',
+              makeFormData({
+                cid: `${calendarId}`,
+                eid: `${eventId}`,
+                date: newDate,
               })
             )
             .then<'ok'>(() => 'ok')

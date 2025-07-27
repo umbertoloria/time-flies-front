@@ -153,7 +153,7 @@ const CalendarDateNotesComponent: FC<{
   )
 }
 
-const { updateCalendarDateNotes, updatePlannedEvent } = getSDK()
+const { updateCalendarDateNotes, updatePlannedEventNotes } = getSDK()
 const CalendarDayNoteSeeAndEdit: FC<{
   mode:
     | {
@@ -213,9 +213,11 @@ const CalendarDayNoteSeeAndEdit: FC<{
                     setLoading(false)
                   })
               } else if (mode.type === 'todo') {
-                updatePlannedEvent(mode.calendarId, mode.eventId, {
-                  notes: _notes || undefined,
-                })
+                updatePlannedEventNotes(
+                  mode.calendarId,
+                  mode.eventId,
+                  _notes || undefined
+                )
                   .then(() => {
                     // Yay!
 
@@ -308,9 +310,11 @@ const NotesAddForm: FC<{
                     setLoading(false)
                   })
               } else if (mode.type === 'todo') {
-                updatePlannedEvent(mode.calendarId, mode.eventId, {
-                  notes: _notes || undefined,
-                })
+                updatePlannedEventNotes(
+                  mode.calendarId,
+                  mode.eventId,
+                  _notes || undefined
+                )
                   .then(() => {
                     // Yay!
 

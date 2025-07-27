@@ -8,7 +8,7 @@ type ContextPartData = {
   calendarId: number
   eventId: number
   date: string
-  mode: 'done' | 'missed'
+  mode: 'done' | 'missed' | 'move'
   loading: boolean
 }
 export type ContextDialogForCheckPlannedEvent = {
@@ -18,10 +18,10 @@ export type ContextDialogForCheckPlannedEvent = {
     calendarId: number,
     date: string,
     eventId: number,
-    mode: 'done' | 'missed'
+    mode: 'done' | 'missed' | 'move'
   ) => void
   closeDialog: () => void
-  confirmProgressDone: (notes: undefined | string) => void
+  confirmProgressDone: (param: undefined | string) => void
 }
 export const contextDialogForCheckPlannedEventDataDefault: ContextDialogForCheckPlannedEvent =
   {
@@ -32,7 +32,7 @@ export const contextDialogForCheckPlannedEventDataDefault: ContextDialogForCheck
     confirmProgressDone() {},
   } as const
 
-const { checkPlannedEventWithSuccess } = getSDK()
+const { checkPlannedEventWithSuccess, movePlannedEvent } = getSDK()
 export const useContextDialogForCheckPlannedEventsForUX = (): {
   dialogForCheckPlannedEvent: ContextDialogForCheckPlannedEvent
 } => {
@@ -69,7 +69,7 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
           isOpen: false,
         })
       },
-      confirmProgressDone(notes) {
+      confirmProgressDone(param) {
         if (!dialog.isOpen || !dialog.data || dialog.data.loading) {
           return
         }
@@ -91,12 +91,44 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
             mode === 'done'
               ? {
                   type: 'done',
-                  notes,
+                  notes: param,
                 }
               : {
                   type: 'missed',
                 }
           )
+            .then(() => {
+              // Yay!
+
+              fireEventStreamlineUpdated(undefined)
+              fireEventCalendarUpdated({ calendarId })
+
+              setDialog({
+                isOpen: false,
+                // data: undefined,
+              })
+            })
+            .catch(err => {
+              console.error(err)
+              // TODO: Tell user all went KO
+              alert('Errore avvenuto')
+              setDialog({
+                isOpen: true,
+                data: {
+                  calendarId,
+                  date,
+                  eventId,
+                  mode,
+                  loading: false,
+                },
+              })
+            })
+        } else if (mode === 'move') {
+          if (!param) {
+            alert('Empty date')
+            return
+          }
+          movePlannedEvent(calendarId, eventId, param)
             .then(() => {
               // Yay!
 

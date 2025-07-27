@@ -147,6 +147,14 @@ const StreamlineTodo: FC<{
       <span
         className='pre-btn'
         onClick={() => {
+          openDialogForCheckPlannedEvent(calendar.id, date, todo.id, 'move')
+        }}
+      >
+        {'[Sposta]'}
+      </span>{' '}
+      <span
+        className='pre-btn'
+        onClick={() => {
           openDialogForDatePanel({
             mode: 'calendar-date-panel',
             calendarId: calendar.id,
