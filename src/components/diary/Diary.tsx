@@ -213,6 +213,7 @@ const CalendarDayNoteSeeAndEdit: FC<{
                     setLoading(false)
                   })
               } else if (mode.type === 'todo') {
+                // FIXME: Deprecate this since should be done in Streamline
                 updatePlannedEventNotes(
                   mode.calendarId,
                   mode.eventId,
@@ -310,6 +311,7 @@ const NotesAddForm: FC<{
                     setLoading(false)
                   })
               } else if (mode.type === 'todo') {
+                // FIXME: Deprecate this since should be done in Streamline
                 updatePlannedEventNotes(
                   mode.calendarId,
                   mode.eventId,

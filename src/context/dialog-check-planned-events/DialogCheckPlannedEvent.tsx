@@ -19,7 +19,9 @@ export const DialogCheckPlannedEvent: FC = () => {
         ? 'Segna come saltato'
         : data?.mode === 'move'
           ? 'Sposta'
-          : '???' // Should never happen.
+          : data?.mode === 'update-notes'
+            ? 'Aggiorna note'
+            : '???' // Should never happen.
 
   const [enableNoteInput, setEnableNoteInput] = useState(INITIAL_ENABLE_NOTE)
   const [notesInputValue, setNotesInputValue] = useState(INITIAL_INPUT_VALUE)
@@ -28,6 +30,14 @@ export const DialogCheckPlannedEvent: FC = () => {
     if (isOpen) {
       if (data?.mode === 'move') {
         setDateInputValue(data.date)
+      } else if (data?.mode === 'update-notes') {
+        if (data.todo.notes) {
+          setEnableNoteInput(true)
+          setNotesInputValue(data.todo.notes)
+        } else {
+          setEnableNoteInput(false)
+          setNotesInputValue('')
+        }
       }
     } else {
       setEnableNoteInput(INITIAL_ENABLE_NOTE)
@@ -78,22 +88,40 @@ export const DialogCheckPlannedEvent: FC = () => {
                 />
               </>
             )}
+
+            {data?.mode === 'update-notes' && (
+              <>
+                <p>
+                  {'Confermi di aver aggiornare le note di questa attività?'}
+                </p>
+                <NotesFieldEditor
+                  enableNoteInput={enableNoteInput}
+                  setEnableNoteInput={setEnableNoteInput}
+                  inputValue={notesInputValue}
+                  setInputValue={setNotesInputValue}
+                />
+              </>
+            )}
           </div>
           <div className='flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600'>
             <button
               type='button'
               className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
               onClick={() => {
-                if (data?.mode === 'done') {
-                  let notes: undefined | string = undefined
-                  if (enableNoteInput) {
-                    // TODO: Duplicated code (*sdcn)
-                    notes = notesInputValue.trim()
-                    if (notes.length < 2 || notes.length > 300) {
-                      alert('Nota non valida: minimo 2 massimo 300 caratteri')
-                      return
-                    }
+                let notes: undefined | string = undefined
+                if (
+                  (data?.mode === 'done' || data?.mode === 'update-notes') &&
+                  enableNoteInput
+                ) {
+                  // TODO: Duplicated code (*sdcn)
+                  notes = notesInputValue.trim()
+                  if (notes.length < 2 || notes.length > 300) {
+                    alert('Nota non valida: minimo 2 massimo 300 caratteri')
+                    return
                   }
+                }
+
+                if (data?.mode === 'done') {
                   confirmProgressDone(notes)
                 }
                 if (data?.mode === 'missed') {
@@ -102,6 +130,9 @@ export const DialogCheckPlannedEvent: FC = () => {
                 if (data?.mode === 'move') {
                   // FIXME: Validate local date
                   confirmProgressDone(dateInputValue)
+                }
+                if (data?.mode === 'update-notes') {
+                  confirmProgressDone(notes)
                 }
               }}
             >

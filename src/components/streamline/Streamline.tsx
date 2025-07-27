@@ -131,7 +131,7 @@ const StreamlineTodo: FC<{
       <span
         className='pre-btn'
         onClick={() => {
-          openDialogForCheckPlannedEvent(calendar.id, date, todo.id, 'done')
+          openDialogForCheckPlannedEvent(calendar.id, date, todo, 'done')
         }}
       >
         {'[Done?]'}
@@ -139,7 +139,7 @@ const StreamlineTodo: FC<{
       <span
         className='pre-btn'
         onClick={() => {
-          openDialogForCheckPlannedEvent(calendar.id, date, todo.id, 'missed')
+          openDialogForCheckPlannedEvent(calendar.id, date, todo, 'missed')
         }}
       >
         {'[Salta?]'}
@@ -147,10 +147,23 @@ const StreamlineTodo: FC<{
       <span
         className='pre-btn'
         onClick={() => {
-          openDialogForCheckPlannedEvent(calendar.id, date, todo.id, 'move')
+          openDialogForCheckPlannedEvent(calendar.id, date, todo, 'move')
         }}
       >
         {'[Sposta]'}
+      </span>{' '}
+      <span
+        className='pre-btn'
+        onClick={() => {
+          openDialogForCheckPlannedEvent(
+            calendar.id,
+            date,
+            todo,
+            'update-notes'
+          )
+        }}
+      >
+        {'[Note]'}
       </span>{' '}
       <span
         className='pre-btn'
