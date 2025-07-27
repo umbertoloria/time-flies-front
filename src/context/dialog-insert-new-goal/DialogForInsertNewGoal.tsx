@@ -38,6 +38,7 @@ export const DialogForInsertNewGoal: FC = () => {
               />
             )}
           </div>
+          {/* // TODO: Duplicated code (*sgfd) */}
           <div className='flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600'>
             <button
               type='button'

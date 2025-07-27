@@ -213,11 +213,9 @@ const CalendarDayNoteSeeAndEdit: FC<{
                     setLoading(false)
                   })
               } else if (mode.type === 'todo') {
-                updatePlannedEvent(
-                  mode.calendarId,
-                  mode.eventId,
-                  _notes || undefined
-                )
+                updatePlannedEvent(mode.calendarId, mode.eventId, {
+                  notes: _notes || undefined,
+                })
                   .then(() => {
                     // Yay!
 
@@ -310,11 +308,9 @@ const NotesAddForm: FC<{
                     setLoading(false)
                   })
               } else if (mode.type === 'todo') {
-                updatePlannedEvent(
-                  mode.calendarId,
-                  mode.eventId,
-                  _notes || undefined
-                )
+                updatePlannedEvent(mode.calendarId, mode.eventId, {
+                  notes: _notes || undefined,
+                })
                   .then(() => {
                     // Yay!
 

@@ -10,16 +10,24 @@ export const DialogCheckPlannedEvent: FC = () => {
 
   const { isOpen, data, closeDialog, confirmProgressDone } =
     useDialogForCheckPlannedEvent()
-  const settingAsMissed = data?.mode === 'missed'
+
+  const title =
+    data?.mode === 'done'
+      ? 'Segna come fatto'
+      : data?.mode === 'missed'
+        ? 'Segna come saltato'
+        : data?.mode === 'move'
+          ? 'Sposta'
+          : '???' // Should never happen.
 
   const [enableNoteInput, setEnableNoteInput] = useState(INITIAL_ENABLE_NOTE)
-  const [inputValue, setInputValue] = useState(INITIAL_INPUT_VALUE)
+  const [notesInputValue, setNotesInputValue] = useState(INITIAL_INPUT_VALUE)
   useEffect(() => {
     if (!isOpen) {
       setEnableNoteInput(INITIAL_ENABLE_NOTE)
-      setInputValue(INITIAL_INPUT_VALUE)
+      setNotesInputValue(INITIAL_INPUT_VALUE)
     }
-  }, [isOpen])
+  }, [isOpen, data])
 
   return (
     <>
@@ -27,27 +35,28 @@ export const DialogCheckPlannedEvent: FC = () => {
         <GenericDialog
           onClose={closeDialog}
           labelOnClose='Indietro'
-          title={settingAsMissed ? 'Segna come saltato' : 'Segna come fatto'}
+          title={title}
         >
           <div className='p-4'>
-            {settingAsMissed ? (
+            {data?.mode === 'done' && (
+              <>
+                <p>{'Confermi di aver svolto questa attività?'}</p>
+                <NotesFieldEditor
+                  enableNoteInput={enableNoteInput}
+                  setEnableNoteInput={setEnableNoteInput}
+                  inputValue={notesInputValue}
+                  setInputValue={setNotesInputValue}
+                />
+              </>
+            )}
+
+            {data?.mode === 'missed' && (
               <>
                 <p>{'Confermi di voler saltare questa attività?'}</p>
               </>
-            ) : (
-              <>
-                <p>{'Confermi di aver svolto questa attività?'}</p>
-              </>
-            )}
-            {!settingAsMissed && (
-              <NotesFieldEditor
-                enableNoteInput={enableNoteInput}
-                setEnableNoteInput={setEnableNoteInput}
-                inputValue={inputValue}
-                setInputValue={setInputValue}
-              />
             )}
           </div>
+          {/* // TODO: Duplicated code (*sgfd) */}
           <div className='flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600'>
             <button
               type='button'
@@ -56,7 +65,7 @@ export const DialogCheckPlannedEvent: FC = () => {
                 let notes: undefined | string = undefined
                 if (enableNoteInput) {
                   // TODO: Duplicated code (*sdcn)
-                  notes = inputValue.trim()
+                  notes = notesInputValue.trim()
                   if (notes.length < 2 || notes.length > 300) {
                     alert('Nota non valida: minimo 2 massimo 300 caratteri')
                     return

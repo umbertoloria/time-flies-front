@@ -41,7 +41,7 @@ export function estimate_record_duration_minutes(
   const num_bars = record.bars_num || 0
   const quarters_num_in_1bar = record.ts_above || 1
   if (record.bars_num === 0 || quarters_num_in_1bar === 0) {
-    // This should never happen...
+    // This should never happen.
     return 0
   }
   const duration_sec_1quarter = 60.0 / record.bpm

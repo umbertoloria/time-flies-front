@@ -225,7 +225,9 @@ export const getSDK = () => {
     updatePlannedEvent: (
       calendarId: number,
       eventId: number,
-      notes: undefined | string
+      data: {
+        notes?: string
+      }
     ) =>
       debugMode
         ? Promise.resolve('ok')
@@ -235,7 +237,7 @@ export const getSDK = () => {
               makeFormData({
                 cid: `${calendarId}`,
                 eid: `${eventId}`,
-                notes,
+                notes: data.notes,
               })
             )
             .then<'ok'>(() => 'ok')

@@ -7,6 +7,7 @@ import { useUXContext } from '../UXContext.tsx'
 type ContextPartData = {
   calendarId: number
   eventId: number
+  date: string
   mode: 'done' | 'missed'
   loading: boolean
 }
@@ -15,6 +16,7 @@ export type ContextDialogForCheckPlannedEvent = {
   data?: ContextPartData
   openDialog: (
     calendarId: number,
+    date: string,
     eventId: number,
     mode: 'done' | 'missed'
   ) => void
@@ -42,7 +44,7 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
     dialogForCheckPlannedEvent: {
       isOpen: dialog.isOpen,
       data: dialog.data,
-      openDialog(calendarId, eventId, mode) {
+      openDialog(calendarId, date, eventId, mode) {
         if (dialog.isOpen || dialog.data?.loading) {
           return
         }
@@ -51,6 +53,7 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
           isOpen: true,
           data: {
             calendarId,
+            date,
             eventId,
             mode,
             loading: false,
@@ -70,53 +73,59 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
         if (!dialog.isOpen || !dialog.data || dialog.data.loading) {
           return
         }
-        const { calendarId, eventId, mode } = dialog.data
+        const { calendarId, date, eventId, mode } = dialog.data
         setDialog({
           isOpen: true,
           data: {
             calendarId,
+            date,
             eventId,
             mode,
             loading: true,
           },
         })
-        checkPlannedEventWithSuccess(
-          calendarId,
-          eventId,
-          mode === 'done'
-            ? {
-                type: 'done',
-                notes,
-              }
-            : {
-                type: 'missed',
-              }
-        )
-          .then(() => {
-            // Yay!
+        if (mode === 'done' || mode === 'missed') {
+          checkPlannedEventWithSuccess(
+            calendarId,
+            eventId,
+            mode === 'done'
+              ? {
+                  type: 'done',
+                  notes,
+                }
+              : {
+                  type: 'missed',
+                }
+          )
+            .then(() => {
+              // Yay!
 
-            fireEventStreamlineUpdated(undefined)
-            fireEventCalendarUpdated({ calendarId })
+              fireEventStreamlineUpdated(undefined)
+              fireEventCalendarUpdated({ calendarId })
 
-            setDialog({
-              isOpen: false,
-              // data: undefined,
+              setDialog({
+                isOpen: false,
+                // data: undefined,
+              })
             })
-          })
-          .catch(err => {
-            console.error(err)
-            // TODO: Tell user all went KO
-            alert('Errore avvenuto')
-            setDialog({
-              isOpen: true,
-              data: {
-                calendarId,
-                eventId,
-                mode,
-                loading: false,
-              },
+            .catch(err => {
+              console.error(err)
+              // TODO: Tell user all went KO
+              alert('Errore avvenuto')
+              setDialog({
+                isOpen: true,
+                data: {
+                  calendarId,
+                  date,
+                  eventId,
+                  mode,
+                  loading: false,
+                },
+              })
             })
-          })
+        } else {
+          // Should never happen.
+        }
       },
     },
   }
