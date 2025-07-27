@@ -19,13 +19,16 @@ export type TDay = {
   date: string // Es. "2023-01-01"
   notes?: string
 }
-export type TCalendarDate = {
-  calendar: {
-    id: number
-    name: string
-    usesNotes?: boolean
-  }
-  date: TDay
+// Todos
+export type TNewTodo = {
+  id: number
+  // date: string
+  notes?: string
+}
+export type TNewDoneTask = {
+  id: number
+  // date: string
+  notes?: string
 }
 
 // Schedule
@@ -87,12 +90,7 @@ export namespace TCalendarSDK {
     id: number
     name: string
     color: string
-    dates: ReadPlannedEventsResponseDate[]
-  }
-  export type ReadPlannedEventsResponseDate = {
-    id: number
-    // date: string
-    notes?: string
+    todos: TNewTodo[]
   }
   // Read Date Response
   export type ReadDateResponse = {
@@ -102,8 +100,7 @@ export namespace TCalendarSDK {
       name: string
       usesNotes?: boolean
     }
-    dates: ReadDateResponseDate[]
-    plannedEvents: ReadDateResponseDate[]
+    doneTasks: TNewDoneTask[]
+    todos: TNewTodo[]
   }
-  export type ReadDateResponseDate = ReadPlannedEventsResponseDate
 }

@@ -112,14 +112,8 @@ const TabHistoryCalendarComponent: FC<{
       <>
         <DiaryEntriesListAccordion
           initialOpen
-          dates={calendar.days.map(date => ({
-            calendar: {
-              id: calendar.id,
-              name: calendar.name,
-              usesNotes: calendar.usesNotes,
-            },
-            date,
-          }))}
+          calendar={calendar}
+          days={calendar.days}
           refreshDate={refreshCalendar}
         />
       </>
@@ -135,14 +129,8 @@ const TabHistoryCalendarComponent: FC<{
           <DiaryEntriesListAccordion
             title={todayYear.toString()}
             initialOpen
-            dates={currentYearDates.map(date => ({
-              calendar: {
-                id: calendar.id,
-                name: calendar.name,
-                usesNotes: calendar.usesNotes,
-              },
-              date,
-            }))}
+            calendar={calendar}
+            days={currentYearDates}
             refreshDate={refreshCalendar}
           />
         )}
@@ -151,18 +139,10 @@ const TabHistoryCalendarComponent: FC<{
             <DiaryEntriesListAccordion
               title={year.toString()}
               initialOpen={false}
-              dates={calendar.days
-                .filter(
-                  date => getDateFromLocalDate(date.date).getFullYear() === year
-                )
-                .map(date => ({
-                  calendar: {
-                    id: calendar.id,
-                    name: calendar.name,
-                    usesNotes: calendar.usesNotes,
-                  },
-                  date,
-                }))}
+              calendar={calendar}
+              days={calendar.days.filter(
+                date => getDateFromLocalDate(date.date).getFullYear() === year
+              )}
               refreshDate={refreshCalendar}
             />
           </div>
@@ -202,13 +182,13 @@ export const DatePanelInner: FC<{
       )}
       {!!data?.data && (
         <>
-          {data.data.dates.map((date, index) => (
+          {data.data.doneTasks.map((doneTask, index) => (
             <DiaryEntry
               key={index}
               calendarId={data.data.calendar.id}
               calendarUsesNotes={!!data.data.calendar.usesNotes}
               date={data.data.date}
-              dateNotes={date.notes}
+              dateNotes={doneTask.notes}
               refreshDate={refreshDate}
             />
           ))}

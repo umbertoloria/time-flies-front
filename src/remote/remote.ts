@@ -155,14 +155,14 @@ export const getSDK = () => {
                   name: 'Debug calendar 1',
                   usesNotes: true,
                 },
-                dates: [
+                doneTasks: [
                   {
                     id: 1,
                     // date: getTodayLocalDate(),
                     notes: 'Debug notes',
                   },
                 ],
-                plannedEvents: [
+                todos: [
                   {
                     id: 1,
                     // date: getTodayLocalDate(),

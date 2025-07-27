@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react'
 import { CalendarTitle } from '../calendar/CalendarGrid.tsx'
 import { getSDK } from '../../remote/remote.ts'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
-import { TCalendarSDK } from '../../remote/sdk/types'
+import { TCalendarSDK, TNewTodo } from '../../remote/sdk/types'
 import { displayDateFromLocalDate } from '../calendar/utils.ts'
 import { useDialogForCheckPlannedEvent } from '../../context/dialog-check-planned-events/ContextDialogForCheckPlannedEvents.tsx'
 import { CustomEventFnType } from '../../events/event-builder.ts'
@@ -84,27 +84,28 @@ const StreamlineCalendar: FC<{
       {'Calendario: '}
       <span style={{ color: calendar.color }}>{calendar.name}</span>
       {'\n'}
-      {calendar.dates.map((date, index) => (
-        <StreamlineDate key={index} calendar={calendar} date={date} />
+      {calendar.todos.map((todo, index) => (
+        <StreamlineTodo key={index} calendar={calendar} todo={todo} />
       ))}
       {'\n'}
     </>
   )
 }
 
-const StreamlineDate: FC<{
+const StreamlineTodo: FC<{
   calendar: TCalendarSDK.ReadPlannedEventsResponseCalendar
-  date: TCalendarSDK.ReadPlannedEventsResponseDate
-}> = ({ calendar, date }) => {
-  const { openDialog } = useDialogForCheckPlannedEvent()
+  todo: TNewTodo
+}> = ({ calendar, todo }) => {
+  const { openDialog: openDialogForCheckPlannedEvent } =
+    useDialogForCheckPlannedEvent()
 
   return (
     <>
       {'  *: '}
       {'notes: '}
       <>
-        {typeof date.notes === 'string' ? (
-          <>{date.notes}</>
+        {typeof todo.notes === 'string' ? (
+          <>{todo.notes}</>
         ) : (
           <span style={{ opacity: 0.6 }}>null</span>
         )}
@@ -114,7 +115,7 @@ const StreamlineDate: FC<{
       <span
         className='pre-btn'
         onClick={() => {
-          openDialog(calendar.id, date.id, 'done')
+          openDialogForCheckPlannedEvent(calendar.id, todo.id, 'done')
         }}
       >
         {'[Done?]'}
@@ -122,7 +123,7 @@ const StreamlineDate: FC<{
       <span
         className='pre-btn'
         onClick={() => {
-          openDialog(calendar.id, date.id, 'missed')
+          openDialogForCheckPlannedEvent(calendar.id, todo.id, 'missed')
         }}
       >
         {'[Salta?]'}

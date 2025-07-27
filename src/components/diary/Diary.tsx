@@ -1,5 +1,5 @@
 import { FC, useRef, useState } from 'react'
-import { TCalendarDate } from '../../remote/sdk/types'
+import { TCalendar, TDay } from '../../remote/sdk/types'
 import { displayDateFromLocalDate } from '../calendar/utils.ts'
 import { getSDK } from '../../remote/remote.ts'
 import { fireEventCalendarUpdated } from '../calendar/event-calendar-updated.ts'
@@ -7,9 +7,10 @@ import { fireEventCalendarUpdated } from '../calendar/event-calendar-updated.ts'
 export const DiaryEntriesListAccordion: FC<{
   title?: string
   initialOpen?: boolean
-  dates: TCalendarDate[]
+  calendar: TCalendar
+  days: TDay[]
   refreshDate: () => void
-}> = ({ title, initialOpen, dates, refreshDate }) => {
+}> = ({ title, initialOpen, calendar, days, refreshDate }) => {
   const [isOpen, setOpen] = useState(
     initialOpen === undefined ? true : initialOpen
   )
@@ -29,13 +30,13 @@ export const DiaryEntriesListAccordion: FC<{
       )}
       {isOpen && (
         <>
-          {dates.map((date, index) => (
+          {days.map((day, index) => (
             <div key={index}>
               <DiaryEntry
-                calendarId={date.calendar.id}
-                calendarUsesNotes={!!date.calendar.usesNotes}
-                date={date.date.date}
-                dateNotes={date.date.notes}
+                calendarId={calendar.id}
+                calendarUsesNotes={!!calendar.usesNotes}
+                date={day.date}
+                dateNotes={day.notes}
                 refreshDate={refreshDate}
               />
             </div>
