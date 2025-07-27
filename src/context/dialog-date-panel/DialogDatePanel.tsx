@@ -6,7 +6,7 @@ import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
 import { TCalendar } from '../../remote/sdk/types'
 import {
   DiaryEntriesListAccordion,
-  DiaryEntry,
+  DiaryEntryDate,
 } from '../../components/diary/Diary.tsx'
 import {
   filterUnique,
@@ -182,16 +182,16 @@ export const DatePanelInner: FC<{
       )}
       {!!data?.data && (
         <>
-          {data.data.doneTasks.map((doneTask, index) => (
-            <DiaryEntry
-              key={index}
-              calendarId={data.data.calendar.id}
-              calendarUsesNotes={!!data.data.calendar.usesNotes}
-              date={data.data.date}
-              dateNotes={doneTask.notes}
-              refreshDate={refreshDate}
-            />
-          ))}
+          <DiaryEntryDate
+            calendarId={data.data.calendar.id}
+            calendarUsesNotes={!!data.data.calendar.usesNotes}
+            date={data.data.date}
+            doneTasks={data.data.doneTasks.map(doneTask => ({
+              id: doneTask.id,
+              notes: doneTask.notes,
+            }))}
+            refreshDate={refreshDate}
+          />
           {/* TODO: Show Planned Events as well */}
         </>
       )}

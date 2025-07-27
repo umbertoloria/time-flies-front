@@ -10,6 +10,7 @@ import {
   subscribeToStreamlineUpdates,
   unsubscribeToStreamlineUpdates,
 } from './event-streamline-updated.ts'
+import { useDialogForDatePanel } from '../../context/dialog-date-panel/ContextDialogForDatePanel.tsx'
 
 const { readStreamline } = getSDK()
 export const Streamline: FC = () => {
@@ -49,8 +50,11 @@ const StreamlineStateless: FC<{
   return (
     <div className='streamline'>
       <pre className='streamline-pre'>
-        {response.dates.map((date, index) => (
-          <StreamlineDateBox key={index} date={date} />
+        {response.dates.map((plannedEventDateInfo, index) => (
+          <StreamlineDateBox
+            key={index}
+            plannedEventDateInfo={plannedEventDateInfo}
+          />
         ))}
       </pre>
     </div>
@@ -58,16 +62,20 @@ const StreamlineStateless: FC<{
 }
 
 const StreamlineDateBox: FC<{
-  date: TCalendarSDK.ReadPlannedEventsResponseDateBox
-}> = ({ date }) => {
+  plannedEventDateInfo: TCalendarSDK.ReadPlannedEventsResponseDateBox
+}> = ({ plannedEventDateInfo }) => {
   return (
     <>
       {'Data: '}
-      {displayDateFromLocalDate(date.date)}
+      {displayDateFromLocalDate(plannedEventDateInfo.date)}
       {'\n'}
-      {date.calendars.map((calendar, index) => (
+      {plannedEventDateInfo.calendars.map((calendar, index) => (
         <>
-          <StreamlineCalendar key={index} calendar={calendar} />
+          <StreamlineCalendar
+            key={index}
+            calendar={calendar}
+            date={plannedEventDateInfo.date}
+          />
           {'\n'}
         </>
       ))}
@@ -77,7 +85,8 @@ const StreamlineDateBox: FC<{
 
 const StreamlineCalendar: FC<{
   calendar: TCalendarSDK.ReadPlannedEventsResponseCalendar
-}> = ({ calendar }) => {
+  date: string
+}> = ({ calendar, date }) => {
   return (
     <>
       {'  '}
@@ -85,7 +94,12 @@ const StreamlineCalendar: FC<{
       <span style={{ color: calendar.color }}>{calendar.name}</span>
       {'\n'}
       {calendar.todos.map((todo, index) => (
-        <StreamlineTodo key={index} calendar={calendar} todo={todo} />
+        <StreamlineTodo
+          key={index}
+          calendar={calendar}
+          date={date}
+          todo={todo}
+        />
       ))}
       {'\n'}
     </>
@@ -94,10 +108,12 @@ const StreamlineCalendar: FC<{
 
 const StreamlineTodo: FC<{
   calendar: TCalendarSDK.ReadPlannedEventsResponseCalendar
+  date: string
   todo: TNewTodo
-}> = ({ calendar, todo }) => {
+}> = ({ calendar, date, todo }) => {
   const { openDialog: openDialogForCheckPlannedEvent } =
     useDialogForCheckPlannedEvent()
+  const { openDialog: openDialogForDatePanel } = useDialogForDatePanel()
 
   return (
     <>
@@ -127,6 +143,18 @@ const StreamlineTodo: FC<{
         }}
       >
         {'[Salta?]'}
+      </span>{' '}
+      <span
+        className='pre-btn'
+        onClick={() => {
+          openDialogForDatePanel({
+            mode: 'calendar-date-panel',
+            calendarId: calendar.id,
+            date,
+          })
+        }}
+      >
+        {'[Modifica]'}
       </span>
     </>
   )

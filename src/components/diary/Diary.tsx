@@ -1,5 +1,5 @@
 import { FC, useRef, useState } from 'react'
-import { TCalendar, TDay } from '../../remote/sdk/types'
+import { TCalendar, TDay, TNewDoneTask } from '../../remote/sdk/types'
 import { displayDateFromLocalDate } from '../calendar/utils.ts'
 import { getSDK } from '../../remote/remote.ts'
 import { fireEventCalendarUpdated } from '../calendar/event-calendar-updated.ts'
@@ -32,11 +32,16 @@ export const DiaryEntriesListAccordion: FC<{
         <>
           {days.map((day, index) => (
             <div key={index}>
-              <DiaryEntry
+              <DiaryEntryDate
                 calendarId={calendar.id}
                 calendarUsesNotes={!!calendar.usesNotes}
                 date={day.date}
-                dateNotes={day.notes}
+                doneTasks={[
+                  {
+                    id: 0, // FIXME: Never used but dangerous!
+                    notes: day.notes,
+                  },
+                ]}
                 refreshDate={refreshDate}
               />
             </div>
@@ -47,26 +52,33 @@ export const DiaryEntriesListAccordion: FC<{
   )
 }
 
-export const DiaryEntry: FC<{
+export const DiaryEntryDate: FC<{
   calendarId: number
   calendarUsesNotes: boolean
   date: string
-  dateNotes?: string
+  doneTasks: TNewDoneTask[]
   refreshDate: () => void
-}> = ({ date, calendarId, calendarUsesNotes, dateNotes, refreshDate }) => {
+}> = ({ date, calendarId, calendarUsesNotes, doneTasks, refreshDate }) => {
   return (
     <>
       <i className='underline'>{displayDateFromLocalDate(date)}</i>
-      {calendarUsesNotes && (
-        <>
-          <CalendarDateNotesComponent
-            calendarId={calendarId}
-            date={date}
-            dateNotes={dateNotes}
-            refreshDate={refreshDate}
-          />
-        </>
-      )}
+      <p>Fatti:</p>
+      {doneTasks.map((doneTask, index) => (
+        <div key={index}>
+          <p>Task fatto.</p>
+          {calendarUsesNotes && (
+            <>
+              <CalendarDateNotesComponent
+                calendarId={calendarId}
+                date={date}
+                dateNotes={doneTask.notes}
+                refreshDate={refreshDate}
+              />
+            </>
+          )}
+        </div>
+      ))}
+      <p>Da fare: (funzione non ancora implementata)</p>
     </>
   )
 }
