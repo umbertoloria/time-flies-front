@@ -5,9 +5,11 @@ import { getSDK } from '../../remote/remote.ts'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
 import { TCalendar } from '../../remote/sdk/types'
 import {
-  StreamlineStatelessCalendarToDate,
-  StreamlineStatelessDateToCalendar,
-} from '../../components/streamline/Streamline.tsx'
+  StreamlineBoxCalendar,
+  StreamlineBoxDate,
+  StreamlinePre,
+  StreamlineTodo,
+} from '../../components/streamline/StreamlineStateless.tsx'
 import { CustomEventFnType } from '../../events/event-builder.ts'
 import {
   CustomEventTypeCalendarUpdated,
@@ -118,23 +120,35 @@ const TabHistoryCalendarComponent: FC<{
   }, [])
   return (
     <>
-      <StreamlineStatelessCalendarToDate
-        calendars={[
-          {
-            calendar: calendar,
-            dates: calendar.days.map(day => ({
-              date: day.date,
-              todos: [],
-              doneTasks: [
-                {
-                  id: 0, // FIXME: Never used but dangerous!
-                  notes: day.notes,
-                },
-              ],
-            })),
-          },
-        ]}
-      />
+      <StreamlinePre>
+        <StreamlineBoxCalendar
+          spacesOffset={0}
+          calendarColor={calendar.color}
+          calendarName={calendar.name}
+        >
+          {calendar.days.map((date, index) => (
+            <StreamlineBoxDate
+              //
+              key={index}
+              spacesOffset={2}
+              date={date.date}
+            >
+              <StreamlineTodo
+                key={index}
+                calendar={calendar}
+                date={date.date}
+                mode={{
+                  type: 'done-task',
+                  doneTask: {
+                    id: 0, // FIXME: Never used but dangerous!
+                    notes: date.notes,
+                  },
+                }}
+              />
+            </StreamlineBoxDate>
+          ))}
+        </StreamlineBoxCalendar>
+      </StreamlinePre>
     </>
   )
 
@@ -233,24 +247,42 @@ export const DatePanelInner: FC<{
       )}
       {!!data?.data && (
         <>
-          <StreamlineStatelessDateToCalendar
-            dates={[
-              {
-                date: data.data.date,
-                calendars: [
-                  {
-                    id: data.data.calendar.id,
-                    name: data.data.calendar.name,
-                    color: data.data.calendar.color,
-                    plannedColor: data.data.calendar.plannedColor,
-                    usesNotes: data.data.calendar.usesNotes,
-                    todos: data.data.todos,
-                    doneTasks: data.data.doneTasks,
-                  },
-                ],
-              },
-            ]}
-          />
+          <StreamlinePre>
+            <StreamlineBoxDate
+              //
+              spacesOffset={0}
+              date={data.data.date}
+            >
+              <StreamlineBoxCalendar
+                spacesOffset={2}
+                calendarColor={data.data.calendar.color}
+                calendarName={data.data.calendar.name}
+              >
+                {data.data.todos.map((todo, index) => (
+                  <StreamlineTodo
+                    key={index}
+                    calendar={data.data.calendar}
+                    date={date}
+                    mode={{
+                      type: 'todo',
+                      todo,
+                    }}
+                  />
+                ))}
+                {(data.data.doneTasks || []).map((doneTask, index) => (
+                  <StreamlineTodo
+                    key={index}
+                    calendar={data.data.calendar}
+                    date={date}
+                    mode={{
+                      type: 'done-task',
+                      doneTask,
+                    }}
+                  />
+                ))}
+              </StreamlineBoxCalendar>
+            </StreamlineBoxDate>
+          </StreamlinePre>
         </>
       )}
     </>
