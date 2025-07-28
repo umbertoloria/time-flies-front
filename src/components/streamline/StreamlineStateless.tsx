@@ -74,30 +74,24 @@ export const StreamlineTodo: FC<{
         <>
           {mode.type === 'todo' && (
             <>
-              {'notes: '}
-              <>
-                {typeof mode.todo.notes === 'string' ? (
-                  <>{mode.todo.notes}</>
-                ) : (
-                  <span style={{ opacity: 0.6 }}>null</span>
-                )}
-              </>
-              {'\n'}
-              {'      '}
+              {!!mode.todo.notes && (
+                <>
+                  {mode.todo.notes}
+                  {'\n'}
+                  {'      '}
+                </>
+              )}
             </>
           )}
           {mode.type === 'done-task' && (
             <>
-              {'notes: '}
-              <>
-                {typeof mode.doneTask.notes === 'string' ? (
-                  <>{mode.doneTask.notes}</>
-                ) : (
-                  <span style={{ opacity: 0.6 }}>null</span>
-                )}
-              </>
-              {'\n'}
-              {'      '}
+              {!!mode.doneTask.notes && (
+                <>
+                  {mode.doneTask.notes}
+                  {'\n'}
+                  {'      '}
+                </>
+              )}
             </>
           )}
         </>
