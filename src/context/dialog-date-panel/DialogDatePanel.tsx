@@ -134,13 +134,11 @@ const TabHistoryCalendarComponent: FC<{
               date={date.date}
             >
               <StreamlineTodo
-                key={index}
                 calendar={calendar}
                 date={date.date}
                 mode={{
                   type: 'done-task',
                   doneTask: {
-                    id: 0, // FIXME: Never used but dangerous!
                     notes: date.notes,
                   },
                 }}

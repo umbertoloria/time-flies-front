@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren } from 'react'
 import { displayDateFromLocalDate } from '../calendar/utils.ts'
-import { TCalendarRcd, TNewDoneTask, TNewTodo } from '../../remote/sdk/types'
+import { TCalendarRcd, TNewTodo } from '../../remote/sdk/types'
 import { useDialogForCheckPlannedEvent } from '../../context/dialog-check-planned-events/ContextDialogForCheckPlannedEvents.tsx'
 import { useDialogForDatePanel } from '../../context/dialog-date-panel/ContextDialogForDatePanel.tsx'
 
@@ -57,7 +57,9 @@ export const StreamlineTodo: FC<{
       }
     | {
         type: 'done-task'
-        doneTask: TNewDoneTask
+        doneTask: {
+          notes?: string
+        }
       }
 }> = ({ calendar, date, mode }) => {
   const { openDialog: openDialogForCheckPlannedEvent } =
