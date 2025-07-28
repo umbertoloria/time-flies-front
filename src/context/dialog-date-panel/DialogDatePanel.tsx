@@ -4,7 +4,10 @@ import { Badge } from '../../components/calendar/Badge.tsx'
 import { getSDK } from '../../remote/remote.ts'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
 import { TCalendar } from '../../remote/sdk/types'
-import { StreamlineStateless } from '../../components/streamline/Streamline.tsx'
+import {
+  StreamlineStatelessCalendarToDate,
+  StreamlineStatelessDateToCalendar,
+} from '../../components/streamline/Streamline.tsx'
 import { CustomEventFnType } from '../../events/event-builder.ts'
 import {
   CustomEventTypeCalendarUpdated,
@@ -115,29 +118,22 @@ const TabHistoryCalendarComponent: FC<{
   }, [])
   return (
     <>
-      <StreamlineStateless
-        response={{
-          dates: calendar.days.map(day => ({
-            // FIXME: Reverse hierarchy
-            date: day.date,
-            calendars: [
-              {
-                id: calendar.id,
-                name: calendar.name,
-                color: calendar.color,
-                plannedColor: calendar.plannedColor,
-                usesNotes: calendar.usesNotes,
-                todos: [],
-                doneTasks: [
-                  {
-                    id: 0, // FIXME: Never used but dangerous!
-                    notes: day.notes,
-                  },
-                ],
-              },
-            ],
-          })),
-        }}
+      <StreamlineStatelessCalendarToDate
+        calendars={[
+          {
+            calendar: calendar,
+            dates: calendar.days.map(day => ({
+              date: day.date,
+              todos: [],
+              doneTasks: [
+                {
+                  id: 0, // FIXME: Never used but dangerous!
+                  notes: day.notes,
+                },
+              ],
+            })),
+          },
+        ]}
       />
     </>
   )
@@ -237,25 +233,23 @@ export const DatePanelInner: FC<{
       )}
       {!!data?.data && (
         <>
-          <StreamlineStateless
-            response={{
-              dates: [
-                {
-                  date: data.data.date,
-                  calendars: [
-                    {
-                      id: data.data.calendar.id,
-                      name: data.data.calendar.name,
-                      color: data.data.calendar.color,
-                      plannedColor: data.data.calendar.plannedColor,
-                      usesNotes: data.data.calendar.usesNotes,
-                      todos: data.data.todos,
-                      doneTasks: data.data.doneTasks,
-                    },
-                  ],
-                },
-              ],
-            }}
+          <StreamlineStatelessDateToCalendar
+            dates={[
+              {
+                date: data.data.date,
+                calendars: [
+                  {
+                    id: data.data.calendar.id,
+                    name: data.data.calendar.name,
+                    color: data.data.calendar.color,
+                    plannedColor: data.data.calendar.plannedColor,
+                    usesNotes: data.data.calendar.usesNotes,
+                    todos: data.data.todos,
+                    doneTasks: data.data.doneTasks,
+                  },
+                ],
+              },
+            ]}
           />
         </>
       )}

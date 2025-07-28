@@ -42,77 +42,129 @@ export const Streamline: FC = () => {
         <>Searching...</>
       ) : (
         <>
-          <StreamlineStateless response={dataStreamline.data} />
+          <StreamlineStatelessDateToCalendar
+            dates={dataStreamline.data.dates}
+          />
         </>
       )}
     </div>
   )
 }
 
-export const StreamlineStateless: FC<{
-  response: TCalendarSDK.ReadPlannedEventsResponse
-}> = ({ response }) => {
+export const StreamlineStatelessDateToCalendar: FC<{
+  dates: {
+    date: string
+    calendars: TCalendarSDK.ReadPlannedEventsResponseCalendar[]
+  }[]
+}> = ({ dates }) => {
   return (
     <div className='streamline'>
       <pre className='streamline-pre'>
-        {response.dates.map((plannedEventDateInfo, index) => (
-          <StreamlineDateToCalendar
-            key={index} // Doesn't work: this uses a Fragment as Root Tag.
-            date={plannedEventDateInfo.date}
-            calendars={plannedEventDateInfo.calendars}
-          />
+        {dates.map(({ date, calendars }) => (
+          <>
+            {'Data: '}
+            {displayDateFromLocalDate(date)}
+            {'\n'}
+            {calendars.map(calendar => (
+              <>
+                {'  Calendario: '}
+                <span style={{ color: calendar.color }}>{calendar.name}</span>
+                {'\n'}
+                {calendar.todos.map((todo, index) => (
+                  <>
+                    <StreamlineTodo
+                      key={index}
+                      calendar={calendar}
+                      date={date}
+                      mode={{
+                        type: 'todo',
+                        todo,
+                      }}
+                    />
+                    {'\n'}
+                  </>
+                ))}
+                {(calendar.doneTasks || []).map((doneTask, index) => (
+                  <>
+                    <StreamlineTodo
+                      key={index}
+                      calendar={calendar}
+                      date={date}
+                      mode={{
+                        type: 'done-task',
+                        doneTask,
+                      }}
+                    />
+                    {'\n'}
+                  </>
+                ))}
+                {'\n'}
+              </>
+            ))}
+          </>
         ))}
       </pre>
     </div>
   )
 }
-
-const StreamlineDateToCalendar: FC<{
-  date: string
-  calendars: TCalendarSDK.ReadPlannedEventsResponseCalendar[]
-}> = ({ date, calendars }) => {
+export const StreamlineStatelessCalendarToDate: FC<{
+  calendars: {
+    calendar: TCalendarRcd
+    dates: {
+      date: string
+      todos: TNewTodo[]
+      doneTasks: TNewDoneTask[]
+    }[]
+  }[]
+}> = ({ calendars }) => {
   return (
-    <>
-      {'Data: '}
-      {displayDateFromLocalDate(date)}
-      {'\n'}
-      {calendars.map(calendar => (
-        <>
-          {'  Calendario: '}
-          <span style={{ color: calendar.color }}>{calendar.name}</span>
-          {'\n'}
-          {calendar.todos.map((todo, index) => (
-            <>
-              <StreamlineTodo
-                key={index}
-                calendar={calendar}
-                date={date}
-                mode={{
-                  type: 'todo',
-                  todo,
-                }}
-              />
-              {'\n'}
-            </>
-          ))}
-          {(calendar.doneTasks || []).map((doneTask, index) => (
-            <>
-              <StreamlineTodo
-                key={index}
-                calendar={calendar}
-                date={date}
-                mode={{
-                  type: 'done-task',
-                  doneTask,
-                }}
-              />
-              {'\n'}
-            </>
-          ))}
-          {'\n'}
-        </>
-      ))}
-    </>
+    <div className='streamline'>
+      <pre className='streamline-pre'>
+        {calendars.map(({ calendar, dates }) => (
+          <>
+            {'Calendario: '}
+            <span style={{ color: calendar.color }}>{calendar.name}</span>
+            {'\n'}
+            {dates.map(date => (
+              <>
+                {'  Data: '}
+                {displayDateFromLocalDate(date.date)}
+                {'\n'}
+                {date.todos.map((todo, index) => (
+                  <>
+                    <StreamlineTodo
+                      key={index}
+                      calendar={calendar}
+                      date={date.date}
+                      mode={{
+                        type: 'todo',
+                        todo,
+                      }}
+                    />
+                    {'\n'}
+                  </>
+                ))}
+                {date.doneTasks.map((doneTask, index) => (
+                  <>
+                    <StreamlineTodo
+                      key={index}
+                      calendar={calendar}
+                      date={date.date}
+                      mode={{
+                        type: 'done-task',
+                        doneTask,
+                      }}
+                    />
+                    {'\n'}
+                  </>
+                ))}
+                {'\n'}
+              </>
+            ))}
+          </>
+        ))}
+      </pre>
+    </div>
   )
 }
 
