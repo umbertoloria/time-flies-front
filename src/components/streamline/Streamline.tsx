@@ -56,9 +56,10 @@ export const StreamlineStateless: FC<{
     <div className='streamline'>
       <pre className='streamline-pre'>
         {response.dates.map((plannedEventDateInfo, index) => (
-          <StreamlineDateBox
+          <StreamlineDateToCalendar
             key={index} // Doesn't work: this uses a Fragment as Root Tag.
-            plannedEventDateInfo={plannedEventDateInfo}
+            date={plannedEventDateInfo.date}
+            calendars={plannedEventDateInfo.calendars}
           />
         ))}
       </pre>
@@ -66,67 +67,48 @@ export const StreamlineStateless: FC<{
   )
 }
 
-const StreamlineDateBox: FC<{
-  plannedEventDateInfo: TCalendarSDK.ReadPlannedEventsResponseDateBox
-}> = ({ plannedEventDateInfo }) => {
+const StreamlineDateToCalendar: FC<{
+  date: string
+  calendars: TCalendarSDK.ReadPlannedEventsResponseCalendar[]
+}> = ({ date, calendars }) => {
   return (
     <>
       {'Data: '}
-      {displayDateFromLocalDate(plannedEventDateInfo.date)}
+      {displayDateFromLocalDate(date)}
       {'\n'}
-      {plannedEventDateInfo.calendars.map((calendar, index) => (
+      {calendars.map(calendar => (
         <>
-          <StreamlineCalendar
-            key={index}
-            calendar={calendar}
-            date={plannedEventDateInfo.date}
-            todos={calendar.todos}
-            doneTasks={calendar.doneTasks || []}
-          />
+          {'  Calendario: '}
+          <span style={{ color: calendar.color }}>{calendar.name}</span>
           {'\n'}
-        </>
-      ))}
-    </>
-  )
-}
-
-const StreamlineCalendar: FC<{
-  calendar: TCalendarRcd
-  date: string
-  todos: TNewTodo[]
-  doneTasks: TNewDoneTask[]
-}> = ({ calendar, date, todos, doneTasks }) => {
-  return (
-    <>
-      {'  '}
-      {'Calendario: '}
-      <span style={{ color: calendar.color }}>{calendar.name}</span>
-      {'\n'}
-      {todos.map((todo, index) => (
-        <>
-          <StreamlineTodo
-            key={index}
-            calendar={calendar}
-            date={date}
-            mode={{
-              type: 'todo',
-              todo,
-            }}
-          />
-          {'\n'}
-        </>
-      ))}
-      {doneTasks.map((doneTask, index) => (
-        <>
-          <StreamlineTodo
-            key={index}
-            calendar={calendar}
-            date={date}
-            mode={{
-              type: 'done-task',
-              doneTask,
-            }}
-          />
+          {calendar.todos.map((todo, index) => (
+            <>
+              <StreamlineTodo
+                key={index}
+                calendar={calendar}
+                date={date}
+                mode={{
+                  type: 'todo',
+                  todo,
+                }}
+              />
+              {'\n'}
+            </>
+          ))}
+          {(calendar.doneTasks || []).map((doneTask, index) => (
+            <>
+              <StreamlineTodo
+                key={index}
+                calendar={calendar}
+                date={date}
+                mode={{
+                  type: 'done-task',
+                  doneTask,
+                }}
+              />
+              {'\n'}
+            </>
+          ))}
           {'\n'}
         </>
       ))}
@@ -228,6 +210,30 @@ const StreamlineTodo: FC<{
                     date,
                     mode.todo,
                     'update-notes'
+                  )
+                }}
+              >
+                {'[Note]'}
+              </span>{' '}
+            </>
+          )}
+        </>
+      )}
+      {mode.type === 'done-task' && (
+        <>
+          {!!calendar.usesNotes && (
+            <>
+              <span
+                className='pre-btn'
+                onClick={() => {
+                  openDialogForCheckPlannedEvent(
+                    calendar,
+                    date,
+                    {
+                      id: 0, // FIXME: Never used but dangerous!
+                      notes: mode.doneTask.notes,
+                    },
+                    'update-done-task-notes'
                   )
                 }}
               >
