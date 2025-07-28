@@ -206,6 +206,7 @@ export const DatePanelInner: FC<{
                       plannedColor: data.data.calendar.plannedColor,
                       usesNotes: data.data.calendar.usesNotes,
                       todos: data.data.todos,
+                      doneTasks: data.data.doneTasks,
                     },
                   ],
                 },

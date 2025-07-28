@@ -2,7 +2,12 @@ import { FC, useEffect } from 'react'
 import { CalendarTitle } from '../calendar/CalendarGrid.tsx'
 import { getSDK } from '../../remote/remote.ts'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
-import { TCalendarRcd, TCalendarSDK, TNewTodo } from '../../remote/sdk/types'
+import {
+  TCalendarRcd,
+  TCalendarSDK,
+  TNewDoneTask,
+  TNewTodo,
+} from '../../remote/sdk/types'
 import { displayDateFromLocalDate } from '../calendar/utils.ts'
 import { useDialogForCheckPlannedEvent } from '../../context/dialog-check-planned-events/ContextDialogForCheckPlannedEvents.tsx'
 import { CustomEventFnType } from '../../events/event-builder.ts'
@@ -76,6 +81,7 @@ const StreamlineDateBox: FC<{
             calendar={calendar}
             date={plannedEventDateInfo.date}
             todos={calendar.todos}
+            doneTasks={calendar.doneTasks || []}
           />
           {'\n'}
         </>
@@ -88,7 +94,8 @@ const StreamlineCalendar: FC<{
   calendar: TCalendarRcd
   date: string
   todos: TNewTodo[]
-}> = ({ calendar, date, todos }) => {
+  doneTasks: TNewDoneTask[]
+}> = ({ calendar, date, todos, doneTasks }) => {
   return (
     <>
       {'  '}
@@ -96,14 +103,33 @@ const StreamlineCalendar: FC<{
       <span style={{ color: calendar.color }}>{calendar.name}</span>
       {'\n'}
       {todos.map((todo, index) => (
-        <StreamlineTodo
-          key={index}
-          calendar={calendar}
-          date={date}
-          todo={todo}
-        />
+        <>
+          <StreamlineTodo
+            key={index}
+            calendar={calendar}
+            date={date}
+            mode={{
+              type: 'todo',
+              todo,
+            }}
+          />
+          {'\n'}
+        </>
       ))}
-      {'\n'}
+      {doneTasks.map((doneTask, index) => (
+        <>
+          <StreamlineTodo
+            key={index}
+            calendar={calendar}
+            date={date}
+            mode={{
+              type: 'done-task',
+              doneTask,
+            }}
+          />
+          {'\n'}
+        </>
+      ))}
     </>
   )
 }
@@ -111,68 +137,104 @@ const StreamlineCalendar: FC<{
 const StreamlineTodo: FC<{
   calendar: TCalendarRcd
   date: string
-  todo: TNewTodo
-}> = ({ calendar, date, todo }) => {
+  mode:
+    | {
+        type: 'todo'
+        todo: TNewTodo
+      }
+    | {
+        type: 'done-task'
+        doneTask: TNewDoneTask
+      }
+}> = ({ calendar, date, mode }) => {
   const { openDialog: openDialogForCheckPlannedEvent } =
     useDialogForCheckPlannedEvent()
   const { openDialog: openDialogForDatePanel } = useDialogForDatePanel()
 
   return (
     <>
-      {'  [ ] '}
+      {mode.type === 'todo' && <>{'  [ ] '}</>}
+      {mode.type === 'done-task' && <>{'  [v] '}</>}
       {!!calendar.usesNotes && (
         <>
-          {'notes: '}
-          <>
-            {typeof todo.notes === 'string' ? (
-              <>{todo.notes}</>
-            ) : (
-              <span style={{ opacity: 0.6 }}>null</span>
-            )}
-          </>
-          {'\n'}
-          {'     '}
+          {mode.type === 'todo' && (
+            <>
+              {'notes: '}
+              <>
+                {typeof mode.todo.notes === 'string' ? (
+                  <>{mode.todo.notes}</>
+                ) : (
+                  <span style={{ opacity: 0.6 }}>null</span>
+                )}
+              </>
+              {'\n'}
+              {'      '}
+            </>
+          )}
+          {mode.type === 'done-task' && (
+            <>
+              {'notes: '}
+              <>
+                {typeof mode.doneTask.notes === 'string' ? (
+                  <>{mode.doneTask.notes}</>
+                ) : (
+                  <span style={{ opacity: 0.6 }}>null</span>
+                )}
+              </>
+              {'\n'}
+              {'      '}
+            </>
+          )}
         </>
       )}
-      <span
-        className='pre-btn'
-        onClick={() => {
-          openDialogForCheckPlannedEvent(calendar, date, todo, 'done')
-        }}
-      >
-        {'[Done?]'}
-      </span>{' '}
-      <span
-        className='pre-btn'
-        onClick={() => {
-          openDialogForCheckPlannedEvent(calendar, date, todo, 'missed')
-        }}
-      >
-        {'[Salta?]'}
-      </span>{' '}
-      <span
-        className='pre-btn'
-        onClick={() => {
-          openDialogForCheckPlannedEvent(calendar, date, todo, 'move')
-        }}
-      >
-        {'[Sposta]'}
-      </span>{' '}
-      {!!calendar.usesNotes && (
+      {mode.type === 'todo' && (
         <>
+          <span
+            className='pre-btn'
+            onClick={() => {
+              openDialogForCheckPlannedEvent(calendar, date, mode.todo, 'done')
+            }}
+          >
+            {'[Done?]'}
+          </span>{' '}
           <span
             className='pre-btn'
             onClick={() => {
               openDialogForCheckPlannedEvent(
                 calendar,
                 date,
-                todo,
-                'update-notes'
+                mode.todo,
+                'missed'
               )
             }}
           >
-            {'[Note]'}
+            {'[Salta?]'}
           </span>{' '}
+          <span
+            className='pre-btn'
+            onClick={() => {
+              openDialogForCheckPlannedEvent(calendar, date, mode.todo, 'move')
+            }}
+          >
+            {'[Sposta]'}
+          </span>{' '}
+          {!!calendar.usesNotes && (
+            <>
+              <span
+                className='pre-btn'
+                onClick={() => {
+                  openDialogForCheckPlannedEvent(
+                    calendar,
+                    date,
+                    mode.todo,
+                    'update-notes'
+                  )
+                }}
+              >
+                {'[Note]'}
+              </span>{' '}
+            </>
+          )}
         </>
       )}
       <span

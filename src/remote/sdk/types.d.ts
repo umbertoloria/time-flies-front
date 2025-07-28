@@ -90,6 +90,7 @@ export namespace TCalendarSDK {
   }
   export type ReadPlannedEventsResponseCalendar = TCalendarRcd & {
     todos: TNewTodo[]
+    doneTasks?: TNewDoneTask[]
   }
   // Read Date Response
   export type ReadDateResponse = {
