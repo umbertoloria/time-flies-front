@@ -66,12 +66,14 @@ export const DialogCheckPlannedEvent: FC = () => {
             {data?.mode === 'done' && (
               <>
                 <p>{'Confermi di aver svolto questa attività?'}</p>
-                <NotesFieldEditor
-                  enableNoteInput={enableNoteInput}
-                  setEnableNoteInput={setEnableNoteInput}
-                  inputValue={notesInputValue}
-                  setInputValue={setNotesInputValue}
-                />
+                {!!data.calendar.usesNotes && (
+                  <NotesFieldEditor
+                    enableNoteInput={enableNoteInput}
+                    setEnableNoteInput={setEnableNoteInput}
+                    inputValue={notesInputValue}
+                    setInputValue={setNotesInputValue}
+                  />
+                )}
               </>
             )}
 
@@ -100,15 +102,17 @@ export const DialogCheckPlannedEvent: FC = () => {
 
             {data?.mode === 'update-notes' && (
               <>
-                <p>
-                  {'Confermi di aver aggiornare le note di questa attività?'}
-                </p>
-                <NotesFieldEditor
-                  enableNoteInput={enableNoteInput}
-                  setEnableNoteInput={setEnableNoteInput}
-                  inputValue={notesInputValue}
-                  setInputValue={setNotesInputValue}
-                />
+                {!!data.calendar.usesNotes && (
+                  <>
+                    <p>{'Confermi di voler aggiornare questa nota?'}</p>
+                    <NotesFieldEditor
+                      enableNoteInput={enableNoteInput}
+                      setEnableNoteInput={setEnableNoteInput}
+                      inputValue={notesInputValue}
+                      setInputValue={setNotesInputValue}
+                    />
+                  </>
+                )}
               </>
             )}
           </div>

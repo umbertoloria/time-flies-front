@@ -118,20 +118,24 @@ const StreamlineTodo: FC<{
   return (
     <>
       {'  *: '}
-      {'notes: '}
-      <>
-        {typeof todo.notes === 'string' ? (
-          <>{todo.notes}</>
-        ) : (
-          <span style={{ opacity: 0.6 }}>null</span>
-        )}
-      </>
+      {!!calendar.usesNotes && (
+        <>
+          {'notes: '}
+          <>
+            {typeof todo.notes === 'string' ? (
+              <>{todo.notes}</>
+            ) : (
+              <span style={{ opacity: 0.6 }}>null</span>
+            )}
+          </>
+        </>
+      )}
       {'\n'}
       {'    '}
       <span
         className='pre-btn'
         onClick={() => {
-          openDialogForCheckPlannedEvent(calendar.id, date, todo, 'done')
+          openDialogForCheckPlannedEvent(calendar, date, todo, 'done')
         }}
       >
         {'[Done?]'}
@@ -139,7 +143,7 @@ const StreamlineTodo: FC<{
       <span
         className='pre-btn'
         onClick={() => {
-          openDialogForCheckPlannedEvent(calendar.id, date, todo, 'missed')
+          openDialogForCheckPlannedEvent(calendar, date, todo, 'missed')
         }}
       >
         {'[Salta?]'}
@@ -147,24 +151,28 @@ const StreamlineTodo: FC<{
       <span
         className='pre-btn'
         onClick={() => {
-          openDialogForCheckPlannedEvent(calendar.id, date, todo, 'move')
+          openDialogForCheckPlannedEvent(calendar, date, todo, 'move')
         }}
       >
         {'[Sposta]'}
       </span>{' '}
-      <span
-        className='pre-btn'
-        onClick={() => {
-          openDialogForCheckPlannedEvent(
-            calendar.id,
-            date,
-            todo,
-            'update-notes'
-          )
-        }}
-      >
-        {'[Note]'}
-      </span>{' '}
+      {!!calendar.usesNotes && (
+        <>
+          <span
+            className='pre-btn'
+            onClick={() => {
+              openDialogForCheckPlannedEvent(
+                calendar,
+                date,
+                todo,
+                'update-notes'
+              )
+            }}
+          >
+            {'[Note]'}
+          </span>{' '}
+        </>
+      )}
       <span
         className='pre-btn'
         onClick={() => {

@@ -3,10 +3,10 @@ import { useState } from 'react'
 import { fireEventStreamlineUpdated } from '../../components/streamline/event-streamline-updated.ts'
 import { fireEventCalendarUpdated } from '../../components/calendar/event-calendar-updated.ts'
 import { useUXContext } from '../UXContext.tsx'
-import { TNewTodo } from '../../remote/sdk/types'
+import { TCalendarRcd, TNewTodo } from '../../remote/sdk/types'
 
 type ContextPartData = {
-  calendarId: number
+  calendar: TCalendarRcd
   date: string
   todo: TNewTodo
   mode: 'done' | 'missed' | 'move' | 'update-notes'
@@ -16,7 +16,7 @@ export type ContextDialogForCheckPlannedEvent = {
   isOpen: boolean
   data?: ContextPartData
   openDialog: (
-    calendarId: number,
+    calendar: TCalendarRcd,
     date: string,
     todo: TNewTodo,
     mode: 'done' | 'missed' | 'move' | 'update-notes'
@@ -49,7 +49,7 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
     dialogForCheckPlannedEvent: {
       isOpen: dialog.isOpen,
       data: dialog.data,
-      openDialog(calendarId, date, todo, mode) {
+      openDialog(calendar, date, todo, mode) {
         if (dialog.isOpen || dialog.data?.loading) {
           return
         }
@@ -57,7 +57,7 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
           ...dialog,
           isOpen: true,
           data: {
-            calendarId,
+            calendar,
             date,
             todo,
             mode,
@@ -79,11 +79,11 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
         if (!dialog.isOpen || !dialog.data || dialog.data.loading) {
           return
         }
-        const { calendarId, date, todo, mode } = dialog.data
+        const { calendar, date, todo, mode } = dialog.data
         setDialog({
           isOpen: true,
           data: {
-            calendarId,
+            calendar,
             date,
             todo,
             mode,
@@ -92,7 +92,7 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
         })
         if (mode === 'done' || mode === 'missed') {
           checkPlannedEventWithSuccess(
-            calendarId,
+            calendar.id,
             todo.id,
             mode === 'done'
               ? {
@@ -107,7 +107,7 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
               // Yay!
 
               fireEventStreamlineUpdated(undefined)
-              fireEventCalendarUpdated({ calendarId })
+              fireEventCalendarUpdated({ calendarId: calendar.id })
 
               setDialog({
                 isOpen: false,
@@ -121,7 +121,7 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
               setDialog({
                 isOpen: true,
                 data: {
-                  calendarId,
+                  calendar,
                   date,
                   todo,
                   mode,
@@ -134,12 +134,12 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
             alert('Empty date')
             return
           }
-          movePlannedEvent(calendarId, todo.id, param)
+          movePlannedEvent(calendar.id, todo.id, param)
             .then(() => {
               // Yay!
 
               fireEventStreamlineUpdated(undefined)
-              fireEventCalendarUpdated({ calendarId })
+              fireEventCalendarUpdated({ calendarId: calendar.id })
 
               setDialog({
                 isOpen: false,
@@ -153,7 +153,7 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
               setDialog({
                 isOpen: true,
                 data: {
-                  calendarId,
+                  calendar,
                   date,
                   todo,
                   mode,
@@ -162,7 +162,7 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
               })
             })
         } else if (mode === 'update-notes') {
-          updatePlannedEventNotes(calendarId, todo.id, param || undefined)
+          updatePlannedEventNotes(calendar.id, todo.id, param || undefined)
             .then(() => {
               // Yay!
 
@@ -181,7 +181,7 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
               setDialog({
                 isOpen: true,
                 data: {
-                  calendarId,
+                  calendar,
                   date,
                   todo,
                   mode,
