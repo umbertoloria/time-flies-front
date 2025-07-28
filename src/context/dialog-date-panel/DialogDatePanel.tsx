@@ -5,14 +5,15 @@ import { getSDK } from '../../remote/remote.ts'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
 import { TCalendar } from '../../remote/sdk/types'
 import {
-  DiaryEntriesListAccordion,
-  DiaryEntryDate,
-} from '../../components/diary/Diary.tsx'
-import {
   filterUnique,
   getDateFromLocalDate,
   getTodayYear,
 } from '../../lib/utils.ts'
+import { StreamlineStateless } from '../../components/streamline/Streamline.tsx'
+import {
+  DiaryEntriesListAccordion,
+  DiaryEntryDate,
+} from '../../components/diary/Diary.tsx'
 
 export const DialogDatePanel: FC = () => {
   // TODO: Deprecate Dialog for Calendar Date management
@@ -189,11 +190,27 @@ export const DatePanelInner: FC<{
               id: doneTask.id,
               notes: doneTask.notes,
             }))}
-            todos={data.data.todos.map(todo => ({
-              id: todo.id,
-              notes: todo.notes,
-            }))}
+            todos={[]}
             refreshDate={refreshDate}
+          />
+          <StreamlineStateless
+            response={{
+              dates: [
+                {
+                  date: data.data.date,
+                  calendars: [
+                    {
+                      id: data.data.calendar.id,
+                      name: data.data.calendar.name,
+                      color: data.data.calendar.color,
+                      plannedColor: data.data.calendar.plannedColor,
+                      usesNotes: data.data.calendar.usesNotes,
+                      todos: data.data.todos,
+                    },
+                  ],
+                },
+              ],
+            }}
           />
         </>
       )}

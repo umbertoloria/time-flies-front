@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react'
 import { CalendarTitle } from '../calendar/CalendarGrid.tsx'
 import { getSDK } from '../../remote/remote.ts'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
-import { TCalendarSDK, TNewTodo } from '../../remote/sdk/types'
+import { TCalendarRcd, TCalendarSDK, TNewTodo } from '../../remote/sdk/types'
 import { displayDateFromLocalDate } from '../calendar/utils.ts'
 import { useDialogForCheckPlannedEvent } from '../../context/dialog-check-planned-events/ContextDialogForCheckPlannedEvents.tsx'
 import { CustomEventFnType } from '../../events/event-builder.ts'
@@ -44,7 +44,7 @@ export const Streamline: FC = () => {
   )
 }
 
-const StreamlineStateless: FC<{
+export const StreamlineStateless: FC<{
   response: TCalendarSDK.ReadPlannedEventsResponse
 }> = ({ response }) => {
   return (
@@ -75,6 +75,7 @@ const StreamlineDateBox: FC<{
             key={index}
             calendar={calendar}
             date={plannedEventDateInfo.date}
+            todos={calendar.todos}
           />
           {'\n'}
         </>
@@ -84,16 +85,17 @@ const StreamlineDateBox: FC<{
 }
 
 const StreamlineCalendar: FC<{
-  calendar: TCalendarSDK.ReadPlannedEventsResponseCalendar
+  calendar: TCalendarRcd
   date: string
-}> = ({ calendar, date }) => {
+  todos: TNewTodo[]
+}> = ({ calendar, date, todos }) => {
   return (
     <>
       {'  '}
       {'Calendario: '}
       <span style={{ color: calendar.color }}>{calendar.name}</span>
       {'\n'}
-      {calendar.todos.map((todo, index) => (
+      {todos.map((todo, index) => (
         <StreamlineTodo
           key={index}
           calendar={calendar}
@@ -107,7 +109,7 @@ const StreamlineCalendar: FC<{
 }
 
 const StreamlineTodo: FC<{
-  calendar: TCalendarSDK.ReadPlannedEventsResponseCalendar
+  calendar: TCalendarRcd
   date: string
   todo: TNewTodo
 }> = ({ calendar, date, todo }) => {
@@ -117,7 +119,7 @@ const StreamlineTodo: FC<{
 
   return (
     <>
-      {'  *: '}
+      {'  [ ] '}
       {!!calendar.usesNotes && (
         <>
           {'notes: '}
@@ -128,10 +130,10 @@ const StreamlineTodo: FC<{
               <span style={{ opacity: 0.6 }}>null</span>
             )}
           </>
+          {'\n'}
+          {'     '}
         </>
       )}
-      {'\n'}
-      {'    '}
       <span
         className='pre-btn'
         onClick={() => {
