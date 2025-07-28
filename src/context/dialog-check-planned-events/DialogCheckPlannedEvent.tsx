@@ -21,7 +21,9 @@ export const DialogCheckPlannedEvent: FC = () => {
           ? 'Sposta'
           : data?.mode === 'update-notes'
             ? 'Aggiorna note'
-            : '???' // Should never happen.
+            : data?.mode === 'update-done-task-notes'
+              ? 'Aggiorna note'
+              : '???' // Should never happen.
 
   const [enableNoteInput, setEnableNoteInput] = useState(INITIAL_ENABLE_NOTE)
   const [notesInputValue, setNotesInputValue] = useState(INITIAL_INPUT_VALUE)
@@ -40,6 +42,14 @@ export const DialogCheckPlannedEvent: FC = () => {
       } else if (data?.mode === 'move') {
         setDateInputValue(data.date)
       } else if (data?.mode === 'update-notes') {
+        if (data.todo.notes) {
+          setEnableNoteInput(true)
+          setNotesInputValue(data.todo.notes)
+        } else {
+          setEnableNoteInput(false)
+          setNotesInputValue('')
+        }
+      } else if (data?.mode === 'update-done-task-notes') {
         if (data.todo.notes) {
           setEnableNoteInput(true)
           setNotesInputValue(data.todo.notes)
@@ -115,6 +125,22 @@ export const DialogCheckPlannedEvent: FC = () => {
                 )}
               </>
             )}
+
+            {data?.mode === 'update-done-task-notes' && (
+              <>
+                {!!data.calendar.usesNotes && (
+                  <>
+                    <p>{'Confermi di voler aggiornare questa nota?'}</p>
+                    <NotesFieldEditor
+                      enableNoteInput={enableNoteInput}
+                      setEnableNoteInput={setEnableNoteInput}
+                      inputValue={notesInputValue}
+                      setInputValue={setNotesInputValue}
+                    />
+                  </>
+                )}
+              </>
+            )}
           </div>
           <div className='flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600'>
             <button
@@ -123,7 +149,9 @@ export const DialogCheckPlannedEvent: FC = () => {
               onClick={() => {
                 let notes: undefined | string = undefined
                 if (
-                  (data?.mode === 'done' || data?.mode === 'update-notes') &&
+                  (data?.mode === 'done' ||
+                    data?.mode === 'update-notes' ||
+                    data?.mode === 'update-done-task-notes') &&
                   enableNoteInput
                 ) {
                   // TODO: Duplicated code (*sdcn)
@@ -145,6 +173,9 @@ export const DialogCheckPlannedEvent: FC = () => {
                   confirmProgressDone(dateInputValue)
                 }
                 if (data?.mode === 'update-notes') {
+                  confirmProgressDone(notes)
+                }
+                if (data?.mode === 'update-done-task-notes') {
                   confirmProgressDone(notes)
                 }
               }}

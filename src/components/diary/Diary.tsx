@@ -1,16 +1,5 @@
-import { FC, useRef, useState } from 'react'
-import {
-  TCalendar,
-  TCalendarRcd,
-  TDay,
-  TNewDoneTask,
-} from '../../remote/sdk/types'
-import { displayDateFromLocalDate } from '../calendar/utils.ts'
-import { getSDK } from '../../remote/remote.ts'
-import { fireEventCalendarUpdated } from '../calendar/event-calendar-updated.ts'
-import { fireEventStreamlineUpdated } from '../streamline/event-streamline-updated.ts'
-import { ColouredQuad } from '../coloured/ColouredQuad.tsx'
-
+/*
+// FIXME: Deprecate this code
 export const DiaryEntriesListAccordion: FC<{
   title?: string
   initialOpen?: boolean
@@ -66,7 +55,6 @@ export const DiaryEntryDate: FC<{
   todos: TNewDoneTask[]
   refreshDate: () => void
 }> = ({ date, calendar, doneTasks, todos, refreshDate }) => {
-  // FIXME: Improve UX here
   return (
     <>
       <i className='underline'>{displayDateFromLocalDate(date)}</i>
@@ -104,7 +92,6 @@ export const DiaryEntryDate: FC<{
               />
             </>
           )}
-          {/* FIXME: Insert Done/Skip buttons here */}
         </div>
       ))}
     </>
@@ -406,3 +393,4 @@ const NotesForm: FC<{
     </>
   )
 }
+*/

@@ -9,7 +9,7 @@ type ContextPartData = {
   calendar: TCalendarRcd
   date: string
   todo: TNewTodo
-  mode: 'done' | 'missed' | 'move' | 'update-notes'
+  mode: 'done' | 'missed' | 'move' | 'update-notes' | 'update-done-task-notes'
   loading: boolean
 }
 export type ContextDialogForCheckPlannedEvent = {
@@ -19,7 +19,7 @@ export type ContextDialogForCheckPlannedEvent = {
     calendar: TCalendarRcd,
     date: string,
     todo: TNewTodo,
-    mode: 'done' | 'missed' | 'move' | 'update-notes'
+    mode: 'done' | 'missed' | 'move' | 'update-notes' | 'update-done-task-notes'
   ) => void
   closeDialog: () => void
   confirmProgressDone: (param: undefined | string) => void
@@ -37,6 +37,7 @@ const {
   checkPlannedEventWithSuccess,
   movePlannedEvent,
   updatePlannedEventNotes,
+  updateCalendarDateNotes,
 } = getSDK()
 export const useContextDialogForCheckPlannedEventsForUX = (): {
   dialogForCheckPlannedEvent: ContextDialogForCheckPlannedEvent
@@ -168,6 +169,34 @@ export const useContextDialogForCheckPlannedEventsForUX = (): {
 
               // fireEventCalendarUpdated({ calendarId })
               fireEventStreamlineUpdated(undefined)
+
+              setDialog({
+                isOpen: false,
+                // data: undefined,
+              })
+            })
+            .catch(err => {
+              console.error(err)
+              // TODO: Tell user all went KO
+              alert('Errore avvenuto')
+              setDialog({
+                isOpen: true,
+                data: {
+                  calendar,
+                  date,
+                  todo,
+                  mode,
+                  loading: false,
+                },
+              })
+            })
+        } else if (mode === 'update-done-task-notes') {
+          updateCalendarDateNotes(calendar.id, date, param || undefined)
+            .then(() => {
+              // Yay!
+
+              fireEventCalendarUpdated({ calendarId: calendar.id })
+              // fireEventStreamlineUpdated(undefined)
 
               setDialog({
                 isOpen: false,

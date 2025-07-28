@@ -4,16 +4,13 @@ import { Badge } from '../../components/calendar/Badge.tsx'
 import { getSDK } from '../../remote/remote.ts'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
 import { TCalendar } from '../../remote/sdk/types'
-import {
-  filterUnique,
-  getDateFromLocalDate,
-  getTodayYear,
-} from '../../lib/utils.ts'
 import { StreamlineStateless } from '../../components/streamline/Streamline.tsx'
+import { CustomEventFnType } from '../../events/event-builder.ts'
 import {
-  DiaryEntriesListAccordion,
-  DiaryEntryDate,
-} from '../../components/diary/Diary.tsx'
+  CustomEventTypeCalendarUpdated,
+  subscribeToCalendarUpdates,
+  unsubscribeToCalendarUpdates,
+} from '../../components/calendar/event-calendar-updated.ts'
 
 export const DialogDatePanel: FC = () => {
   // TODO: Deprecate Dialog for Calendar Date management
@@ -103,6 +100,49 @@ const TabHistoryCalendarComponent: FC<{
   calendar: TCalendar
   refreshCalendar: () => void
 }> = ({ calendar, refreshCalendar }) => {
+  useEffect(() => {
+    const listener: CustomEventFnType<
+      CustomEventTypeCalendarUpdated
+    > = event => {
+      if (event.detail.calendarId === calendar.id) {
+        refreshCalendar()
+      }
+    }
+    subscribeToCalendarUpdates(listener)
+    return () => {
+      unsubscribeToCalendarUpdates(listener)
+    }
+  }, [])
+  return (
+    <>
+      <StreamlineStateless
+        response={{
+          dates: calendar.days.map(day => ({
+            // FIXME: Reverse hierarchy
+            date: day.date,
+            calendars: [
+              {
+                id: calendar.id,
+                name: calendar.name,
+                color: calendar.color,
+                plannedColor: calendar.plannedColor,
+                usesNotes: calendar.usesNotes,
+                todos: [],
+                doneTasks: [
+                  {
+                    id: 0, // FIXME: Never used but dangerous!
+                    notes: day.notes,
+                  },
+                ],
+              },
+            ],
+          })),
+        }}
+      />
+    </>
+  )
+
+  /*
   const allYears = calendar.days
     .map(day => getDateFromLocalDate(day.date).getFullYear())
     .filter(filterUnique)
@@ -151,6 +191,7 @@ const TabHistoryCalendarComponent: FC<{
       </>
     )
   }
+  */
 }
 
 export const DatePanelInner: FC<{
@@ -173,6 +214,19 @@ export const DatePanelInner: FC<{
     // TODO: Go in loading if calendar/date is changing
     refreshDate()
   }, [calendarId, date])
+  useEffect(() => {
+    const listener: CustomEventFnType<
+      CustomEventTypeCalendarUpdated
+    > = event => {
+      if (event.detail.calendarId === calendarId) {
+        refreshDate()
+      }
+    }
+    subscribeToCalendarUpdates(listener)
+    return () => {
+      unsubscribeToCalendarUpdates(listener)
+    }
+  }, [])
 
   return (
     <>
@@ -183,16 +237,6 @@ export const DatePanelInner: FC<{
       )}
       {!!data?.data && (
         <>
-          <DiaryEntryDate
-            calendar={data.data.calendar}
-            date={data.data.date}
-            doneTasks={data.data.doneTasks.map(doneTask => ({
-              id: doneTask.id,
-              notes: doneTask.notes,
-            }))}
-            todos={[]}
-            refreshDate={refreshDate}
-          />
           <StreamlineStateless
             response={{
               dates: [

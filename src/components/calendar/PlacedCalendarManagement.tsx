@@ -1,19 +1,14 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { useDialogForDatePanel } from '../../context/dialog-date-panel/ContextDialogForDatePanel.tsx'
 import {
   DatePanelInner,
   TabHistoryCalendarLoaderComponent,
 } from '../../context/dialog-date-panel/DialogDatePanel.tsx'
-import classNames from 'classnames'
 import { CalendarTitle } from './CalendarGrid.tsx'
 import { displayDateFromLocalDate } from './utils.ts'
 
-const TAB_HISTORY = 'tab-history'
-const TAB_TODOS = 'tab-todos'
-
 export const PlacedCalendarManagement: FC = () => {
   const { isOpen, data, closeDialog } = useDialogForDatePanel()
-  const [tab, setTab] = useState(TAB_TODOS)
   return (
     <>
       <div className='placed-calendar-management'>
@@ -24,15 +19,7 @@ export const PlacedCalendarManagement: FC = () => {
                 {'Close X'}
               </button>
             </CalendarTitle>
-            <TabsList tab={tab} setTab={setTab} />
-            <div className='tabs-content'>
-              {tab === TAB_HISTORY && (
-                <TabHistoryCalendarLoaderComponent
-                  calendarId={data.calendarId}
-                />
-              )}
-              {tab === TAB_TODOS && <TabTodos />}
-            </div>
+            <TabHistoryCalendarLoaderComponent calendarId={data.calendarId} />
           </>
         )}
         {isOpen && data?.mode === 'calendar-date-panel' && (
@@ -57,6 +44,9 @@ export const PlacedCalendarManagement: FC = () => {
   )
 }
 
+/*
+const TAB_HISTORY = 'tab-history'
+const TAB_TODOS = 'tab-todos'
 const TabsList: FC<{
   tab: string
   setTab: (tab: string) => void
@@ -90,3 +80,4 @@ const TabsList: FC<{
 const TabTodos = () => {
   return <div className='todos'>...</div>
 }
+*/
