@@ -85,11 +85,21 @@ export const DayStatus: FC<DayStatusProps> = props => {
       return () => {
         if (props.apiData) {
           // On Parent Calendar, this uses Parent Calendar ID.
-          openDialogForInsertNewGoal(
-            props.apiData.calendar.id,
-            props.apiData.calendar.usesNotes,
-            props.date
-          )
+          if (props.status === 'planned') {
+            // Open "DialogForDatePanel"
+            openDialogForDatePanel({
+              mode: 'calendar-date-panel',
+              calendarId: props.apiData.calendar.id,
+              date: props.date,
+            })
+          } else {
+            // Open "DialogForInsertNewGoal"
+            openDialogForInsertNewGoal(
+              props.apiData.calendar.id,
+              props.apiData.calendar.usesNotes,
+              props.date
+            )
+          }
         } else {
           // Should never happen.
         }
