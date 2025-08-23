@@ -85,7 +85,8 @@
 
     .streamline-box,
     .timelines-grids,
-    .placed-calendar-management {
+    .placed-calendar-management,
+    .dashboard-control {
         width: calc(280px * 2 + 40px);
     }
 
@@ -156,5 +157,9 @@
 
         }
 
+    }
+
+    .dashboard-control {
+        /* ... */
     }
 }

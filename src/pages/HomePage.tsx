@@ -18,6 +18,10 @@ import {
 import { moveDateToClosestNonFutureMonday } from '../components/calendar/utils.ts'
 import { createLogicCalendarFromTCalendar } from '../components/calendar/logic-calendar.ts'
 import { PlacedCalendarManagement } from '../components/calendar/PlacedCalendarManagement.tsx'
+import {
+  DashboardControl,
+  DEFAULT_SEE_ALL_CALENDARS_FLAG,
+} from '../components/DashboardControl.tsx'
 
 const periodRefreshCalendarsInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 
@@ -105,13 +109,22 @@ const InnerPage: FC = () => {
     return result
   }, [calendar2monthsOffset, timelinesWeeksBefore])
 
+  // See All Calendars Flag
+  const [seeAllCalendars, setSeeAllCalendars] = useState(
+    DEFAULT_SEE_ALL_CALENDARS_FLAG
+  )
+
   // Calendars
   const [dataAllCalendars, { refetch: refetchAllCalendars }] =
     useWrapperForCreateResource(() => {
       return readAllCalendars({
         dateFrom: minFromDate,
+        seeAllCalendars,
       })
     })
+  useEffect(() => {
+    refetchAllCalendars()
+  }, [minFromDate, seeAllCalendars])
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const refetchOneCalendar = (calendarId: number) => {
@@ -126,9 +139,6 @@ const InnerPage: FC = () => {
       clearInterval(refreshCalendarIntervalTimer)
     }
   }, [])
-  useEffect(() => {
-    refetchAllCalendars()
-  }, [minFromDate])
 
   return (
     <section className='p-8'>
@@ -171,6 +181,11 @@ const InnerPage: FC = () => {
               pleaseUpdateCalendar={calendarId => {
                 refetchOneCalendar(calendarId)
               }}
+            />
+
+            <DashboardControl
+              seeAllCalendars={seeAllCalendars}
+              setSeeAllCalendars={setSeeAllCalendars}
             />
           </>
         )}

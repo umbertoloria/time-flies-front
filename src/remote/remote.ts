@@ -62,6 +62,7 @@ export const getSDK = () => {
     // Calendar
     readAllCalendars: (filters: {
       dateFrom: string
+      seeAllCalendars: boolean
     }): Promise<{ calendars: TCalendar[] }> =>
       debugMode
         ? Promise.resolve({
@@ -100,7 +101,7 @@ export const getSDK = () => {
             .get(
               // When "date-from" filter is optional:
               //   `?a=calendars-read${typeof filters.dateFrom === 'string' ? `&date-from=${filters.dateFrom}` : ''}`
-              `?a=calendars-read&date-from=${filters.dateFrom}`
+              `?a=calendars-read&date-from=${filters.dateFrom}${filters.seeAllCalendars ? '&show-all=true' : ''}`
             )
             .then(({ data }) => data),
     readCalendar: (id: number): Promise<TCalendar | 'unable'> =>
