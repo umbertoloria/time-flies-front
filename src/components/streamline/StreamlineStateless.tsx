@@ -19,7 +19,7 @@ export const StreamlineBoxDate: FC<
 > = ({ spacesOffset, date, children }) => {
   return (
     <>
-      {spacesOffset > 0 && ' '.repeat(spacesOffset)}
+      {placeOffsetSpace(spacesOffset)}
       {'Data: '}
       {displayDateFromLocalDate(date)}
       {'\n'}
@@ -37,7 +37,7 @@ export const StreamlineBoxCalendar: FC<
 > = ({ spacesOffset, calendarColor, calendarName, children }) => {
   return (
     <>
-      {spacesOffset > 0 && ' '.repeat(spacesOffset)}
+      {placeOffsetSpace(spacesOffset)}
       {'Calendario: '}
       <span style={{ color: calendarColor }}>{calendarName}</span>
       {'\n'}
@@ -46,6 +46,9 @@ export const StreamlineBoxCalendar: FC<
     </>
   )
 }
+
+export const placeOffsetSpace = (spacesOffset: number) =>
+  spacesOffset > 0 && ' '.repeat(spacesOffset)
 
 export const StreamlineTodo: FC<{
   calendar: TCalendarRcd
@@ -104,7 +107,7 @@ export const StreamlineTodo: FC<{
               openDialogForCheckPlannedEvent(calendar, date, mode.todo, 'done')
             }}
           >
-            {'[Done?]'}
+            {'[Done]'}
           </span>{' '}
           <span
             className='pre-btn'
@@ -117,7 +120,7 @@ export const StreamlineTodo: FC<{
               )
             }}
           >
-            {'[Salta?]'}
+            {'[Skip]'}
           </span>{' '}
           <span
             className='pre-btn'
@@ -125,7 +128,7 @@ export const StreamlineTodo: FC<{
               openDialogForCheckPlannedEvent(calendar, date, mode.todo, 'move')
             }}
           >
-            {'[Sposta]'}
+            {'[Move]'}
           </span>{' '}
           {!!calendar.usesNotes && (
             <>
@@ -140,7 +143,7 @@ export const StreamlineTodo: FC<{
                   )
                 }}
               >
-                {'[Note]'}
+                {'[Notes]'}
               </span>{' '}
             </>
           )}
@@ -164,7 +167,7 @@ export const StreamlineTodo: FC<{
                   )
                 }}
               >
-                {'[Note]'}
+                {'[Notes]'}
               </span>{' '}
             </>
           )}
@@ -180,7 +183,7 @@ export const StreamlineTodo: FC<{
           })
         }}
       >
-        {'[Apri]'}
+        {'[Open]'}
       </span>
       {'\n'}
     </>

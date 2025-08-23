@@ -59,6 +59,7 @@ export const DialogDatePanel: FC = () => {
   )
 }
 
+// --------------------------------------------------------------- //
 const periodRefreshDateInMillis = 3 * 60 * 60 * 1000 // 3 minutes.
 const { readCalendar, readCalendarDate } = getSDK()
 export const TabHistoryCalendarLoaderComponent: FC<{
@@ -202,6 +203,7 @@ const TabHistoryCalendarComponent: FC<{
   */
 }
 
+// --------------------------------------------------------------- //
 export const DatePanelInner: FC<{
   calendarId: number
   date: string
@@ -256,6 +258,7 @@ export const DatePanelInner: FC<{
                 calendarColor={data.data.calendar.color}
                 calendarName={data.data.calendar.name}
               >
+                {/* Show all Todos */}
                 {data.data.todos.map((todo, index) => (
                   <StreamlineTodo
                     key={index}
@@ -267,6 +270,8 @@ export const DatePanelInner: FC<{
                     }}
                   />
                 ))}
+
+                {/* Show all Done Tasks */}
                 {(data.data.doneTasks || []).map((doneTask, index) => (
                   <StreamlineTodo
                     key={index}

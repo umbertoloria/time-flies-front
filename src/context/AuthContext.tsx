@@ -16,7 +16,7 @@ const AuthContext = createContext<{
   refresh: () => void
 }>({
   user: undefined,
-  isLoading: true, // Initing with loading on.
+  isLoading: true, // Starting with loading on.
   refresh() {
     // Blank...
   },
