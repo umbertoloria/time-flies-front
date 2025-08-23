@@ -1,12 +1,12 @@
 import { FC } from 'react'
 import {
   CalendarArrowControl,
+  CalendarGridStatelessListening,
   CalendarTitle,
 } from '../calendar/CalendarGrid.tsx'
 import { TCalendar } from '../../remote/sdk/types'
 import { getITMonthFromLocalDate } from '../../lib/utils.ts'
 import { getFirstAndLastLocalDatesFromDayStatusRows } from '../calendar/utils.ts'
-import { Timeline } from './Timeline.tsx'
 import { createDayStatusPropsListFromLogicCalendar } from './timeline-utils.ts'
 import { createLogicCalendarFromTCalendar } from '../calendar/logic-calendar.ts'
 import { Badge } from '../calendar/Badge.tsx'
@@ -55,10 +55,16 @@ export const Timelines: FC<{
         {!props.isLoading ? (
           props.allCalendars.map((calendar, index) => (
             <div key={index}>
-              <Timeline
-                fromDate={props.fromDate}
-                numDaysToShow={numDaysToShow}
-                calendar={calendar}
+              <CalendarGridStatelessListening
+                dayStatusRows={[
+                  {
+                    dayStatuses: createDayStatusPropsListFromLogicCalendar(
+                      createLogicCalendarFromTCalendar(calendar),
+                      props.fromDate,
+                      numDaysToShow
+                    ),
+                  },
+                ]}
                 pleaseUpdateCalendar={() => {
                   props.pleaseUpdateCalendar(calendar.id)
                 }}

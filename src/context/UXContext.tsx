@@ -20,7 +20,7 @@ import {
 import {
   ContextDialogForCheckPlannedEvent,
   contextDialogForCheckPlannedEventDataDefault,
-  useContextDialogForCheckPlannedEventsForUX,
+  useContextDialogForCheckPlannedEventForUX,
 } from './dialog-check-planned-events/ContextDialogForCheckPlannedEvents.tsx'
 import {
   ContextDialogForInsertNewPlannedEvent,
@@ -28,6 +28,12 @@ import {
   useContextDialogForInsertNewPlannedEventForUX,
 } from './dialog-insert-new-planned-event/ContextDialogForInsertNewPlannedEvent.tsx'
 import { DialogForInsertNewPlannedEvent } from './dialog-insert-new-planned-event/DialogForInsertNewPlannedEvent.tsx'
+import {
+  ContextDialogForCalendarManagement,
+  contextDialogForCalendarManagementDataDefault,
+  useContextDialogForCalendarManagementForUX,
+} from './dialog-calendar-management/ContextDialogForCalendarManagement.tsx'
+import { DialogCalendarManagement } from './dialog-calendar-management/DialogCalendarManagement.tsx'
 
 const UXContext = createContext<{
   dialogForInsertNewGoal: ContextDialogForInsertNewGoal
@@ -35,6 +41,7 @@ const UXContext = createContext<{
   dialogForGroover: ContextDialogForGroover
   dialogForCheckPlannedEvent: ContextDialogForCheckPlannedEvent
   dialogForInsertNewPlannedEvent: ContextDialogForInsertNewPlannedEvent
+  dialogForCalendarManagement: ContextDialogForCalendarManagement
 }>({
   dialogForInsertNewGoal: contextDialogForInsertNewGoalDataDefault,
   dialogForDatePanel: contextDialogForDatePanelDataDefault,
@@ -42,6 +49,7 @@ const UXContext = createContext<{
   dialogForCheckPlannedEvent: contextDialogForCheckPlannedEventDataDefault,
   dialogForInsertNewPlannedEvent:
     contextDialogForInsertNewPlannedEventDataDefault,
+  dialogForCalendarManagement: contextDialogForCalendarManagementDataDefault,
 })
 
 export const UXProvider: FC<PropsWithChildren> = props => {
@@ -49,9 +57,11 @@ export const UXProvider: FC<PropsWithChildren> = props => {
   const { dialogForDatePanel } = useUXContextDialogForDatePanelForUX()
   const { dialogForGroover } = useContextDialogForGrooverForUX()
   const { dialogForCheckPlannedEvent } =
-    useContextDialogForCheckPlannedEventsForUX()
+    useContextDialogForCheckPlannedEventForUX()
   const { dialogForInsertNewPlannedEvent } =
     useContextDialogForInsertNewPlannedEventForUX()
+  const { dialogForCalendarManagement } =
+    useContextDialogForCalendarManagementForUX()
 
   return (
     <UXContext.Provider
@@ -61,6 +71,7 @@ export const UXProvider: FC<PropsWithChildren> = props => {
         dialogForGroover,
         dialogForCheckPlannedEvent,
         dialogForInsertNewPlannedEvent,
+        dialogForCalendarManagement,
       }}
     >
       <DialogForInsertNewGoal />
@@ -68,6 +79,7 @@ export const UXProvider: FC<PropsWithChildren> = props => {
       <DialogForGroover />
       <DialogCheckPlannedEvent />
       <DialogForInsertNewPlannedEvent />
+      <DialogCalendarManagement />
       {props.children}
     </UXContext.Provider>
   )

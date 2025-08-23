@@ -146,6 +146,23 @@ export const getSDK = () => {
             .catch(() => {
               return 'unable'
             }),
+    createCalendar: (data: {
+      name: string
+      color: string // Es. "115599" for "#115599"
+      plannedColor: string // Es. "115599" for "#115599"
+      usesNotes: boolean
+    }) =>
+      api
+        .post(
+          `?a=calendar-create`,
+          makeFormData({
+            name: data.name,
+            color: data.color,
+            'planned-color': data.plannedColor,
+            'uses-notes': data.usesNotes ? 'true' : 'false',
+          })
+        )
+        .then(({ data }) => data),
     readCalendarDate: (
       calendarId: number,
       date: string

@@ -45,8 +45,6 @@
     }
 
     .calendar-grid {
-        width: 280px;
-
         tr {
             width: 280px;
 
@@ -83,10 +81,16 @@
         @apply bg-gray-500
     }
 
+    .calendar-grid,
+    .dashboard-control {
+        /* Single-sized */
+        width: 280px;
+    }
+
     .streamline-box,
     .timelines-grids,
-    .placed-calendar-management,
-    .dashboard-control {
+    .placed-calendar-management {
+        /* Double-sized */
         width: calc(280px * 2 + 40px);
     }
 

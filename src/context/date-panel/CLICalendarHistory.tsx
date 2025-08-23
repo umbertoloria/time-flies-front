@@ -38,7 +38,6 @@ export const CLICalendarHistory: FC<{
   useEffect(() => {
     refreshCalendar()
   }, [calendarId])
-  const calendar = data?.data
 
   return (
     <>
@@ -47,10 +46,10 @@ export const CLICalendarHistory: FC<{
           <Badge>Loading...</Badge>
         </>
       )}
-      {!!calendar && (
+      {!data?.loading && !!data?.data && (
         <>
           <CLICalendarHistoryStateless
-            calendar={calendar}
+            calendar={data.data}
             refreshCalendar={refreshCalendar}
           />
         </>

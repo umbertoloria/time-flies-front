@@ -39,7 +39,7 @@ const {
   updatePlannedEventNotes,
   updateCalendarDateNotes,
 } = getSDK()
-export const useContextDialogForCheckPlannedEventsForUX = (): {
+export const useContextDialogForCheckPlannedEventForUX = (): {
   dialogForCheckPlannedEvent: ContextDialogForCheckPlannedEvent
 } => {
   const [dialog, setDialog] = useState<{

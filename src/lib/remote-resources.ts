@@ -19,12 +19,15 @@ export const useWrapperForCreateResource = <T>(
   )
 
   const fnfn = () => {
+    // console.log('useWrapperForCreateResource', data, 'start loading')
     setData(old => (old ? { ...old, loading: true } : undefined))
     fn()
       .then(data => {
+        // console.log('useWrapperForCreateResource', data, 'stop loading ok')
         setData({ data, loading: false })
       })
       .catch(err => {
+        // console.error('useWrapperForCreateResource', data, 'stop loading error')
         setData(old => (old ? { ...old, loading: false } : undefined))
         console.error(err)
       })
@@ -37,7 +40,7 @@ export const useWrapperForCreateResource = <T>(
   return [
     data
       ? {
-          loading: false,
+          loading: data.loading,
           data: data.data,
         }
       : undefined,

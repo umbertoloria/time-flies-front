@@ -83,3 +83,6 @@ export const getTodayYear = () => getTodayDate().getFullYear()
 export const filterUnique = <T>(value: T, index: number, array: T[]) =>
   array.indexOf(value) === index
 export const getUniqueElems = <T>(list: T[]) => list.filter(filterUnique)
+
+// REG. EXPR.s
+export const regexpColorNoHashRRGGBB = /^[A-Fa-f0-9]{6}$/
