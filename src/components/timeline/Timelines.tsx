@@ -9,6 +9,7 @@ import { getFirstAndLastLocalDatesFromDayStatusRows } from '../calendar/utils.ts
 import { Timeline } from './Timeline.tsx'
 import { createDayStatusPropsListFromLogicCalendar } from './timeline-utils.ts'
 import { createLogicCalendarFromTCalendar } from '../calendar/logic-calendar.ts'
+import { Badge } from '../calendar/Badge.tsx'
 
 export const defaultTimelinesNumDaysBefore = 14 // 14 days before + today => correct "width"
 
@@ -65,7 +66,7 @@ export const Timelines: FC<{
             </div>
           ))
         ) : (
-          <>Searching...</>
+          <Badge>Caricamento...</Badge>
         )}
       </div>
     </div>

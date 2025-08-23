@@ -91,7 +91,7 @@ export const TabHistoryCalendarLoaderComponent: FC<{
     <>
       {data?.loading && (
         <>
-          <Badge>Caricamento...</Badge>
+          <Badge>Loading...</Badge>
         </>
       )}
       {!!calendar && (
@@ -250,10 +250,10 @@ export const DatePanelInner: FC<{
     <>
       {data?.loading && (
         <>
-          <Badge>Caricamento...</Badge>
+          <Badge>Loading...</Badge>
         </>
       )}
-      {!!data?.data && (
+      {!data?.loading && !!data?.data && (
         <>
           <StreamlinePre>
             <StreamlineBoxDate
@@ -324,7 +324,7 @@ export const DatePanelInner: FC<{
                         )
                       }}
                     >
-                      {'[New Todo?]'}
+                      {'[Add todo]'}
                     </span>{' '}
                   </>
                 )}

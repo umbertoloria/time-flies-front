@@ -13,6 +13,7 @@ import {
   StreamlinePre,
   StreamlineTodo,
 } from './StreamlineStateless.tsx'
+import { Badge } from '../calendar/Badge.tsx'
 
 const { readStreamline } = getSDK()
 export const Streamline: FC = () => {
@@ -36,7 +37,7 @@ export const Streamline: FC = () => {
     <div className='streamline-box'>
       <CalendarTitle textColor='#fff' label='Streamline' />
       {!dataStreamline?.data ? (
-        <>Searching...</>
+        <Badge>Caricamento...</Badge>
       ) : (
         <>
           <StreamlinePre>
