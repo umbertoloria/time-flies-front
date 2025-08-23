@@ -42,19 +42,21 @@ export const Streamline: FC = () => {
         <>
           <StreamlinePre>
             {dataStreamline.data.dates.map(({ date, calendars }, index) => (
-              <StreamlineBoxDate
-                //
-                key={index}
-                spacesOffset={0}
-                date={date}
-              >
+              <>
+                <StreamlineBoxDate
+                  //
+                  key={index}
+                  spacesOffset={0}
+                  date={date}
+                />
                 {calendars.map((calendar, index) => (
-                  <StreamlineBoxCalendar
-                    key={index}
-                    spacesOffset={2}
-                    calendarColor={calendar.color}
-                    calendarName={calendar.name}
-                  >
+                  <>
+                    <StreamlineBoxCalendar
+                      key={index}
+                      spacesOffset={2}
+                      calendarColor={calendar.color}
+                      calendarName={calendar.name}
+                    />
                     {calendar.todos.map((todo, index) => (
                       <StreamlineTodo
                         key={index}
@@ -77,9 +79,10 @@ export const Streamline: FC = () => {
                         }}
                       />
                     ))}
-                  </StreamlineBoxCalendar>
+                    {'\n'}
+                  </>
                 ))}
-              </StreamlineBoxDate>
+              </>
             ))}
           </StreamlinePre>
         </>

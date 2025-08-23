@@ -129,27 +129,28 @@ const TabHistoryCalendarComponent: FC<{
           spacesOffset={0}
           calendarColor={calendar.color}
           calendarName={calendar.name}
-        >
-          {calendar.days.map((date, index) => (
+        />
+        {calendar.days.map((date, index) => (
+          <>
             <StreamlineBoxDate
               //
               key={index}
               spacesOffset={2}
               date={date.date}
-            >
-              <StreamlineTodo
-                calendar={calendar}
-                date={date.date}
-                mode={{
-                  type: 'done-task',
-                  doneTask: {
-                    notes: date.notes,
-                  },
-                }}
-              />
-            </StreamlineBoxDate>
-          ))}
-        </StreamlineBoxCalendar>
+            />
+            <StreamlineTodo
+              calendar={calendar}
+              date={date.date}
+              mode={{
+                type: 'done-task',
+                doneTask: {
+                  notes: date.notes,
+                },
+              }}
+            />
+            {'\n'}
+          </>
+        ))}
       </StreamlinePre>
     </>
   )
@@ -267,77 +268,73 @@ export const DatePanelInner: FC<{
               //
               spacesOffset={0}
               date={data.data.date}
-            >
-              <StreamlineBoxCalendar
-                spacesOffset={2}
-                calendarColor={data.data.calendar.color}
-                calendarName={data.data.calendar.name}
-              >
-                {/* Show all Todos */}
-                {data.data.todos.map((todo, index) => (
-                  <StreamlineTodo
-                    key={index}
-                    calendar={data.data.calendar}
-                    date={date}
-                    mode={{
-                      type: 'todo',
-                      todo,
-                    }}
-                  />
-                ))}
-
-                {/* Show all Done Tasks */}
-                {(data.data.doneTasks || []).map((doneTask, index) => (
-                  <StreamlineTodo
-                    key={index}
-                    calendar={data.data.calendar}
-                    date={date}
-                    mode={{
-                      type: 'done-task',
-                      doneTask,
-                    }}
-                  />
-                ))}
-
-                {(allowNewDoneTasks || allowNewTodos) && (
+            />
+            <StreamlineBoxCalendar
+              spacesOffset={2}
+              calendarColor={data.data.calendar.color}
+              calendarName={data.data.calendar.name}
+            />
+            {/* Show all Todos */}
+            {data.data.todos.map((todo, index) => (
+              <StreamlineTodo
+                key={index}
+                calendar={data.data.calendar}
+                date={date}
+                mode={{
+                  type: 'todo',
+                  todo,
+                }}
+              />
+            ))}
+            {/* Show all Done Tasks */}
+            {(data.data.doneTasks || []).map((doneTask, index) => (
+              <StreamlineTodo
+                key={index}
+                calendar={data.data.calendar}
+                date={date}
+                mode={{
+                  type: 'done-task',
+                  doneTask,
+                }}
+              />
+            ))}
+            {(allowNewDoneTasks || allowNewTodos) && (
+              <>
+                {placeOffsetSpace(2)}
+                {allowNewDoneTasks && (
                   <>
-                    {placeOffsetSpace(2)}
-                    {allowNewDoneTasks && (
-                      <>
-                        <span
-                          className='pre-btn'
-                          onClick={() => {
-                            openDialogForInsertNewGoal(
-                              data.data.calendar.id,
-                              data.data.calendar.usesNotes || false,
-                              date
-                            )
-                          }}
-                        >
-                          {'[Add done task]'}
-                        </span>{' '}
-                      </>
-                    )}
-                    {allowNewTodos && (
-                      <>
-                        <span
-                          className='pre-btn'
-                          onClick={() => {
-                            openDialogForInsertNewPlannedEvent(
-                              data.data.calendar.id,
-                              data.data.calendar.usesNotes || false,
-                              date
-                            )
-                          }}
-                        >
-                          {'[Add todo]'}
-                        </span>{' '}
-                      </>
-                    )}
+                    <span
+                      className='pre-btn'
+                      onClick={() => {
+                        openDialogForInsertNewGoal(
+                          data.data.calendar.id,
+                          data.data.calendar.usesNotes || false,
+                          date
+                        )
+                      }}
+                    >
+                      {'[Add done task]'}
+                    </span>{' '}
                   </>
                 )}
-              </StreamlineBoxCalendar>
-            </StreamlineBoxDate>
+                {allowNewTodos && (
+                  <>
+                    <span
+                      className='pre-btn'
+                      onClick={() => {
+                        openDialogForInsertNewPlannedEvent(
+                          data.data.calendar.id,
+                          data.data.calendar.usesNotes || false,
+                          date
+                        )
+                      }}
+                    >
+                      {'[Add todo]'}
+                    </span>{' '}
+                  </>
+                )}
+              </>
+            )}
           </StreamlinePre>
         </>
       )}

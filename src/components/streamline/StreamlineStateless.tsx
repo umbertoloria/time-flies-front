@@ -11,37 +11,29 @@ export const StreamlinePre: FC<PropsWithChildren> = ({ children }) => {
     </div>
   )
 }
-export const StreamlineBoxDate: FC<
-  PropsWithChildren<{
-    spacesOffset: number
-    date: string
-  }>
-> = ({ spacesOffset, date, children }) => {
+export const StreamlineBoxDate: FC<{
+  spacesOffset: number
+  date: string
+}> = ({ spacesOffset, date }) => {
   return (
     <>
       {placeOffsetSpace(spacesOffset)}
       {'Data: '}
       {displayDateFromLocalDate(date)}
       {'\n'}
-      {children}
-      {'\n'}
     </>
   )
 }
-export const StreamlineBoxCalendar: FC<
-  PropsWithChildren<{
-    spacesOffset: number
-    calendarColor: string
-    calendarName: string
-  }>
-> = ({ spacesOffset, calendarColor, calendarName, children }) => {
+export const StreamlineBoxCalendar: FC<{
+  spacesOffset: number
+  calendarColor: string
+  calendarName: string
+}> = ({ spacesOffset, calendarColor, calendarName }) => {
   return (
     <>
       {placeOffsetSpace(spacesOffset)}
       {'Calendario: '}
       <span style={{ color: calendarColor }}>{calendarName}</span>
-      {'\n'}
-      {children}
       {'\n'}
     </>
   )
@@ -71,8 +63,9 @@ export const StreamlineTodo: FC<{
 
   return (
     <>
-      {mode.type === 'todo' && <>{'  [ ] '}</>}
-      {mode.type === 'done-task' && <>{'  [v] '}</>}
+      {placeOffsetSpace(2)}
+      {mode.type === 'todo' && <>{'[ ] '}</>}
+      {mode.type === 'done-task' && <>{'[v] '}</>}
       {!!calendar.usesNotes && (
         <>
           {mode.type === 'todo' && (
@@ -81,7 +74,7 @@ export const StreamlineTodo: FC<{
                 <>
                   {mode.todo.notes}
                   {'\n'}
-                  {'      '}
+                  {placeOffsetSpace(2 + 4)}
                 </>
               )}
             </>
@@ -92,7 +85,7 @@ export const StreamlineTodo: FC<{
                 <>
                   {mode.doneTask.notes}
                   {'\n'}
-                  {'      '}
+                  {placeOffsetSpace(2 + 4)}
                 </>
               )}
             </>
