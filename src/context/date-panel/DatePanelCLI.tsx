@@ -16,10 +16,11 @@ import {
 } from '../../components/calendar/event-calendar-updated.ts'
 import { useDialogForInsertNewGoal } from '../dialog-insert-new-goal/ContextDialogForInsertNewGoal.tsx'
 import { useDialogForInsertNewPlannedEvent } from '../dialog-insert-new-planned-event/ContextDialogForInsertNewPlannedEvent.tsx'
-import { getSDK } from '../../remote/remote.ts'
+import { getCalendarDateSDK } from '../../remote/remote.ts'
 
 export const periodRefreshDateInMillis = 3 * 60 * 60 * 1000 // 3 minutes.
-const { calendarDateSdk } = getSDK()
+
+const calendarDateSdk = getCalendarDateSDK()
 export const DatePanelInnerCLI: FC<{
   calendarId: number
   date: string

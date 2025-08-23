@@ -13,11 +13,11 @@ import {
   StreamlinePre,
   StreamlineTodo,
 } from '../../components/streamline/StreamlineStateless.tsx'
-import { getSDK } from '../../remote/remote.ts'
+import { getCalendarSDK } from '../../remote/remote.ts'
 import { periodRefreshDateInMillis } from './DatePanelCLI.tsx'
 import { TCalendar } from '../../remote/sdk/types'
 
-const { calendarSdk } = getSDK()
+const calendarSdk = getCalendarSDK()
 export const CLICalendarHistory: FC<{
   calendarId: number
 }> = ({ calendarId }) => {

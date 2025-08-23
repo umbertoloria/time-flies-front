@@ -1,4 +1,4 @@
-import { getSDK } from '../../remote/remote.ts'
+import { getCalendarDateSDK, getPlannedEventSDK } from '../../remote/remote.ts'
 import { useState } from 'react'
 import { fireEventStreamlineUpdated } from '../../components/streamline/event-streamline-updated.ts'
 import { fireEventCalendarUpdated } from '../../components/calendar/event-calendar-updated.ts'
@@ -33,7 +33,8 @@ export const contextDialogForCheckPlannedEventDataDefault: ContextDialogForCheck
     confirmProgressDone() {},
   } as const
 
-const { plannedEventSdk, calendarDateSdk } = getSDK()
+const calendarDateSdk = getCalendarDateSDK()
+const plannedEventSdk = getPlannedEventSDK()
 export const useContextDialogForCheckPlannedEventForUX = (): {
   dialogForCheckPlannedEvent: ContextDialogForCheckPlannedEvent
 } => {

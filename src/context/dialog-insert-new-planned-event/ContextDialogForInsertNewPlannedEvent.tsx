@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { fireEventCalendarUpdated } from '../../components/calendar/event-calendar-updated.ts'
 import { fireEventStreamlineUpdated } from '../../components/streamline/event-streamline-updated.ts'
-import { getSDK } from '../../remote/remote.ts'
+import { getPlannedEventSDK } from '../../remote/remote.ts'
 import { useUXContext } from '../UXContext.tsx'
 
 type ContextPartData = {
@@ -32,7 +32,7 @@ export const contextDialogForInsertNewPlannedEventDataDefault: ContextDialogForI
     confirmProgressToDo() {},
   } as const
 
-const { plannedEventSdk } = getSDK()
+const plannedEventSdk = getPlannedEventSDK()
 export const useContextDialogForInsertNewPlannedEventForUX = (): {
   dialogForInsertNewPlannedEvent: ContextDialogForInsertNewPlannedEvent
 } => {

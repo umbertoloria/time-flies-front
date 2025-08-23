@@ -1,4 +1,4 @@
-import { getSDK } from '../../remote/remote.ts'
+import { getCalendarSDK } from '../../remote/remote.ts'
 import { useState } from 'react'
 import { fireEventStreamlineUpdated } from '../../components/streamline/event-streamline-updated.ts'
 import { useUXContext } from '../UXContext.tsx'
@@ -29,7 +29,7 @@ export const contextDialogForCalendarManagementDataDefault: ContextDialogForCale
     confirmOperation() {},
   } as const
 
-const { calendarSdk } = getSDK()
+const calendarSdk = getCalendarSDK()
 export const useContextDialogForCalendarManagementForUX = (): {
   dialogForCalendarManagement: ContextDialogForCalendarManagement
 } => {

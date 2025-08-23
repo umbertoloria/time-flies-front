@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { fireEventCalendarUpdated } from '../../components/calendar/event-calendar-updated.ts'
 import { fireEventStreamlineUpdated } from '../../components/streamline/event-streamline-updated.ts'
-import { getSDK } from '../../remote/remote.ts'
+import { getCalendarDateSDK } from '../../remote/remote.ts'
 import { useUXContext } from '../UXContext.tsx'
 
 type ContextPartData = {
@@ -32,7 +32,7 @@ export const contextDialogForInsertNewGoalDataDefault: ContextDialogForInsertNew
     confirmProgressDone() {},
   } as const
 
-const { calendarDateSdk } = getSDK()
+const calendarDateSdk = getCalendarDateSDK()
 export const useContextDialogForInsertNewGoalForUX = (): {
   dialogForInsertNewGoal: ContextDialogForInsertNewGoal
 } => {

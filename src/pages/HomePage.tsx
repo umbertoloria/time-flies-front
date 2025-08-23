@@ -7,7 +7,7 @@ import {
   localDatesLT,
 } from '../lib/utils.ts'
 import { UserLayout } from '../layout/UserLayout.tsx'
-import { getSDK } from '../remote/remote.ts'
+import { getCalendarSDK } from '../remote/remote.ts'
 import { LogicCalendarGridListening } from '../components/calendar/CalendarGrid.tsx'
 import { useWrapperForCreateResource } from '../lib/remote-resources.ts'
 import { Streamline } from '../components/streamline/Streamline.tsx'
@@ -51,7 +51,7 @@ export const getCalendarGridFromDateMondayOnMonthsOffset = (
     )
   )
 
-const { calendarSdk } = getSDK()
+const calendarSdk = getCalendarSDK()
 const InnerPage: FC = () => {
   const todayLocalDate = getTodayLocalDate()
 
