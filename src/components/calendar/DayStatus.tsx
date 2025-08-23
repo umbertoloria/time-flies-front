@@ -33,116 +33,48 @@ export const DayStatus: FC<DayStatusProps> = props => {
   const isToday = isLocalDateToday(props.date)
   const isFuture = isLocalDateFuture(props.date)
 
-  const actionMode:
-    | 'custom-action'
-    | 'manage-calendar-date'
-    | 'create-new-calendar-day'
-    | 'create-new-planned-event'
-    | 'none' = (() => {
-    if (props.onClick) {
-      return 'custom-action'
-    }
-    if (!props.apiData) {
-      return 'none'
-    }
-    if (props.status === 'done' || props.status === 'planned') {
-      return 'manage-calendar-date'
-    } else if (!props.status) {
-      if (isInCurrWeek) {
-        return 'create-new-calendar-day'
-      }
-      if (isFuture) {
-        return 'create-new-planned-event'
-      }
-    } else {
-      // Should never happen.
-    }
-    return 'none'
-  })()
-
   const onClick = (() => {
-    if (actionMode === 'custom-action') {
+    if (props.onClick) {
       return () => {
         if (props.onClick) {
           props.onClick()
-        } else {
-          // Should never happen.
         }
       }
     }
-    if (actionMode === 'manage-calendar-date') {
+    if (
+      !!props.apiData &&
+      // If a DayStatus is clickable for opening DatePanel.
+      (props.status === 'done' ||
+        props.status === 'planned' ||
+        isInCurrWeek ||
+        isFuture)
+    ) {
       return () => {
         if (props.apiData) {
           // On Parent Calendar, this uses the Actual Calendar ID (Parent or
           // Child depending on the actual Date).
-          if (props.status === 'done') {
-            openDialogForDatePanel({
-              mode: 'calendar-date-panel',
-              calendarId: props.apiData.calendar.id,
-              date: props.date,
-            })
-          } else if (props.status === 'planned') {
-            openDialogForDatePanel({
-              mode: 'calendar-date-panel',
-              calendarId: props.apiData.calendar.id,
-              date: props.date,
-            })
-          }
-        } else {
-          // Should never happen.
-        }
-      }
-    }
-    if (actionMode === 'create-new-calendar-day') {
-      return () => {
-        if (props.apiData && !props.status && isInCurrWeek) {
-          // On Parent Calendar, this uses the Actual Calendar ID (Parent or
-          // Child depending on the actual Date).
-          // It doesn't matter if "props.status" is "done" or "planned".
           openDialogForDatePanel({
             mode: 'calendar-date-panel',
             calendarId: props.apiData.calendar.id,
             date: props.date,
           })
-        } else {
-          // Should never happen.
         }
       }
-    }
-    if (actionMode === 'create-new-planned-event') {
-      return () => {
-        if (props.apiData && !props.status && isFuture) {
-          // On Parent Calendar, this uses the Actual Calendar ID (Parent or
-          // Child depending on the actual Date).
-          openDialogForDatePanel({
-            mode: 'calendar-date-panel',
-            calendarId: props.apiData.calendar.id,
-            date: props.date,
-          })
-        } else {
-          // Should never happen.
-        }
-      }
-    }
-    if (actionMode !== 'none') {
-      // Should never happen.
     }
     return undefined
   })()
 
   const { openDialog: openDialogForDatePanel } = useDialogForDatePanel()
 
-  const displayDate = displayDateFromLocalDate(props.date)
-
   return (
     <div
       className='date-div'
-      title={displayDate} // As tooltip.
+      title={displayDateFromLocalDate(props.date)} // As tooltip.
     >
       <div
         className={classNames('rounded-sm w-full h-full', {
           'bg-gray-200': !props.color,
-          clickable: actionMode !== 'none',
+          clickable: !!onClick,
           'show-today': isToday,
         })}
         style={{
