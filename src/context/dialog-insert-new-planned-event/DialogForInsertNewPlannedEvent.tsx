@@ -8,8 +8,9 @@ const INITIAL_INPUT_VALUE = ''
 export const DialogForInsertNewPlannedEvent: FC = () => {
   // TODO: Unify this with "DialogForInsertNewGoal"?
 
-  const { isOpen, closeDialog, confirmProgressToDo } =
+  const { isOpen, data, closeDialog, confirmProgressToDo } =
     useDialogForInsertNewPlannedEvent()
+  const calendarUsesNotes = !!data?.calendar.usesNotes
 
   const [enableNoteInput, setEnableNoteInput] = useState(INITIAL_ENABLE_NOTE)
   const [inputValue, setInputValue] = useState(INITIAL_INPUT_VALUE)
@@ -30,12 +31,14 @@ export const DialogForInsertNewPlannedEvent: FC = () => {
         >
           <div className='p-4'>
             <p>{'Confermi di voler pianificare questa attività?'}</p>
-            <NotesFieldEditor
-              enableNoteInput={enableNoteInput}
-              setEnableNoteInput={setEnableNoteInput}
-              inputValue={inputValue}
-              setInputValue={setInputValue}
-            />
+            {calendarUsesNotes && (
+              <NotesFieldEditor
+                enableNoteInput={enableNoteInput}
+                setEnableNoteInput={setEnableNoteInput}
+                inputValue={inputValue}
+                setInputValue={setInputValue}
+              />
+            )}
           </div>
           {/* // TODO: Duplicated code (*sgfd) */}
           <div className='flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600'>

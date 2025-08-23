@@ -320,6 +320,7 @@ export const DatePanelInner: FC<{
                       onClick={() => {
                         openDialogForInsertNewPlannedEvent(
                           data.data.calendar.id,
+                          data.data.calendar.usesNotes || false,
                           date
                         )
                       }}
