@@ -51,7 +51,7 @@ export const getCalendarGridFromDateMondayOnMonthsOffset = (
     )
   )
 
-const { readAllCalendars } = getSDK()
+const { calendarSdk } = getSDK()
 const InnerPage: FC = () => {
   const todayLocalDate = getTodayLocalDate()
 
@@ -117,7 +117,7 @@ const InnerPage: FC = () => {
   // Calendars
   const [dataAllCalendars, { refetch: refetchAllCalendars }] =
     useWrapperForCreateResource(() => {
-      return readAllCalendars({
+      return calendarSdk.readAllCalendars({
         dateFrom: minFromDate,
         seeAllCalendars,
       })

@@ -19,13 +19,13 @@ import { useDialogForInsertNewPlannedEvent } from '../dialog-insert-new-planned-
 import { getSDK } from '../../remote/remote.ts'
 
 export const periodRefreshDateInMillis = 3 * 60 * 60 * 1000 // 3 minutes.
-const { readCalendarDate } = getSDK()
+const { calendarDateSdk } = getSDK()
 export const DatePanelInnerCLI: FC<{
   calendarId: number
   date: string
 }> = ({ calendarId, date }) => {
   const [data, { refetch: refreshDate }] = useWrapperForCreateResource(() =>
-    readCalendarDate(calendarId, date)
+    calendarDateSdk.readCalendarDate(calendarId, date)
   )
   useEffect(() => {
     const refreshDateIntervalTimer = setInterval(

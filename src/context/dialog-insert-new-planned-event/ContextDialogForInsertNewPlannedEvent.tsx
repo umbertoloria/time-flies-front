@@ -32,7 +32,7 @@ export const contextDialogForInsertNewPlannedEventDataDefault: ContextDialogForI
     confirmProgressToDo() {},
   } as const
 
-const { setDateAsPlannedEvent } = getSDK()
+const { plannedEventSdk } = getSDK()
 export const useContextDialogForInsertNewPlannedEventForUX = (): {
   dialogForInsertNewPlannedEvent: ContextDialogForInsertNewPlannedEvent
 } => {
@@ -85,7 +85,8 @@ export const useContextDialogForInsertNewPlannedEventForUX = (): {
             loading: true,
           },
         })
-        setDateAsPlannedEvent(calendar.id, localDate, notes)
+        plannedEventSdk
+          .setDateAsPlannedEvent(calendar.id, localDate, notes)
           .then(() => {
             // Yay!
 

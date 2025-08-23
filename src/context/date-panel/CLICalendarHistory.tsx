@@ -17,14 +17,14 @@ import { getSDK } from '../../remote/remote.ts'
 import { periodRefreshDateInMillis } from './DatePanelCLI.tsx'
 import { TCalendar } from '../../remote/sdk/types'
 
-const { readCalendar } = getSDK()
+const { calendarSdk } = getSDK()
 export const CLICalendarHistory: FC<{
   calendarId: number
 }> = ({ calendarId }) => {
   const [data, { refetch: refreshCalendar }] = useWrapperForCreateResource(() =>
-    readCalendar(calendarId).then(response =>
-      typeof response === 'object' ? response : undefined
-    )
+    calendarSdk
+      .readCalendar(calendarId)
+      .then(response => (typeof response === 'object' ? response : undefined))
   )
   useEffect(() => {
     const refreshDateIntervalTimer = setInterval(

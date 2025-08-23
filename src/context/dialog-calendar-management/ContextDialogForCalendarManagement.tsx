@@ -29,7 +29,7 @@ export const contextDialogForCalendarManagementDataDefault: ContextDialogForCale
     confirmOperation() {},
   } as const
 
-const { createCalendar } = getSDK()
+const { calendarSdk } = getSDK()
 export const useContextDialogForCalendarManagementForUX = (): {
   dialogForCalendarManagement: ContextDialogForCalendarManagement
 } => {
@@ -76,12 +76,13 @@ export const useContextDialogForCalendarManagementForUX = (): {
           },
         })
         if (mode === 'insert') {
-          createCalendar({
-            name,
-            color,
-            plannedColor,
-            usesNotes,
-          })
+          calendarSdk
+            .createCalendar({
+              name,
+              color,
+              plannedColor,
+              usesNotes,
+            })
             .then(() => {
               // Yay!
 

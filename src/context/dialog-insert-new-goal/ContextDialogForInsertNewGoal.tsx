@@ -32,7 +32,7 @@ export const contextDialogForInsertNewGoalDataDefault: ContextDialogForInsertNew
     confirmProgressDone() {},
   } as const
 
-const { checkDateWithSuccess } = getSDK()
+const { calendarDateSdk } = getSDK()
 export const useContextDialogForInsertNewGoalForUX = (): {
   dialogForInsertNewGoal: ContextDialogForInsertNewGoal
 } => {
@@ -85,7 +85,8 @@ export const useContextDialogForInsertNewGoalForUX = (): {
             loading: true,
           },
         })
-        checkDateWithSuccess(calendar.id, localDate, notes)
+        calendarDateSdk
+          .checkDateWithSuccess(calendar.id, localDate, notes)
           .then(() => {
             // Yay!
 
