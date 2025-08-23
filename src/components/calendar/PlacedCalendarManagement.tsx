@@ -33,9 +33,10 @@ export const PlacedCalendarManagement: FC = () => {
               </button>
             </CalendarTitle>
             <DatePanelInner
-              //
               calendarId={data.calendarId}
               date={data.date}
+              allowNewDoneTasks={data.allowNewDoneTasks}
+              allowNewTodos={data.allowNewTodos}
             />
           </>
         )}

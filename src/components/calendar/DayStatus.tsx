@@ -1,6 +1,5 @@
 import { FC } from 'react'
 import classNames from 'classnames'
-import { useDialogForInsertNewGoal } from '../../context/dialog-insert-new-goal/ContextDialogForInsertNewGoal.tsx'
 import { useDialogForDatePanel } from '../../context/dialog-date-panel/ContextDialogForDatePanel.tsx'
 import {
   getDateWithOffsetDays,
@@ -11,7 +10,6 @@ import {
   localDatesLTE,
 } from '../../lib/utils.ts'
 import { displayDateFromLocalDate } from './utils.ts'
-import { useDialogForInsertNewPlannedEvent } from '../../context/dialog-insert-new-planned-event/ContextDialogForInsertNewPlannedEvent.tsx'
 
 export type DayStatusProps = {
   date: string // Es. "2023-01-01"
@@ -75,6 +73,8 @@ export const DayStatus: FC<DayStatusProps> = props => {
             mode: 'calendar-date-panel',
             calendarId: props.apiData.calendar.id,
             date: props.date,
+            allowNewDoneTasks: false,
+            allowNewTodos: false,
           })
         } else {
           // Should never happen.
@@ -84,22 +84,16 @@ export const DayStatus: FC<DayStatusProps> = props => {
     if (actionMode === 'create-new-calendar-day') {
       return () => {
         if (props.apiData) {
-          // On Parent Calendar, this uses Parent Calendar ID.
-          if (props.status === 'planned') {
-            // Open "DialogForDatePanel"
-            openDialogForDatePanel({
-              mode: 'calendar-date-panel',
-              calendarId: props.apiData.calendar.id,
-              date: props.date,
-            })
-          } else {
-            // Open "DialogForInsertNewGoal"
-            openDialogForInsertNewGoal(
-              props.apiData.calendar.id,
-              props.apiData.calendar.usesNotes,
-              props.date
-            )
-          }
+          // On Parent Calendar, this uses the Actual Calendar ID (Parent or
+          // Child depending on the actual Date).
+          // It doesn't matter if "props.status" is "done" or "planned".
+          openDialogForDatePanel({
+            mode: 'calendar-date-panel',
+            calendarId: props.apiData.calendar.id,
+            date: props.date,
+            allowNewDoneTasks: true,
+            allowNewTodos: false,
+          })
         } else {
           // Should never happen.
         }
@@ -108,8 +102,15 @@ export const DayStatus: FC<DayStatusProps> = props => {
     if (actionMode === 'create-new-planned-event') {
       return () => {
         if (!props.status && !!props.apiData) {
-          // On Parent Calendar, this uses Parent Calendar ID.
-          openDialogForInsertPlannedEvent(props.apiData.calendar.id, props.date)
+          // On Parent Calendar, this uses the Actual Calendar ID (Parent or
+          // Child depending on the actual Date).
+          openDialogForDatePanel({
+            mode: 'calendar-date-panel',
+            calendarId: props.apiData.calendar.id,
+            date: props.date,
+            allowNewDoneTasks: false,
+            allowNewTodos: true,
+          })
         } else {
           // Should never happen.
         }
@@ -121,10 +122,7 @@ export const DayStatus: FC<DayStatusProps> = props => {
     return undefined
   })()
 
-  const { openDialog: openDialogForInsertNewGoal } = useDialogForInsertNewGoal()
   const { openDialog: openDialogForDatePanel } = useDialogForDatePanel()
-  const { openDialog: openDialogForInsertPlannedEvent } =
-    useDialogForInsertNewPlannedEvent()
 
   const displayDate = displayDateFromLocalDate(props.date)
 

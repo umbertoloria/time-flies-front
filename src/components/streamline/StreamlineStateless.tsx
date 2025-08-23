@@ -180,6 +180,8 @@ export const StreamlineTodo: FC<{
             mode: 'calendar-date-panel',
             calendarId: calendar.id,
             date,
+            allowNewDoneTasks: false,
+            allowNewTodos: false,
           })
         }}
       >

@@ -5,6 +5,7 @@ import { getSDK } from '../../remote/remote.ts'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
 import { TCalendar } from '../../remote/sdk/types'
 import {
+  placeOffsetSpace,
   StreamlineBoxCalendar,
   StreamlineBoxDate,
   StreamlinePre,
@@ -16,6 +17,8 @@ import {
   subscribeToCalendarUpdates,
   unsubscribeToCalendarUpdates,
 } from '../../components/calendar/event-calendar-updated.ts'
+import { useDialogForInsertNewGoal } from '../dialog-insert-new-goal/ContextDialogForInsertNewGoal.tsx'
+import { useDialogForInsertNewPlannedEvent } from '../dialog-insert-new-planned-event/ContextDialogForInsertNewPlannedEvent.tsx'
 
 export const DialogDatePanel: FC = () => {
   // TODO: Deprecate Dialog for Calendar Date management
@@ -207,7 +210,9 @@ const TabHistoryCalendarComponent: FC<{
 export const DatePanelInner: FC<{
   calendarId: number
   date: string
-}> = ({ calendarId, date }) => {
+  allowNewDoneTasks: boolean
+  allowNewTodos: boolean
+}> = ({ calendarId, date, allowNewDoneTasks, allowNewTodos }) => {
   const [data, { refetch: refreshDate }] = useWrapperForCreateResource(() =>
     readCalendarDate(calendarId, date)
   )
@@ -237,6 +242,9 @@ export const DatePanelInner: FC<{
       unsubscribeToCalendarUpdates(listener)
     }
   }, [])
+  const { openDialog: openDialogForInsertNewGoal } = useDialogForInsertNewGoal()
+  const { openDialog: openDialogForInsertNewPlannedEvent } =
+    useDialogForInsertNewPlannedEvent()
 
   return (
     <>
@@ -283,6 +291,43 @@ export const DatePanelInner: FC<{
                     }}
                   />
                 ))}
+
+                {/* Show button to insert Done Tasks */}
+                {allowNewDoneTasks && (
+                  <>
+                    {placeOffsetSpace(2)}
+                    <span
+                      className='pre-btn'
+                      onClick={() => {
+                        openDialogForInsertNewGoal(
+                          data.data.calendar.id,
+                          data.data.calendar.usesNotes || false,
+                          date
+                        )
+                      }}
+                    >
+                      {'[Add done task]'}
+                    </span>{' '}
+                  </>
+                )}
+
+                {/* Show button to insert Todos */}
+                {allowNewTodos && (
+                  <>
+                    {placeOffsetSpace(2)}
+                    <span
+                      className='pre-btn'
+                      onClick={() => {
+                        openDialogForInsertNewPlannedEvent(
+                          data.data.calendar.id,
+                          date
+                        )
+                      }}
+                    >
+                      {'[New Todo?]'}
+                    </span>{' '}
+                  </>
+                )}
               </StreamlineBoxCalendar>
             </StreamlineBoxDate>
           </StreamlinePre>

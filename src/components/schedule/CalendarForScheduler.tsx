@@ -49,8 +49,8 @@ export const CalendarForScheduler: FC<{
       logicCalendar={{
         color: manualCalendarColor,
         name: 'Calendario',
-        // onClickOpenDialogForCalendarOverview: undefined,
-        // apiCalendar: undefined,
+        onClickOpenDialogForCalendarOverview: undefined,
+        apiCalendar: undefined,
         logicDays,
       }}
       fromDateMonday={fromDateMonday}
