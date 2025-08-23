@@ -42,14 +42,20 @@ export const DayStatus: FC<DayStatusProps> = props => {
     if (props.onClick) {
       return 'custom-action'
     }
-    if (props.status === 'done' && !!props.apiData) {
+    if (!props.apiData) {
+      return 'none'
+    }
+    if (props.status === 'done' || props.status === 'planned') {
       return 'manage-calendar-date'
-    }
-    if (isInCurrWeek && !!props.apiData) {
-      return 'create-new-calendar-day'
-    }
-    if (isFuture && !props.status && !!props.apiData) {
-      return 'create-new-planned-event'
+    } else if (!props.status) {
+      if (isInCurrWeek) {
+        return 'create-new-calendar-day'
+      }
+      if (isFuture) {
+        return 'create-new-planned-event'
+      }
+    } else {
+      // Should never happen.
     }
     return 'none'
   })()
@@ -66,16 +72,26 @@ export const DayStatus: FC<DayStatusProps> = props => {
     }
     if (actionMode === 'manage-calendar-date') {
       return () => {
-        if (props.status === 'done' && !!props.apiData) {
+        if (props.apiData) {
           // On Parent Calendar, this uses the Actual Calendar ID (Parent or
           // Child depending on the actual Date).
-          openDialogForDatePanel({
-            mode: 'calendar-date-panel',
-            calendarId: props.apiData.calendar.id,
-            date: props.date,
-            allowNewDoneTasks: false,
-            allowNewTodos: false,
-          })
+          if (props.status === 'done') {
+            openDialogForDatePanel({
+              mode: 'calendar-date-panel',
+              calendarId: props.apiData.calendar.id,
+              date: props.date,
+              allowNewDoneTasks: false,
+              allowNewTodos: false,
+            })
+          } else if (props.status === 'planned') {
+            openDialogForDatePanel({
+              mode: 'calendar-date-panel',
+              calendarId: props.apiData.calendar.id,
+              date: props.date,
+              allowNewDoneTasks: false,
+              allowNewTodos: false,
+            })
+          }
         } else {
           // Should never happen.
         }
@@ -83,7 +99,7 @@ export const DayStatus: FC<DayStatusProps> = props => {
     }
     if (actionMode === 'create-new-calendar-day') {
       return () => {
-        if (props.apiData) {
+        if (props.apiData && !props.status && isInCurrWeek) {
           // On Parent Calendar, this uses the Actual Calendar ID (Parent or
           // Child depending on the actual Date).
           // It doesn't matter if "props.status" is "done" or "planned".
@@ -92,7 +108,7 @@ export const DayStatus: FC<DayStatusProps> = props => {
             calendarId: props.apiData.calendar.id,
             date: props.date,
             allowNewDoneTasks: true,
-            allowNewTodos: false,
+            allowNewTodos: true,
           })
         } else {
           // Should never happen.
@@ -101,7 +117,7 @@ export const DayStatus: FC<DayStatusProps> = props => {
     }
     if (actionMode === 'create-new-planned-event') {
       return () => {
-        if (!props.status && !!props.apiData) {
+        if (props.apiData && !props.status && isFuture) {
           // On Parent Calendar, this uses the Actual Calendar ID (Parent or
           // Child depending on the actual Date).
           openDialogForDatePanel({
