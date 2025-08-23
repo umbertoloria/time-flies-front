@@ -6,7 +6,7 @@ import { NotesFieldEditor } from '../dialog-insert-new-goal/DialogForInsertNewGo
 const INITIAL_ENABLE_NOTE = false
 const INITIAL_INPUT_VALUE = ''
 export const DialogForInsertNewPlannedEvent: FC = () => {
-  // TODO: Unify this with "DialogForInsertNewGoal"?
+  // TODO: Unify with "DialogForInsertNewGoal"
 
   const { isOpen, data, closeDialog, confirmProgressToDo } =
     useDialogForInsertNewPlannedEvent()

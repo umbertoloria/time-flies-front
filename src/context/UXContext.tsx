@@ -11,7 +11,7 @@ import {
   ContextDialogForDatePanel,
   contextDialogForDatePanelDataDefault,
   useUXContextDialogForDatePanelForUX,
-} from './dialog-date-panel/ContextDialogForDatePanel.tsx'
+} from './date-panel/ContextDialogForDatePanel.tsx'
 import {
   ContextDialogForGroover,
   contextDialogForGrooverDataDefault,

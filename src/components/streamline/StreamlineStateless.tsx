@@ -2,7 +2,7 @@ import { FC, PropsWithChildren } from 'react'
 import { displayDateFromLocalDate } from '../calendar/utils.ts'
 import { TCalendarRcd, TNewTodo } from '../../remote/sdk/types'
 import { useDialogForCheckPlannedEvent } from '../../context/dialog-check-planned-events/ContextDialogForCheckPlannedEvents.tsx'
-import { useDialogForDatePanel } from '../../context/dialog-date-panel/ContextDialogForDatePanel.tsx'
+import { useDialogForDatePanel } from '../../context/date-panel/ContextDialogForDatePanel.tsx'
 
 export const StreamlinePre: FC<PropsWithChildren> = ({ children }) => {
   return (

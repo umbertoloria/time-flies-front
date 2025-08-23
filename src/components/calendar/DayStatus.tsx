@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import classNames from 'classnames'
-import { useDialogForDatePanel } from '../../context/dialog-date-panel/ContextDialogForDatePanel.tsx'
+import { useDialogForDatePanel } from '../../context/date-panel/ContextDialogForDatePanel.tsx'
 import {
   getDateWithOffsetDays,
   getLocalDayByDate,

@@ -11,7 +11,7 @@ import { getFirstAndLastLocalDatesFromDayStatusRows } from './utils'
 import { LogicCalendar } from './logic-calendar.ts'
 import { createDayStatusPropsListFromLogicCalendar } from '../timeline/timeline-utils.ts'
 import classNames from 'classnames'
-import { useDialogForDatePanel } from '../../context/dialog-date-panel/ContextDialogForDatePanel.tsx'
+import { useDialogForDatePanel } from '../../context/date-panel/ContextDialogForDatePanel.tsx'
 
 export type DayStatusRow = {
   dayStatuses: DayStatusProps[]

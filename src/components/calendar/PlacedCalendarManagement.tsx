@@ -1,11 +1,9 @@
 import { FC } from 'react'
-import { useDialogForDatePanel } from '../../context/dialog-date-panel/ContextDialogForDatePanel.tsx'
-import {
-  DatePanelInner,
-  TabHistoryCalendarLoaderComponent,
-} from '../../context/dialog-date-panel/DialogDatePanel.tsx'
+import { useDialogForDatePanel } from '../../context/date-panel/ContextDialogForDatePanel.tsx'
+import { DatePanelInnerCLI } from '../../context/date-panel/DatePanelCLI.tsx'
 import { CalendarTitle } from './CalendarGrid.tsx'
 import { displayDateFromLocalDate } from './utils.ts'
+import { CLICalendarHistory } from '../../context/date-panel/CLICalendarHistory.tsx'
 
 export const PlacedCalendarManagement: FC = () => {
   const { isOpen, data, closeDialog } = useDialogForDatePanel()
@@ -19,7 +17,7 @@ export const PlacedCalendarManagement: FC = () => {
                 {'Close X'}
               </button>
             </CalendarTitle>
-            <TabHistoryCalendarLoaderComponent calendarId={data.calendarId} />
+            <CLICalendarHistory calendarId={data.calendarId} />
           </>
         )}
         {isOpen && data?.mode === 'calendar-date-panel' && (
@@ -32,7 +30,7 @@ export const PlacedCalendarManagement: FC = () => {
                 {'Close X'}
               </button>
             </CalendarTitle>
-            <DatePanelInner
+            <DatePanelInnerCLI
               //
               calendarId={data.calendarId}
               date={data.date}
@@ -43,41 +41,3 @@ export const PlacedCalendarManagement: FC = () => {
     </>
   )
 }
-
-/*
-const TAB_HISTORY = 'tab-history'
-const TAB_TODOS = 'tab-todos'
-const TabsList: FC<{
-  tab: string
-  setTab: (tab: string) => void
-}> = ({ tab, setTab }) => {
-  return (
-    <div className='tabs-list'>
-      <button
-        className={classNames('tab-btn', {
-          active: tab === TAB_TODOS,
-        })}
-        onClick={() => {
-          setTab(TAB_TODOS)
-        }}
-      >
-        {'Todos'}
-      </button>
-      <button
-        className={classNames('tab-btn', {
-          active: tab === TAB_HISTORY,
-        })}
-        onClick={() => {
-          setTab(TAB_HISTORY)
-        }}
-      >
-        {'History'}
-      </button>
-    </div>
-  )
-}
-
-const TabTodos = () => {
-  return <div className='todos'>...</div>
-}
-*/
