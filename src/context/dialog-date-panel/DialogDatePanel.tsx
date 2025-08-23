@@ -210,9 +210,7 @@ const TabHistoryCalendarComponent: FC<{
 export const DatePanelInner: FC<{
   calendarId: number
   date: string
-  allowNewDoneTasks: boolean
-  allowNewTodos: boolean
-}> = ({ calendarId, date, allowNewDoneTasks, allowNewTodos }) => {
+}> = ({ calendarId, date }) => {
   const [data, { refetch: refreshDate }] = useWrapperForCreateResource(() =>
     readCalendarDate(calendarId, date)
   )
@@ -242,6 +240,15 @@ export const DatePanelInner: FC<{
       unsubscribeToCalendarUpdates(listener)
     }
   }, [])
+  const allowNewDoneTasks =
+    !data?.loading && !!data?.data
+      ? data.data.doneTasks.length === 0 && data.data.todos.length === 0
+      : false
+  const allowNewTodos =
+    !data?.loading && !!data?.data
+      ? data.data.doneTasks.length === 0 && data.data.todos.length === 0
+      : false
+
   const { openDialog: openDialogForInsertNewGoal } = useDialogForInsertNewGoal()
   const { openDialog: openDialogForInsertNewPlannedEvent } =
     useDialogForInsertNewPlannedEvent()
@@ -292,41 +299,41 @@ export const DatePanelInner: FC<{
                   />
                 ))}
 
-                {/* Show button to insert Done Tasks */}
-                {allowNewDoneTasks && (
+                {(allowNewDoneTasks || allowNewTodos) && (
                   <>
                     {placeOffsetSpace(2)}
-                    <span
-                      className='pre-btn'
-                      onClick={() => {
-                        openDialogForInsertNewGoal(
-                          data.data.calendar.id,
-                          data.data.calendar.usesNotes || false,
-                          date
-                        )
-                      }}
-                    >
-                      {'[Add done task]'}
-                    </span>{' '}
-                  </>
-                )}
-
-                {/* Show button to insert Todos */}
-                {allowNewTodos && (
-                  <>
-                    {placeOffsetSpace(2)}
-                    <span
-                      className='pre-btn'
-                      onClick={() => {
-                        openDialogForInsertNewPlannedEvent(
-                          data.data.calendar.id,
-                          data.data.calendar.usesNotes || false,
-                          date
-                        )
-                      }}
-                    >
-                      {'[Add todo]'}
-                    </span>{' '}
+                    {allowNewDoneTasks && (
+                      <>
+                        <span
+                          className='pre-btn'
+                          onClick={() => {
+                            openDialogForInsertNewGoal(
+                              data.data.calendar.id,
+                              data.data.calendar.usesNotes || false,
+                              date
+                            )
+                          }}
+                        >
+                          {'[Add done task]'}
+                        </span>{' '}
+                      </>
+                    )}
+                    {allowNewTodos && (
+                      <>
+                        <span
+                          className='pre-btn'
+                          onClick={() => {
+                            openDialogForInsertNewPlannedEvent(
+                              data.data.calendar.id,
+                              data.data.calendar.usesNotes || false,
+                              date
+                            )
+                          }}
+                        >
+                          {'[Add todo]'}
+                        </span>{' '}
+                      </>
+                    )}
                   </>
                 )}
               </StreamlineBoxCalendar>

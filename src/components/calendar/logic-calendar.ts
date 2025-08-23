@@ -17,7 +17,7 @@ export type LogicDay = {
     id: number
     usesNotes: boolean
   }
-  isPlanned?: boolean
+  isPlanned: boolean
   color: string
   onClick?: () => void
 }
@@ -33,6 +33,7 @@ export function appendLogicDaysFromTCalendarCh(
         id: calendar.id,
         usesNotes: !!calendar.usesNotes,
       },
+      isPlanned: false,
       color: calendar.color,
     }))
   )

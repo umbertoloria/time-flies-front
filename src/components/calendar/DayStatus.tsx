@@ -80,16 +80,12 @@ export const DayStatus: FC<DayStatusProps> = props => {
               mode: 'calendar-date-panel',
               calendarId: props.apiData.calendar.id,
               date: props.date,
-              allowNewDoneTasks: false,
-              allowNewTodos: false,
             })
           } else if (props.status === 'planned') {
             openDialogForDatePanel({
               mode: 'calendar-date-panel',
               calendarId: props.apiData.calendar.id,
               date: props.date,
-              allowNewDoneTasks: false,
-              allowNewTodos: false,
             })
           }
         } else {
@@ -107,8 +103,6 @@ export const DayStatus: FC<DayStatusProps> = props => {
             mode: 'calendar-date-panel',
             calendarId: props.apiData.calendar.id,
             date: props.date,
-            allowNewDoneTasks: true,
-            allowNewTodos: true,
           })
         } else {
           // Should never happen.
@@ -124,8 +118,6 @@ export const DayStatus: FC<DayStatusProps> = props => {
             mode: 'calendar-date-panel',
             calendarId: props.apiData.calendar.id,
             date: props.date,
-            allowNewDoneTasks: false,
-            allowNewTodos: true,
           })
         } else {
           // Should never happen.

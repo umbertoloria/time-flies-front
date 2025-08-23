@@ -27,7 +27,7 @@ export const CalendarForScheduler: FC<{
   const logicDays = props.datesWithRecords.map<LogicDay>(date => ({
     date,
     // apiCalendar: undefined,
-    // isPlanned: undefined,
+    isPlanned: false,
     color: manualCalendarColor,
     onClick() {
       props.setLocalDate(date)
@@ -37,7 +37,7 @@ export const CalendarForScheduler: FC<{
   logicDays.push({
     date: lastLocalDate,
     // apiCalendar: undefined,
-    // isPlanned: undefined,
+    isPlanned: false,
     color: manualCalendarColor,
     onClick() {
       props.setLocalDate(lastLocalDate)

@@ -6,8 +6,6 @@ type ContextPartData =
       mode: 'calendar-date-panel'
       calendarId: number
       date: string // Es. "2025-02-26"
-      allowNewDoneTasks: boolean
-      allowNewTodos: boolean
     }
   | {
       mode: 'calendar-panel'
