@@ -2,6 +2,8 @@ import { getCalendarSDK } from '../../remote/remote.ts'
 import { useState } from 'react'
 import { fireEventStreamlineUpdated } from '../../components/streamline/event-streamline-updated.ts'
 import { useUXContext } from '../UXContext.tsx'
+import { TCalendar } from '../../remote/sdk/types'
+import { fireEventCalendarUpdated } from '../../components/calendar/event-calendar-updated.ts'
 
 type ContextPartData =
   | {
@@ -10,9 +12,8 @@ type ContextPartData =
     }
   | {
       mode: 'update'
-      calendarId: number
-      // FIXME: Should have more Calendar data
       loading: boolean
+      calendar: TCalendar
     }
 export type ContextDialogForCalendarManagement = {
   isOpen: boolean
@@ -116,8 +117,38 @@ export const useContextDialogForCalendarManagementForUX = (): {
               })
             })
         } else if (mode === 'update') {
-          // FIXME: develop calendar update
-          alert('Feature not available')
+          const { calendar } = dialog.data
+          calendarSdk
+            .updateCalendar(calendar.id, {
+              name,
+              color,
+              plannedColor,
+              usesNotes,
+            })
+            .then(() => {
+              // Yay!
+
+              fireEventStreamlineUpdated(undefined)
+              fireEventCalendarUpdated({ calendarId: calendar.id })
+
+              setDialog({
+                isOpen: false,
+                // data: undefined,
+              })
+            })
+            .catch(err => {
+              console.error(err)
+              // TODO: Tell user all went KO
+              alert('Errore avvenuto')
+              setDialog({
+                isOpen: true,
+                data: {
+                  mode,
+                  loading: false,
+                  calendar,
+                },
+              })
+            })
         } else {
           // Should never happen.
         }

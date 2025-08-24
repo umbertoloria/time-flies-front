@@ -293,8 +293,8 @@ export const getCalendarSDK = () => ({
           }),
   createCalendar: (data: {
     name: string
-    color: string // Es. "115599" for "#115599"
-    plannedColor: string // Es. "115599" for "#115599"
+    color: string // Es. "#115599"
+    plannedColor: string // Es. "#115599"
     usesNotes: boolean
   }) =>
     api
@@ -305,6 +305,32 @@ export const getCalendarSDK = () => ({
           color: data.color,
           'planned-color': data.plannedColor,
           'uses-notes': data.usesNotes ? 'true' : 'false',
+        })
+      )
+      .then(({ data }) => data),
+  updateCalendar: (
+    calendarId: number,
+    data: {
+      name?: string
+      color?: string // Es. "#115599"
+      plannedColor?: string // Es. "#115599"
+      usesNotes?: boolean
+    }
+  ) =>
+    api
+      .post(
+        `?a=calendar-update`,
+        makeFormData({
+          cid: `${calendarId}`,
+          name: data.name || undefined,
+          color: data.color || undefined,
+          'planned-color': data.plannedColor || undefined,
+          'uses-notes':
+            typeof data.usesNotes === 'boolean'
+              ? data.usesNotes
+                ? 'true'
+                : 'false'
+              : undefined,
         })
       )
       .then(({ data }) => data),

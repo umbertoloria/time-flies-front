@@ -3,12 +3,14 @@ import { useDialogForDatePanel } from '../../context/date-panel/ContextDialogFor
 import { DatePanelInnerCLI } from '../../context/date-panel/DatePanelCLI.tsx'
 import { CalendarTitle } from './CalendarGrid.tsx'
 import { displayDateFromLocalDate } from './utils.ts'
-import { CLICalendarHistory } from '../../context/date-panel/CLICalendarHistory.tsx'
+import {
+  CLICalendarHistoryStateless,
+  useCalendarDownloader,
+} from '../../context/date-panel/CLICalendarHistory.tsx'
 import { useDialogForCalendarManagement } from '../../context/dialog-calendar-management/ContextDialogForCalendarManagement.tsx'
+import { Badge } from './Badge.tsx'
 
 export const PlacedCalendarManagement: FC = () => {
-  const { openDialog: openDialogForCalendarManagement } =
-    useDialogForCalendarManagement()
   const {
     isOpen,
     data,
@@ -19,29 +21,10 @@ export const PlacedCalendarManagement: FC = () => {
       <div className='placed-calendar-management'>
         {isOpen && data?.mode === 'calendar-panel' && (
           <>
-            <CalendarTitle textColor='#fff' label='Calendario'>
-              <div>
-                <button
-                  className='close-btn'
-                  onClick={() => {
-                    openDialogForCalendarManagement({
-                      mode: 'update',
-                      calendarId: data.calendarId,
-                      loading: false, // Should be implicit.
-                    })
-                  }}
-                >
-                  {'Edit'}
-                </button>
-                <button
-                  className='close-btn ml-2'
-                  onClick={closeDialogForDatePanel}
-                >
-                  {'Close'}
-                </button>
-              </div>
-            </CalendarTitle>
-            <CLICalendarHistory calendarId={data.calendarId} />
+            <PlacedCalendarManagementModeCalendar
+              calendarId={data.calendarId}
+              onClose={closeDialogForDatePanel}
+            />
           </>
         )}
         {isOpen && data?.mode === 'calendar-date-panel' && (
@@ -62,6 +45,54 @@ export const PlacedCalendarManagement: FC = () => {
           </>
         )}
       </div>
+    </>
+  )
+}
+
+const PlacedCalendarManagementModeCalendar: FC<{
+  calendarId: number
+  onClose: () => void
+}> = ({ calendarId, onClose }) => {
+  const { data, refreshCalendar } = useCalendarDownloader(calendarId)
+  const { openDialog: openDialogForCalendarManagement } =
+    useDialogForCalendarManagement()
+
+  return (
+    <>
+      {data?.loading && (
+        <>
+          <Badge>Loading...</Badge>
+        </>
+      )}
+      {!data?.loading && !!data?.data && (
+        <>
+          <CalendarTitle textColor='#fff' label='Calendario'>
+            <div>
+              <button
+                className='close-btn mr-2'
+                onClick={() => {
+                  if (!data?.loading && data?.data) {
+                    openDialogForCalendarManagement({
+                      mode: 'update',
+                      loading: false, // Should be implicit.
+                      calendar: data.data,
+                    })
+                  }
+                }}
+              >
+                {'Edit'}
+              </button>
+              <button className='close-btn' onClick={onClose}>
+                {'Close'}
+              </button>
+            </div>
+          </CalendarTitle>
+          <CLICalendarHistoryStateless
+            calendar={data.data}
+            refreshCalendar={refreshCalendar}
+          />
+        </>
+      )}
     </>
   )
 }

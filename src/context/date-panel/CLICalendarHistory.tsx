@@ -6,7 +6,6 @@ import {
   subscribeToCalendarUpdates,
   unsubscribeToCalendarUpdates,
 } from '../../components/calendar/event-calendar-updated.ts'
-import { Badge } from '../../components/calendar/Badge.tsx'
 import {
   StreamlineBoxCalendar,
   StreamlineBoxDate,
@@ -18,9 +17,8 @@ import { periodRefreshDateInMillis } from './DatePanelCLI.tsx'
 import { TCalendar } from '../../remote/sdk/types'
 
 const calendarSdk = getCalendarSDK()
-export const CLICalendarHistory: FC<{
-  calendarId: number
-}> = ({ calendarId }) => {
+
+export const useCalendarDownloader = (calendarId: number) => {
   const [data, { refetch: refreshCalendar }] = useWrapperForCreateResource(() =>
     calendarSdk
       .readCalendar(calendarId)
@@ -38,26 +36,10 @@ export const CLICalendarHistory: FC<{
   useEffect(() => {
     refreshCalendar()
   }, [calendarId])
-
-  return (
-    <>
-      {data?.loading && (
-        <>
-          <Badge>Loading...</Badge>
-        </>
-      )}
-      {!data?.loading && !!data?.data && (
-        <>
-          <CLICalendarHistoryStateless
-            calendar={data.data}
-            refreshCalendar={refreshCalendar}
-          />
-        </>
-      )}
-    </>
-  )
+  return { data, refreshCalendar }
 }
-const CLICalendarHistoryStateless: FC<{
+
+export const CLICalendarHistoryStateless: FC<{
   calendar: TCalendar
   refreshCalendar: () => void
 }> = ({ calendar, refreshCalendar }) => {
