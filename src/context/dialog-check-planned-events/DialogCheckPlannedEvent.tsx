@@ -96,6 +96,7 @@ export const DialogCheckPlannedEvent: FC = () => {
             {data?.mode === 'move' && (
               <>
                 <p>{'Confermi di voler spostare questa attività?'}</p>
+                {/* // TODO: Duplicated code (*mkld) */}
                 <span className='pr-2'>{'Data: '}</span>
                 <input
                   type='date'

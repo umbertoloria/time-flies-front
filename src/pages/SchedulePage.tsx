@@ -101,6 +101,7 @@ const InnerPage: FC = () => {
             />
             <div className='bg-gray-200 rounded-sm'>
               <form className='mx-auto my-4 w-fit p-3 rounded-lg'>
+                {/* // TODO: Duplicated code (*mkld) */}
                 <span className='pr-2'>{'Data: '}</span>
                 <input
                   type='date'

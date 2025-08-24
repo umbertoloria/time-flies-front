@@ -1,0 +1,5 @@
+[ ] Calendar Update dialog
+[ ] Todo move has to refresh/move Date Panel to the new date (maybe?)
+[ ] Done todo doesn't always update properly
+[ ] "checkDateWithSuccess" must update Date Panel
+[ ] Backend doesn't support "doneTasks?: TNewDoneTask[]" in "ReadPlannedEventsResponseCalendar"
