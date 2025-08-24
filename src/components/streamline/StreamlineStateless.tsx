@@ -56,7 +56,8 @@ export const StreamlineTodo: FC<{
           notes?: string
         }
       }
-}> = ({ calendar, date, mode }) => {
+  showButtonToOpenInDatePanel: boolean
+}> = ({ calendar, date, mode, showButtonToOpenInDatePanel }) => {
   const { openDialog: openDialogForCheckPlannedEvent } =
     useDialogForCheckPlannedEvent()
   const { openDialog: openDialogForDatePanel } = useDialogForDatePanel()
@@ -166,18 +167,22 @@ export const StreamlineTodo: FC<{
           )}
         </>
       )}
-      <span
-        className='pre-btn'
-        onClick={() => {
-          openDialogForDatePanel({
-            mode: 'calendar-date-panel',
-            calendarId: calendar.id,
-            date,
-          })
-        }}
-      >
-        {'[Open]'}
-      </span>
+      {showButtonToOpenInDatePanel && (
+        <>
+          <span
+            className='pre-btn'
+            onClick={() => {
+              openDialogForDatePanel({
+                mode: 'calendar-date-panel',
+                calendarId: calendar.id,
+                date,
+              })
+            }}
+          >
+            {'[Show date]'}
+          </span>
+        </>
+      )}
       {'\n'}
     </>
   )

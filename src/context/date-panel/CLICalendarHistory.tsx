@@ -99,6 +99,7 @@ const CLICalendarHistoryStateless: FC<{
                   notes: date.notes,
                 },
               }}
+              showButtonToOpenInDatePanel
             />
             {'\n'}
           </>

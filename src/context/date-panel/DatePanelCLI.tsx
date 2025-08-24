@@ -97,6 +97,7 @@ export const DatePanelInnerCLI: FC<{
                   type: 'todo',
                   todo,
                 }}
+                showButtonToOpenInDatePanel={false}
               />
             ))}
             {/* Show all Done Tasks */}
@@ -109,6 +110,7 @@ export const DatePanelInnerCLI: FC<{
                   type: 'done-task',
                   doneTask,
                 }}
+                showButtonToOpenInDatePanel={false}
               />
             ))}
             {(allowNewDoneTasks || allowNewTodos) && (

@@ -21,10 +21,12 @@ export type LogicDay = {
   onClick?: () => void
 }
 
-export function appendLogicDaysFromTCalendar(
-  logicDays: LogicDay[],
+export function createLogicDaysFromTCalendar(
   calendar: TCalendarPrev
-) {
+): LogicDay[] {
+  const logicDays: LogicDay[] = []
+
+  // FIXME: This supports at most one among Done Tasks and Todos per day
   if (calendar.doneTaskDates && calendar.doneTaskDates.length) {
     logicDays.push(
       ...calendar.doneTaskDates.map<LogicDay>(date => ({
@@ -51,15 +53,6 @@ export function appendLogicDaysFromTCalendar(
       }))
     )
   }
-}
-
-export function createLogicDaysFromTCalendar(
-  calendar: TCalendarPrev
-): LogicDay[] {
-  const logicDays: LogicDay[] = []
-
-  // All "TDays" to evaluate
-  appendLogicDaysFromTCalendar(logicDays, calendar)
   logicDays.sort((a, b) => a.date.localeCompare(b.date))
 
   return logicDays
