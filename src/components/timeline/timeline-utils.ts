@@ -73,7 +73,6 @@ export function createDayStatusPropsListFromLogicCalendar(
         apiData: logicCalendar.apiCalendar
           ? {
               calendar: {
-                // On Parent Calendar: using Parent Calendar ID for empty days.
                 id: logicCalendar.apiCalendar.id,
                 usesNotes: logicCalendar.apiCalendar.usesNotes,
               },

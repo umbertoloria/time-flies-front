@@ -51,8 +51,6 @@ export const DayStatus: FC<DayStatusProps> = props => {
     ) {
       return () => {
         if (props.apiData) {
-          // On Parent Calendar, this uses the Actual Calendar ID (Parent or
-          // Child depending on the actual Date).
           openDialogForDatePanel({
             mode: 'calendar-date-panel',
             calendarId: props.apiData.calendar.id,

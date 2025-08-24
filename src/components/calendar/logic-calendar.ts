@@ -1,11 +1,10 @@
-import { TCalendar, TCalendarCh } from '../../remote/sdk/types'
+import { TCalendar } from '../../remote/sdk/types'
 
 export type LogicCalendar = {
   color: string
   name: string
   onClickOpenDialogForCalendarOverview?: boolean
   apiCalendar?: {
-    // On Parent Calendars this can be different from "logicDays*.apiCalendar"
     id: number
     usesNotes: boolean
   }
@@ -22,9 +21,9 @@ export type LogicDay = {
   onClick?: () => void
 }
 
-export function appendLogicDaysFromTCalendarCh(
+export function appendLogicDaysFromTCalendar(
   logicDays: LogicDay[],
-  calendar: TCalendarCh
+  calendar: TCalendar
 ) {
   logicDays.push(
     ...calendar.days.map<LogicDay>(day => ({
@@ -56,12 +55,7 @@ export function createLogicDaysFromTCalendar(calendar: TCalendar): LogicDay[] {
   const logicDays: LogicDay[] = []
 
   // All "TDays" to evaluate
-  appendLogicDaysFromTCalendarCh(logicDays, calendar)
-  if (calendar.children && calendar.children.length) {
-    for (const childCalendar of calendar.children) {
-      appendLogicDaysFromTCalendarCh(logicDays, childCalendar)
-    }
-  }
+  appendLogicDaysFromTCalendar(logicDays, calendar)
   logicDays.sort((a, b) => a.date.localeCompare(b.date))
 
   return logicDays

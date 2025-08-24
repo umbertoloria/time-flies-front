@@ -3,10 +3,7 @@
 // v3.4
 
 // Calendar
-export type TCalendar = TCalendarCh & {
-  children?: TCalendarCh[]
-}
-type TCalendarCh = TCalendarRcd & {
+export type TCalendar = TCalendarRcd & {
   days: TDay[]
   plannedDays?: TDay[]
 }
