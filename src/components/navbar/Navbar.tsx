@@ -14,7 +14,9 @@ export const Navbar = () => {
         <NavbarItem to='/' label='Dashboard' />
         {user ? (
           <>
-            <NavbarItem to='/schedule' label='Schedule' />
+            {/* // TODO: Disabled Schedule Page
+            <NavbarItem to={pathSchedulePage} label='Schedule' />
+            */}
             <NavbarItem to='/account' label={user.email} />
             <NavbarItem
               onClick={() => {

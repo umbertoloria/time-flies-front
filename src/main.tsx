@@ -6,9 +6,11 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import ErrorPage from './error-page.tsx'
 import HomePage from './pages/HomePage.tsx'
 import LoginPage from './pages/LoginPage.tsx'
-import SchedulePage from './pages/SchedulePage.tsx'
 
 export const baseRoot = '/app/time-flies' as const
+
+export const pathSchedulePage = '/schedule'
+
 const router = createBrowserRouter(
   [
     {
@@ -24,10 +26,12 @@ const router = createBrowserRouter(
           path: 'login',
           element: <LoginPage />,
         },
+        /* // TODO: Disabled Schedule Page
         {
-          path: 'schedule',
+          path: pathSchedulePage,
           element: <SchedulePage />,
         },
+        */
       ],
     },
   ],

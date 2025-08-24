@@ -1,6 +1,8 @@
 [v] Calendar Update dialog
+[ ] Calendar Update: catch message from server when Uses Notes cannot be disabled
 [ ] Todo move has to refresh/move Date Panel to the new date (maybe?)
 [ ] Done todo doesn't always update properly
 [ ] "checkDateWithSuccess" must update Date Panel
 [ ] Backend doesn't support "doneTasks?: TNewDoneTask[]" in "ReadPlannedEventsResponseCalendar"
 [ ] Find another name for PlacedCalendarManagement component
+[ ] Schedule page: show again in the future
