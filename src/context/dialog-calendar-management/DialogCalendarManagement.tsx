@@ -7,7 +7,12 @@ export const DialogCalendarManagement: FC = () => {
   const { isOpen, data, closeDialog, confirmOperation } =
     useDialogForCalendarManagement()
 
-  const title = data?.mode === 'insert' ? 'Crea calendario' : '???' // Should never happen.
+  const title =
+    data?.mode === 'insert'
+      ? 'Create calendar'
+      : data?.mode === 'update'
+        ? 'Edit calendar'
+        : '???' // Should never happen.
 
   const inputName = useRef<HTMLInputElement>(null)
   const inputColor = useRef<HTMLInputElement>(null)
@@ -22,16 +27,12 @@ export const DialogCalendarManagement: FC = () => {
   return (
     <>
       {isOpen && (
-        <GenericDialog
-          onClose={closeDialog}
-          labelOnClose='Indietro'
-          title={title}
-        >
+        <GenericDialog onClose={closeDialog} labelOnClose='Close' title={title}>
           <div className='p-4'>
             {data?.mode === 'insert' && (
               <>
                 <div className='pt-2'>
-                  {'Nome'}
+                  {'Name'}
                   <input
                     type='text'
                     ref={inputName}
@@ -40,7 +41,7 @@ export const DialogCalendarManagement: FC = () => {
                   />
                 </div>
                 <div className='pt-2'>
-                  {'Colore'}
+                  {'Color'}
                   <input
                     type='text'
                     ref={inputColor}
@@ -50,7 +51,7 @@ export const DialogCalendarManagement: FC = () => {
                   />
                 </div>
                 <div className='pt-2'>
-                  {'Colore leggero'}
+                  {'Color for todos (lighter)'}
                   <input
                     type='text'
                     ref={inputPlannedColor}
@@ -60,13 +61,21 @@ export const DialogCalendarManagement: FC = () => {
                   />
                 </div>
                 <div className='pt-2'>
-                  {'Abilita note'}
+                  {'Enable notes'}
                   <input
                     type='checkbox'
                     className='inline ml-1'
                     ref={inputUsesNotes}
                   />
                 </div>
+              </>
+            )}
+            {data?.mode === 'update' && (
+              <>
+                Calendar ID: {data?.calendarId}
+                <br />
+                Still to develop...
+                {/* FIXME: develop calendar update */}
               </>
             )}
           </div>
@@ -102,7 +111,7 @@ export const DialogCalendarManagement: FC = () => {
                 }
               }}
             >
-              {'Conferma'}
+              {'Confirm'}
             </button>
           </div>
         </GenericDialog>

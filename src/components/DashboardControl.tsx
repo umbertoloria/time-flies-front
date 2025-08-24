@@ -31,7 +31,7 @@ export const DashboardControl: FC<{
           onClick={() => {
             openDialogForCalendarManagement({
               mode: 'insert',
-              loading: false,
+              loading: false, // Should be implicit.
             })
           }}
         >

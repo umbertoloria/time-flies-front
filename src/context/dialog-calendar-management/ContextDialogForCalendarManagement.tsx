@@ -3,11 +3,17 @@ import { useState } from 'react'
 import { fireEventStreamlineUpdated } from '../../components/streamline/event-streamline-updated.ts'
 import { useUXContext } from '../UXContext.tsx'
 
-type ContextPartData = {
-  mode: 'insert'
-  // mode: 'update' | 'insert' // In the future...
-  loading: boolean
-}
+type ContextPartData =
+  | {
+      mode: 'insert'
+      loading: boolean
+    }
+  | {
+      mode: 'update'
+      calendarId: number
+      // FIXME: Should have more Calendar data
+      loading: boolean
+    }
 export type ContextDialogForCalendarManagement = {
   isOpen: boolean
   data?: ContextPartData
@@ -109,6 +115,9 @@ export const useContextDialogForCalendarManagementForUX = (): {
                 },
               })
             })
+        } else if (mode === 'update') {
+          // FIXME: develop calendar update
+          alert('Feature not available')
         } else {
           // Should never happen.
         }
