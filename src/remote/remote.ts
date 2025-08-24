@@ -1,5 +1,11 @@
 import axios from 'axios'
-import { TAuthStatus, TCalendar, TCalendarSDK, TScheduleSDK } from './sdk/types'
+import {
+  TAuthStatus,
+  TCalendar,
+  TCalendarPrev,
+  TCalendarSDK,
+  TScheduleSDK,
+} from './sdk/types'
 import { getTodayLocalDate } from '../lib/utils.ts'
 
 const backendURL = import.meta.env.VITE_BACKEND_ENDPOINT
@@ -202,7 +208,7 @@ export const getCalendarSDK = () => ({
   readAllCalendars: (filters: {
     dateFrom: string
     seeAllCalendars: boolean
-  }): Promise<{ calendars: TCalendar[] }> =>
+  }): Promise<{ calendars: TCalendarPrev[] }> =>
     debugMode
       ? Promise.resolve({
           calendars: [

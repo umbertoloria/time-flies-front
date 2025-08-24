@@ -4,7 +4,7 @@ import {
   CalendarGridStatelessListening,
   CalendarTitle,
 } from '../calendar/CalendarGrid.tsx'
-import { TCalendar } from '../../remote/sdk/types'
+import { TCalendarPrev } from '../../remote/sdk/types'
 import { getITMonthFromLocalDate } from '../../lib/utils.ts'
 import { getFirstAndLastLocalDatesFromDayStatusRows } from '../calendar/utils.ts'
 import { createDayStatusPropsListFromLogicCalendar } from './timeline-utils.ts'
@@ -15,7 +15,7 @@ export const defaultTimelinesNumDaysBefore = 14 // 14 days before + today => cor
 
 export const Timelines: FC<{
   fromDate: Date
-  allCalendars: TCalendar[]
+  allCalendars: TCalendarPrev[]
   isLoading: boolean
   goInThePast: () => void
   goInTheFuture: () => void

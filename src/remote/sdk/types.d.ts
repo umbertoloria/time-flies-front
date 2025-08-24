@@ -1,8 +1,12 @@
 // Types
-// 2025-07-27T17:06:34Z
-// v3.4
+// 2025-08-24T00:40:31Z
+// v3.5
 
 // Calendar
+export type TCalendarPrev = TCalendarRcd & {
+  doneTaskDates?: string[]
+  todoDates?: string[]
+}
 export type TCalendar = TCalendarRcd & {
   days: TDay[]
   plannedDays?: TDay[]

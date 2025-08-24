@@ -59,7 +59,7 @@ export function createDayStatusPropsListFromLogicCalendar(
         ) {
           ++siblings_offset
         }
-        // TODO: Multiple days in various Calendars (Parent and Children)
+        // TODO: Multiple days in various Calendars
         console.log(
           'Found ' + siblings_offset + ' Logic Days on the same date',
           curLocalDate,

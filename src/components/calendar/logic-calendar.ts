@@ -1,4 +1,4 @@
-import { TCalendar } from '../../remote/sdk/types'
+import { TCalendarPrev } from '../../remote/sdk/types'
 
 export type LogicCalendar = {
   color: string
@@ -23,23 +23,25 @@ export type LogicDay = {
 
 export function appendLogicDaysFromTCalendar(
   logicDays: LogicDay[],
-  calendar: TCalendar
+  calendar: TCalendarPrev
 ) {
-  logicDays.push(
-    ...calendar.days.map<LogicDay>(day => ({
-      date: day.date,
-      apiCalendar: {
-        id: calendar.id,
-        usesNotes: !!calendar.usesNotes,
-      },
-      isPlanned: false,
-      color: calendar.color,
-    }))
-  )
-  if (calendar.plannedDays && calendar.plannedDays.length) {
+  if (calendar.doneTaskDates && calendar.doneTaskDates.length) {
     logicDays.push(
-      ...calendar.plannedDays.map<LogicDay>(day => ({
-        date: day.date,
+      ...calendar.doneTaskDates.map<LogicDay>(date => ({
+        date,
+        apiCalendar: {
+          id: calendar.id,
+          usesNotes: !!calendar.usesNotes,
+        },
+        isPlanned: false,
+        color: calendar.color,
+      }))
+    )
+  }
+  if (calendar.todoDates && calendar.todoDates.length) {
+    logicDays.push(
+      ...calendar.todoDates.map<LogicDay>(date => ({
+        date,
         apiCalendar: {
           id: calendar.id,
           usesNotes: !!calendar.usesNotes,
@@ -51,7 +53,9 @@ export function appendLogicDaysFromTCalendar(
   }
 }
 
-export function createLogicDaysFromTCalendar(calendar: TCalendar): LogicDay[] {
+export function createLogicDaysFromTCalendar(
+  calendar: TCalendarPrev
+): LogicDay[] {
   const logicDays: LogicDay[] = []
 
   // All "TDays" to evaluate
@@ -62,7 +66,7 @@ export function createLogicDaysFromTCalendar(calendar: TCalendar): LogicDay[] {
 }
 
 export function createLogicCalendarFromTCalendar(
-  calendar: TCalendar
+  calendar: TCalendarPrev
 ): LogicCalendar {
   return {
     color: calendar.color,
