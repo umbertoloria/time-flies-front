@@ -2,7 +2,12 @@ import { FC } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.tsx'
 import { getSDK } from '../../remote/remote'
-import { baseRoot } from '../../main.tsx'
+import {
+  baseRoot,
+  pathAccountPage,
+  pathHomePage,
+  pathLoginPage,
+} from '../../main.tsx'
 
 const { authLogout } = getSDK()
 export const Navbar = () => {
@@ -11,13 +16,13 @@ export const Navbar = () => {
   return (
     <nav className='bg-gray-200 text-gray-900 px-4'>
       <ul className='w-full flex items-center justify-center'>
-        <NavbarItem to='/' label='Dashboard' />
+        <NavbarItem to={pathHomePage} label='Dashboard' />
         {user ? (
           <>
-            {/* // TODO: Disabled Schedule Page
+            {/* // TODO: Schedule Page disabled
             <NavbarItem to={pathSchedulePage} label='Schedule' />
             */}
-            <NavbarItem to='/account' label={user.email} />
+            <NavbarItem to={pathAccountPage} label='Account' />
             <NavbarItem
               onClick={() => {
                 authLogout().then(() => {
@@ -30,7 +35,7 @@ export const Navbar = () => {
         ) : (
           <>
             {/* Consider "isLoading" to disable click */}
-            <NavbarItem to='/login' label='Login' />
+            <NavbarItem to={pathLoginPage} label='Login' />
           </>
         )}
       </ul>

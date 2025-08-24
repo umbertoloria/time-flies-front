@@ -9,6 +9,7 @@ import {
 import { TAuthUser } from '../remote/sdk/types'
 import { getSDK } from '../remote/remote.ts'
 import { useNavigate } from 'react-router-dom'
+import { pathLoginPage } from '../main.tsx'
 
 const AuthContext = createContext<{
   user: TAuthUser | undefined
@@ -41,7 +42,7 @@ export const AuthProvider: FC<PropsWithChildren> = props => {
             console.error(err)
           }
           setUser(undefined)
-          navigate('/login')
+          navigate(pathLoginPage)
         })
         .finally(() => {
           setLoading(false)
