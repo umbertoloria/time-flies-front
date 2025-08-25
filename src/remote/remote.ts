@@ -14,6 +14,11 @@ const api = axios.create({
   withCredentials: true,
 })
 
+const api2 = axios.create({
+  baseURL: import.meta.env.VITE_BACKEND2_ENDPOINT,
+  withCredentials: true,
+})
+
 function makeFormData(args: Record<string, string | undefined>) {
   const formData = new FormData()
   for (const key in args) {
@@ -285,8 +290,8 @@ export const getCalendarSDK = () => ({
           }
           return Promise.reject(new Error('Calendar not found (debug mode)'))
         })()
-      : api
-          .get(`?a=calendar-read&cid=${id}`)
+      : api2
+          .get(`calendars/${id}`)
           .then(({ data }) => data)
           .catch(() => {
             return 'unable'
