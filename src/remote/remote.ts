@@ -7,6 +7,7 @@ import {
   TScheduleSDK,
 } from './sdk/types'
 import { getTodayLocalDate } from '../lib/utils.ts'
+import { getAuthData } from './auth.ts'
 
 const backendURL = import.meta.env.VITE_BACKEND_ENDPOINT
 const api = axios.create({
@@ -291,7 +292,9 @@ export const getCalendarSDK = () => ({
           return Promise.reject(new Error('Calendar not found (debug mode)'))
         })()
       : api2
-          .get(`calendars/${id}`)
+          .post(`calendars/${id}`, {
+            ...getAuthData(),
+          })
           .then(({ data }) => data)
           .catch(() => {
             return 'unable'

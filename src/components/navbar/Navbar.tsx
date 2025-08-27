@@ -8,6 +8,7 @@ import {
   pathHomePage,
   pathLoginPage,
 } from '../../main.tsx'
+import { resetAuthData } from '../../remote/auth.ts'
 
 const { authLogout } = getSDK()
 export const Navbar = () => {
@@ -26,6 +27,7 @@ export const Navbar = () => {
             <NavbarItem
               onClick={() => {
                 authLogout().then(() => {
+                  resetAuthData()
                   location.href = baseRoot
                 })
               }}

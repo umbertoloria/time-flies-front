@@ -1,6 +1,7 @@
 import { getSDK } from '../remote/remote.ts'
 import classNames from 'classnames'
 import { baseRoot } from '../main.tsx'
+import { setAuthData, sha256 } from '../remote/auth.ts'
 
 export default function LoginPage() {
   return (
@@ -25,9 +26,12 @@ const Login = () => {
         const formData = new FormData(form)
         const email = (formData.get('email') as string) || ''
         const password = (formData.get('password') as string) || ''
-        authLogin(email, password).then(() => {
-          location.href = baseRoot
-        })
+        sha256(password).then(sp =>
+          authLogin(email, sp).then(() => {
+            setAuthData(email, sp)
+            location.href = baseRoot
+          })
+        )
       }}
     >
       <fieldset className='flex flex-col gap-2 items-center'>
