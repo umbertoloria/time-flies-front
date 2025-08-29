@@ -53,8 +53,8 @@ export const getSDK = () => {
     authLogin: (email: string, password: string): Promise<'ok' | 'invalid'> =>
       debugMode
         ? Promise.resolve('ok')
-        : api
-            .post('?a=login', makeFormData({ email, password }))
+        : api2
+            .post('/auth/login', { email, password })
             .then<'ok'>(() => 'ok')
             .catch<'invalid'>(err => {
               if (err.response?.data === 'invalid') {
@@ -62,6 +62,7 @@ export const getSDK = () => {
               }
               throw err
             }),
+    /*
     authLogout: (): Promise<'ok' | 'invalid'> =>
       debugMode
         ? Promise.resolve('ok')
@@ -74,7 +75,9 @@ export const getSDK = () => {
               }
               throw err
             }),
+    */
 
+    // TODO: Deprecate these Schedule logics
     // Schedule
     readDateSchedule: (
       localDate: string,
@@ -329,22 +332,20 @@ export const getCalendarSDK = () => ({
       usesNotes?: boolean
     }
   ) =>
-    api
-      .post(
-        `?a=calendar-update`,
-        makeFormData({
-          cid: `${calendarId}`,
-          name: data.name || undefined,
-          color: data.color || undefined,
-          'planned-color': data.plannedColor || undefined,
-          'uses-notes':
-            typeof data.usesNotes === 'boolean'
-              ? data.usesNotes
-                ? 'true'
-                : 'false'
-              : undefined,
-        })
-      )
+    api2
+      .post(`calendar-update`, {
+        ...getAuthData(),
+        cid: `${calendarId}`,
+        name: data.name || undefined,
+        color: data.color || undefined,
+        'planned-color': data.plannedColor || undefined,
+        'uses-notes':
+          typeof data.usesNotes === 'boolean'
+            ? data.usesNotes
+              ? 'true'
+              : 'false'
+            : undefined,
+      })
       .then(({ data }) => data),
 })
 export const getCalendarDateSDK = () => ({
@@ -392,15 +393,11 @@ export const getCalendarDateSDK = () => ({
   ): Promise<'ok' | 'invalid'> =>
     debugMode
       ? Promise.resolve('ok')
-      : api
-          .post(
-            '?a=calendar-date-create',
-            makeFormData({
-              id: `${id}`,
-              'local-date': localDate,
-              notes,
-            })
-          )
+      : api2
+          .post(`calendars/${id}/date-create/${localDate}`, {
+            ...getAuthData(),
+            notes,
+          })
           .then<'ok'>(() => 'ok')
           .catch<'invalid'>(err => {
             if (err.response?.data === 'invalid') {
@@ -415,15 +412,11 @@ export const getCalendarDateSDK = () => ({
   ): Promise<'ok' | 'invalid'> =>
     debugMode
       ? Promise.resolve('ok')
-      : api
-          .post(
-            '?a=calendar-date-update-notes',
-            makeFormData({
-              'calendar-id': `${calendarId}`,
-              'local-date': localDate,
-              notes,
-            })
-          )
+      : api2
+          .post(`calendars/${calendarId}/date-upd-notes/${localDate}`, {
+            ...getAuthData(),
+            notes,
+          })
           .then<'ok'>(() => 'ok'),
 })
 export const getPlannedEventSDK = () => ({
@@ -434,15 +427,11 @@ export const getPlannedEventSDK = () => ({
   ) =>
     debugMode
       ? Promise.resolve('ok')
-      : api
-          .post(
-            '?a=planned-event-create',
-            makeFormData({
-              id: `${id}`,
-              'local-date': localDate,
-              notes,
-            })
-          )
+      : api2
+          .post(`calendars/${id}/todo-create/${localDate}`, {
+            ...getAuthData(),
+            notes,
+          })
           .then<'ok'>(() => 'ok')
           .catch<'invalid'>(err => {
             if (err.response?.data === 'invalid') {
@@ -457,15 +446,11 @@ export const getPlannedEventSDK = () => ({
   ) =>
     debugMode
       ? Promise.resolve('ok')
-      : api
-          .post(
-            '?a=planned-event-update-notes',
-            makeFormData({
-              cid: `${calendarId}`,
-              eid: `${eventId}`,
-              notes,
-            })
-          )
+      : api2
+          .post(`calendars/${calendarId}/todo-upd/${eventId}`, {
+            ...getAuthData(),
+            notes,
+          })
           .then<'ok'>(() => 'ok')
           .catch<'invalid'>(err => {
             if (err.response?.data === 'invalid') {
@@ -476,15 +461,11 @@ export const getPlannedEventSDK = () => ({
   movePlannedEvent: (calendarId: number, eventId: number, newDate: string) =>
     debugMode
       ? Promise.resolve('ok')
-      : api
-          .post(
-            '?a=planned-event-move',
-            makeFormData({
-              cid: `${calendarId}`,
-              eid: `${eventId}`,
-              date: newDate,
-            })
-          )
+      : api2
+          .post(`calendars/${calendarId}/todo-move/${eventId}`, {
+            ...getAuthData(),
+            date: newDate,
+          })
           .then<'ok'>(() => 'ok')
           .catch<'invalid'>(err => {
             if (err.response?.data === 'invalid') {
@@ -506,19 +487,16 @@ export const getPlannedEventSDK = () => ({
   ): Promise<'ok' | 'invalid'> =>
     debugMode
       ? Promise.resolve('ok')
-      : api
-          .post(
-            '?a=planned-event-set-as-done',
-            makeFormData({
-              calendar_id: `${calendarId}`,
-              event_id: `${eventId}`,
-              set_as_missed: mode.type === 'missed' ? 'true' : undefined,
-              notes:
-                mode.type === 'done' && typeof mode.notes === 'string'
-                  ? mode.notes
-                  : undefined,
-            })
-          )
+      : api2
+          .post(`calendars/${calendarId}/todo-done/${eventId}`, {
+            ...getAuthData(),
+            mode: mode.type,
+            set_as_missed: mode.type === 'missed' ? 'true' : undefined,
+            notes:
+              mode.type === 'done' && typeof mode.notes === 'string'
+                ? mode.notes
+                : undefined,
+          })
           .then<'ok'>(() => 'ok')
           .catch<'invalid'>(err => {
             if (err.response?.data === 'invalid') {

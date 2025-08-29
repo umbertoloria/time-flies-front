@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.tsx'
-import { getSDK } from '../../remote/remote'
 import {
   baseRoot,
   pathAccountPage,
@@ -10,7 +9,6 @@ import {
 } from '../../main.tsx'
 import { resetAuthData } from '../../remote/auth.ts'
 
-const { authLogout } = getSDK()
 export const Navbar = () => {
   const { user } = useAuth()
 
@@ -26,10 +24,13 @@ export const Navbar = () => {
             <NavbarItem to={pathAccountPage} label='Account' />
             <NavbarItem
               onClick={() => {
-                authLogout().then(() => {
+                resetAuthData()
+                location.href = baseRoot
+                // FIXME: Remove "authLogout" usage
+                /*authLogout().then(() => {
                   resetAuthData()
                   location.href = baseRoot
-                })
+                })*/
               }}
               label='Logout'
             />
