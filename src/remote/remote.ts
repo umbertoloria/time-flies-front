@@ -45,7 +45,11 @@ export const getSDK = () => {
               email: 'test@test.com',
             },
           })
-        : api.get('?a=status').then(({ data }) => data),
+        : api2
+            .post('/auth/status', {
+              ...getAuthData(),
+            })
+            .then(({ data }) => data),
     authLogin: (email: string, password: string): Promise<'ok' | 'invalid'> =>
       debugMode
         ? Promise.resolve('ok')
@@ -203,8 +207,10 @@ throw err
               },
             ],
           })
-        : api
-            .get('?a=planned-event-read')
+        : api2
+            .post('/streamline', {
+              ...getAuthData(),
+            })
             .then(({ data }) => data)
             .catch<'unable'>(() => 'unable'),
   }
@@ -248,12 +254,12 @@ export const getCalendarSDK = () => ({
             },
           ],
         })
-      : api
-          .get(
-            // When "date-from" filter is optional:
-            //   `?a=calendars-read${typeof filters.dateFrom === 'string' ? `&date-from=${filters.dateFrom}` : ''}`
-            `?a=calendars-read&date-from=${filters.dateFrom}${filters.seeAllCalendars ? '&show-all=true' : ''}`
-          )
+      : api2
+          .post('calendars', {
+            ...getAuthData(),
+            'date-from': filters.dateFrom, // This is actually optional.
+            'show-all': filters.seeAllCalendars ? 'true' : undefined,
+          })
           .then(({ data }) => data),
   readCalendar: (id: number): Promise<TCalendar | 'unable'> =>
     debugMode
@@ -305,16 +311,14 @@ export const getCalendarSDK = () => ({
     plannedColor: string // Es. "#115599"
     usesNotes: boolean
   }) =>
-    api
-      .post(
-        `?a=calendar-create`,
-        makeFormData({
-          name: data.name,
-          color: data.color,
-          'planned-color': data.plannedColor,
-          'uses-notes': data.usesNotes ? 'true' : 'false',
-        })
-      )
+    api2
+      .post('calendars-create', {
+        ...getAuthData(),
+        name: data.name,
+        color: data.color,
+        'planned-color': data.plannedColor,
+        'uses-notes': data.usesNotes ? 'true' : 'false',
+      })
       .then(({ data }) => data),
   updateCalendar: (
     calendarId: number,
@@ -378,8 +382,8 @@ export const getCalendarDateSDK = () => ({
           }
           return Promise.reject(new Error('Calendar not found (debug mode)'))
         })()
-      : api
-          .get(`?a=calendar-date-read&cid=${calendarId}&date=${date}`)
+      : api2
+          .post(`calendars/${calendarId}/date/${date}`, { ...getAuthData() })
           .then(({ data }) => data),
   checkDateWithSuccess: (
     id: number,
