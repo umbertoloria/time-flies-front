@@ -26,11 +26,6 @@ export const Navbar = () => {
               onClick={() => {
                 resetAuthData()
                 location.href = baseRoot
-                // FIXME: Remove "authLogout" usage
-                /*authLogout().then(() => {
-                  resetAuthData()
-                  location.href = baseRoot
-                })*/
               }}
               label='Logout'
             />

@@ -8,8 +8,7 @@ import {
 } from 'react'
 import { TAuthUser } from '../remote/sdk/types'
 import { getSDK } from '../remote/remote.ts'
-import { useNavigate } from 'react-router-dom'
-import { pathLoginPage } from '../main.tsx'
+import { baseRoot, pathLoginPage } from '../main.tsx'
 
 const AuthContext = createContext<{
   user: TAuthUser | undefined
@@ -25,8 +24,6 @@ const AuthContext = createContext<{
 
 const { authStatus } = getSDK()
 export const AuthProvider: FC<PropsWithChildren> = props => {
-  const navigate = useNavigate()
-
   const [user, setUser] = useState<TAuthUser | undefined>(undefined)
   const [loading, setLoading] = useState(false)
 
@@ -42,7 +39,7 @@ export const AuthProvider: FC<PropsWithChildren> = props => {
             console.error(err)
           }
           setUser(undefined)
-          navigate(pathLoginPage)
+          location.href = `${baseRoot}/#${pathLoginPage}`
         })
         .finally(() => {
           setLoading(false)

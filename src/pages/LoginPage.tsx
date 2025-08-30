@@ -26,12 +26,21 @@ const Login = () => {
         const formData = new FormData(form)
         const email = (formData.get('email') as string) || ''
         const password = (formData.get('password') as string) || ''
-        sha256(password).then(sp =>
-          authLogin(email, sp).then(() => {
-            setAuthData(email, sp)
-            location.href = baseRoot
+        sha256(password)
+          .then(sp =>
+            authLogin(email, sp).then(outcome => {
+              if (outcome === 'ok') {
+                setAuthData(email, sp)
+                location.href = baseRoot
+              } else {
+                throw new Error()
+              }
+            })
+          )
+          .catch(err => {
+            console.error(err)
+            alert('Login error')
           })
-        )
       }}
     >
       <fieldset className='flex flex-col gap-2 items-center'>

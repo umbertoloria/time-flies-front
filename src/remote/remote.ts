@@ -27,37 +27,25 @@ export const getSDK = () => {
               email: 'test@test.com',
             },
           })
-        : api
-            .post('/auth/status', {
-              ...getAuthData(),
-            })
-            .then(({ data }) => data),
+        : (() => {
+            const authData = getAuthData()
+            if (!authData.em || !authData.sp) {
+              throw new Error('Guest user')
+            }
+            return api.post('/auth/status', authData).then(({ data }) => data)
+          })(),
     authLogin: (email: string, password: string): Promise<'ok' | 'invalid'> =>
       debugMode
         ? Promise.resolve('ok')
         : api
             .post('/auth/login', { email, password })
-            .then<'ok'>(() => 'ok')
+            .then(({ data }) => (data === 'ok-login' ? 'ok' : 'invalid'))
             .catch<'invalid'>(err => {
               if (err.response?.data === 'invalid') {
                 return 'invalid'
               }
               throw err
             }),
-    /*
-    authLogout: (): Promise<'ok' | 'invalid'> =>
-      debugMode
-        ? Promise.resolve('ok')
-        : api
-            .get('?a=logout')
-            .then<'ok'>(() => 'ok')
-            .catch<'invalid'>(err => {
-              if (err.response?.data === 'invalid') {
-                return 'invalid'
-              }
-              throw err
-            }),
-    */
 
     /*
     // TODx: Deprecate these Schedule logics
