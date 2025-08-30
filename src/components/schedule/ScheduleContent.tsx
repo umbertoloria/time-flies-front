@@ -1,7 +1,4 @@
-import { FC } from 'react'
-import { ExerciseGroup } from './ExerciseGroup.tsx'
-import { useScheduleContext } from './ScheduleContext.tsx'
-
+/*
 export const ScheduleContent: FC<{
   canInputThings?: boolean
 }> = props => {
@@ -12,10 +9,10 @@ export const ScheduleContent: FC<{
   return (
     <>
       {schedule.groups.length === 0 ? (
-        <>{/*<p className='text-center'>Nessuna informazione trovata.</p>*/}</>
+        <>{/!*<p className='text-center'>Nessuna informazione trovata.</p>*!/}</>
       ) : (
         <div>
-          {/*<span className='text-lg font-bold'>{props.title}</span>*/}
+          {/!*<span className='text-lg font-bold'>{props.title}</span>*!/}
           <div>
             {schedule.groups.map((exerciseGroup, index) => (
               <ExerciseGroup
@@ -41,3 +38,4 @@ export const ScheduleContent: FC<{
     </>
   )
 }
+*/

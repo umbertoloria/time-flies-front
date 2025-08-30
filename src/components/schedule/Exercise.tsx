@@ -1,13 +1,4 @@
-import { FC } from 'react'
-import { TExercise, TExerciseRecord } from '../../remote/sdk/types'
-import { ExerciseRecord, ExerciseRecordRowToAddNew } from './ExerciseRecord.tsx'
-import {
-  displayDuration,
-  estimate_record_list_duration_minutes,
-} from './estimations.ts'
-import { useDialogForGroover } from '../../context/dialog-groover/ContextDialogForGroover.tsx'
-import { ColouredLabel } from '../coloured/ColouredLabel.tsx'
-
+/*
 export const Exercise: FC<{
   exercise: TExercise
   addRecords?: boolean
@@ -50,7 +41,7 @@ export const Exercise: FC<{
                 }
               }}
             >
-              {/* // TODO: Icons in this project */}
+              {/!* // TODx: Icons in this project *!/}
               {'I'}
             </button>
           </>
@@ -93,3 +84,4 @@ const ExerciseRecordsList: FC<{
     </div>
   )
 }
+*/

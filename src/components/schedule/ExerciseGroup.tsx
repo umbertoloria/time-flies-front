@@ -1,12 +1,4 @@
-import { FC } from 'react'
-import { TExerciseGroup } from '../../remote/sdk/types'
-import { Exercise } from './Exercise.tsx'
-import {
-  displayDuration,
-  estimate_exercise_group_duration_minutes,
-} from './estimations.ts'
-import { ColouredLabel } from '../coloured/ColouredLabel.tsx'
-
+/*
 export const ExerciseGroup: FC<{
   exerciseGroup: TExerciseGroup
   addRecords?: boolean
@@ -26,7 +18,7 @@ export const ExerciseGroup: FC<{
           </>
         )}
       </div>
-      {/* // TODO: Responsive number of columns */}
+      {/!* // TODx: Responsive number of columns *!/}
       <div className='mt-1 grid grid-cols-3 gap-3'>
         {props.exerciseGroup.exercises.map((subExercise, index) => (
           <Exercise
@@ -39,3 +31,4 @@ export const ExerciseGroup: FC<{
     </div>
   )
 }
+*/

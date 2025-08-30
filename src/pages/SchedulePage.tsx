@@ -1,25 +1,4 @@
-import { FC, useEffect, useState } from 'react'
-import { UserLayout } from '../layout/UserLayout.tsx'
-import { useWrapperForCreateResource } from '../lib/remote-resources.ts'
-import { getSDK } from '../remote/remote.ts'
-import { ScheduleContent } from '../components/schedule/ScheduleContent.tsx'
-import {
-  getTodayLocalDate,
-  isLocalDateToday,
-  isLocalDateYesterday,
-} from '../lib/utils.ts'
-import {
-  ScheduleProvider,
-  useScheduleContext,
-} from '../components/schedule/ScheduleContext.tsx'
-import {
-  CustomEventTypeReloadSchedulePage,
-  subscribeReloadSchedulePage,
-  unsubscribeReloadSchedulePage,
-} from '../components/schedule/event-reload-schedule-page.ts'
-import { CustomEventFnType } from '../events/event-builder.ts'
-import { CalendarForScheduler } from '../components/schedule/CalendarForScheduler.tsx'
-
+/*
 const periodRefreshDatesWithRecordsInMillis = 3 * 60 * 60 * 1000 // 3 minutes.
 const periodRefreshScheduleInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 
@@ -93,7 +72,7 @@ const InnerPage: FC = () => {
     <section className='p-8'>
       <div className='w-full'>
         <div className='mt-1 flex flex-wrap gap-3 justify-start'>
-          {/* Left Part */}
+          {/!* Left Part *!/}
           <div>
             <CalendarForScheduler
               datesWithRecords={dataDatesWithRecords?.data.dates || []}
@@ -101,7 +80,7 @@ const InnerPage: FC = () => {
             />
             <div className='bg-gray-200 rounded-sm'>
               <form className='mx-auto my-4 w-fit p-3 rounded-lg'>
-                {/* // TODO: Duplicated code (*mkld) */}
+                {/!* // TODx: Duplicated code (*mkld) *!/}
                 <span className='pr-2'>{'Data: '}</span>
                 <input
                   type='date'
@@ -109,7 +88,7 @@ const InnerPage: FC = () => {
                   value={inputDateValue}
                   onInput={event => {
                     const newDate = event.currentTarget.value // Es. "2024-11-15"
-                    // TODO: Check if it's valid
+                    // TODx: Check if it's valid
                     setInputDateValue(newDate)
                   }}
                 />
@@ -117,7 +96,7 @@ const InnerPage: FC = () => {
             </div>
           </div>
 
-          {/* Right Part */}
+          {/!* Right Part *!/}
           <div className='flex-grow '>
             <ScheduleContent canInputThings={canInputThings} />
           </div>
@@ -126,3 +105,4 @@ const InnerPage: FC = () => {
     </section>
   )
 }
+*/

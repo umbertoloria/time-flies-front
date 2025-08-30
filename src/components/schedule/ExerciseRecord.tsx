@@ -1,15 +1,4 @@
-import { FC, PropsWithChildren, useState } from 'react'
-import { TExerciseRecord } from '../../remote/sdk/types'
-import classNames from 'classnames'
-import { getSDK } from '../../remote/remote.ts'
-import { useScheduleContext } from './ScheduleContext.tsx'
-import { fireReloadSchedulePage } from './event-reload-schedule-page.ts'
-import {
-  displayDuration,
-  estimate_record_duration_minutes,
-} from './estimations.ts'
-import { ColouredLabel } from '../coloured/ColouredLabel.tsx'
-
+/*
 const ExerciseRecordBase: FC<
   PropsWithChildren<{
     hasHover?: boolean
@@ -57,7 +46,7 @@ export const ExerciseRecordRowToAddNew: FC<{
 
   return (
     <ExerciseRecordBase>
-      {/* BPM */}
+      {/!* BPM *!/}
       <ColouredLabel bold>
         <input
           type='number'
@@ -81,7 +70,7 @@ export const ExerciseRecordRowToAddNew: FC<{
         {' bpm'}
       </ColouredLabel>
 
-      {/* Minutes */}
+      {/!* Minutes *!/}
       <ColouredLabel blurText={!isMinutesInputFilled}>
         <input
           type='checkbox'
@@ -118,7 +107,7 @@ export const ExerciseRecordRowToAddNew: FC<{
         {' min'}
       </ColouredLabel>
 
-      {/* Minutes */}
+      {/!* Minutes *!/}
       <ColouredLabel blurText={!isHandInputFilled}>
         <input
           type='checkbox'
@@ -158,7 +147,7 @@ export const ExerciseRecordRowToAddNew: FC<{
         className='btn-primary'
         onClick={() => {
           setLoading(true)
-          // TODO: Validate params
+          // TODx: Validate params
           createExerciseRecord(props.exerciseId, localDate, {
             bpm,
             minutes: typeof minutes === 'number' ? minutes : undefined,
@@ -171,7 +160,7 @@ export const ExerciseRecordRowToAddNew: FC<{
                 alert('Input non valido: minutes')
               } else {
                 // Yay!
-                // TODO: Tell user all went OK
+                // TODx: Tell user all went OK
                 clearInput()
                 fireReloadSchedulePage(undefined)
               }
@@ -179,7 +168,7 @@ export const ExerciseRecordRowToAddNew: FC<{
             })
             .catch(err => {
               console.error(err)
-              // TODO: Tell user all went KO
+              // TODx: Tell user all went KO
               alert('Errore avvenuto')
               setLoading(false)
             })
@@ -196,15 +185,15 @@ export const ExerciseRecordContent: FC<{
 }> = props => {
   return (
     <>
-      {/* BPM */}
+      {/!* BPM *!/}
       <ColouredLabel bold>{`${props.record.bpm} bpm`}</ColouredLabel>
 
-      {/* Minutes */}
+      {/!* Minutes *!/}
       {props.record.minutes !== undefined && (
         <ColouredLabel>{`${props.record.minutes} minuti`}</ColouredLabel>
       )}
 
-      {/* Hand: dx/sx */}
+      {/!* Hand: dx/sx *!/}
       {props.record.hand !== undefined && (
         <>
           {!!props.record.hand && (
@@ -215,11 +204,11 @@ export const ExerciseRecordContent: FC<{
         </>
       )}
 
-      {/* Bar num and Time Signature */}
+      {/!* Bar num and Time Signature *!/}
       {props.record.bars_num !== undefined && (
         <ColouredLabel>{`${props.record.bars_num} battute`}</ColouredLabel>
       )}
-      {/* Calculation of duration */}
+      {/!* Calculation of duration *!/}
       {props.record.bars_num !== undefined &&
         props.record.ts_above !== undefined &&
         props.record.ts_below !== undefined && (
@@ -232,3 +221,4 @@ export const ExerciseRecordContent: FC<{
     </>
   )
 }
+*/
