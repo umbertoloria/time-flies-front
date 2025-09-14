@@ -1,6 +1,6 @@
 // Types
-// 2025-08-24T00:40:31Z
-// v3.5
+// 2025-09-14T17:28:30Z
+// v3.6
 
 // Calendar
 export type TCalendarPrev = TCalendarRcd & {
@@ -91,7 +91,6 @@ export namespace TCalendarSDK {
   }
   export type ReadPlannedEventsResponseCalendar = TCalendarRcd & {
     todos: TNewTodo[]
-    doneTasks?: TNewDoneTask[]
   }
   // Read Date Response
   export type ReadDateResponse = {

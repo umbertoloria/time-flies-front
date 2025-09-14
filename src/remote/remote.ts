@@ -30,7 +30,7 @@ export const getSDK = () => {
         : (() => {
             const authData = getAuthData()
             if (!authData.em || !authData.sp) {
-              throw new Error('Guest user')
+              return Promise.reject(new Error('Guest user'))
             }
             return api.post('/auth/status', authData).then(({ data }) => data)
           })(),
@@ -303,7 +303,7 @@ export const getCalendarSDK = () => ({
       plannedColor?: string // Es. "#115599"
       usesNotes?: boolean
     }
-  ) =>
+  ): Promise<'calendar-uses-notes-cannot-be-disabled' | 'ok-updated'> =>
     api
       .post(`calendar-update`, {
         ...getAuthData(),

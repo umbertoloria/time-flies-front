@@ -69,7 +69,7 @@ export const Streamline: FC = () => {
                         showButtonToOpenInDatePanel
                       />
                     ))}
-                    {(calendar.doneTasks || []).map((doneTask, index) => (
+                    {/*{(calendar.doneTasks || []).map((doneTask, index) => (
                       <StreamlineTodo
                         key={index}
                         calendar={calendar}
@@ -80,7 +80,7 @@ export const Streamline: FC = () => {
                         }}
                         showButtonToOpenInDatePanel
                       />
-                    ))}
+                    ))}*/}
                     {'\n'}
                   </>
                 ))}
