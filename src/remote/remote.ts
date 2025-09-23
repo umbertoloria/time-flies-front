@@ -182,12 +182,26 @@ export const getSDK = () => {
               },
             ],
           })
-        : api
-            .post('/streamline', {
-              ...getAuthData(),
-            })
-            .then(({ data }) => data)
-            .catch<'unable'>(() => 'unable'),
+        : new Promise((resolve, reject) => {
+            setTimeout(() => {
+              // FIXME: Delaying Streamline retrieval due to DB slowness
+              try {
+                /*return resolve({
+                  dates: [],
+                })*/
+                return resolve(
+                  api
+                    .post('/calendars/streamline', {
+                      ...getAuthData(),
+                    })
+                    .then(({ data }) => data)
+                    .catch<'unable'>(() => 'unable')
+                )
+              } catch (e) {
+                reject(e)
+              }
+            }, 1500)
+          }),
   }
 }
 
@@ -230,7 +244,7 @@ export const getCalendarSDK = () => ({
           ],
         })
       : api
-          .post('calendars', {
+          .post('/calendars', {
             ...getAuthData(),
             'date-from': filters.dateFrom, // This is actually optional.
             'show-all': filters.seeAllCalendars ? 'true' : undefined,
@@ -273,7 +287,7 @@ export const getCalendarSDK = () => ({
           return Promise.reject(new Error('Calendar not found (debug mode)'))
         })()
       : api
-          .post(`calendars/${id}`, {
+          .post(`/calendars/${id}`, {
             ...getAuthData(),
           })
           .then(({ data }) => data)
@@ -287,7 +301,7 @@ export const getCalendarSDK = () => ({
     usesNotes: boolean
   }) =>
     api
-      .post('calendars-create', {
+      .post('/calendars/create', {
         ...getAuthData(),
         name: data.name,
         color: data.color,
@@ -305,7 +319,7 @@ export const getCalendarSDK = () => ({
     }
   ): Promise<'calendar-uses-notes-cannot-be-disabled' | 'ok-updated'> =>
     api
-      .post(`calendar-update`, {
+      .post('/calendars/update', {
         ...getAuthData(),
         cid: `${calendarId}`,
         name: data.name || undefined,
