@@ -12,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@biomejs/biome": "^2.4.15",
     "@types/axios": "^0.14.0",
     "axios": "^1.7.3",
     "classnames": "^2.5.1",
