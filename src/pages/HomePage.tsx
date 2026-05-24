@@ -25,7 +25,7 @@ import {
 
 const periodRefreshCalendarsInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 
-export default function HomePage() {
+export default function HomePageContent() {
   return (
     <UserLayout>
       <InnerPage />

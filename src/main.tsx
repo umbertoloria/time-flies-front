@@ -4,15 +4,14 @@ import Root from './Root.tsx'
 import './index.css'
 import { createHashRouter, RouterProvider } from 'react-router-dom'
 import ErrorPage from './error-page.tsx'
-import HomePage from './pages/HomePage.tsx'
-import LoginPage from './pages/LoginPage.tsx'
+import HomePageContent from './pages/HomePage.tsx'
+import LoginPageContent from './pages/LoginPage.tsx'
 
 export const baseRoot = '/app/time-flies' as const
 
 export const pathHomePage = '/'
 export const pathLoginPage = '/login'
 export const pathAccountPage = '/account'
-export const pathSchedulePage = '/schedule'
 
 const router = createHashRouter(
   [
@@ -23,18 +22,12 @@ const router = createHashRouter(
       children: [
         {
           path: '',
-          element: <HomePage />,
+          element: <HomePageContent />,
         },
         {
           path: pathLoginPage,
-          element: <LoginPage />,
+          element: <LoginPageContent />,
         },
-        /* // TODO: Schedule Page disabled
-        {
-          path: pathSchedulePage,
-          element: <SchedulePage />,
-        },
-        */
       ],
     },
   ],

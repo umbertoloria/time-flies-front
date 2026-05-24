@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { baseRoot } from '../main.tsx'
 import { setAuthData, sha256 } from '../remote/auth.ts'
 
-export default function LoginPage() {
+export default function LoginPageContent() {
   return (
     <section className=' p-8'>
       <Login />
