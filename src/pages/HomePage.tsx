@@ -1,3 +1,5 @@
+'use client'
+
 import { FC, useEffect, useMemo, useState } from 'react'
 import {
   getDateFromLocalDate,

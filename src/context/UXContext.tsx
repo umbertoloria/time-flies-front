@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext, FC, PropsWithChildren, useContext } from 'react'
 import { DialogForInsertNewGoal } from './dialog-insert-new-goal/DialogForInsertNewGoal.tsx'
 import { DialogForGroover } from './dialog-groover/DialogForGroover.tsx'

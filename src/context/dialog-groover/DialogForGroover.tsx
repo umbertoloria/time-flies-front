@@ -1,3 +1,5 @@
+'use client'
+
 import { FC, useEffect } from 'react'
 import { useDialogForGroover } from './ContextDialogForGroover.tsx'
 import { GenericDialog } from '../../components/calendar/GenericDialog.tsx'

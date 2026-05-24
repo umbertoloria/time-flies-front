@@ -1,4 +1,6 @@
-import { FC, useEffect } from 'react'
+'use client'
+
+import { FC, Fragment, useEffect } from 'react'
 import { CalendarTitle } from '../calendar/CalendarGrid.tsx'
 import { getSDK } from '../../remote/remote.ts'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
@@ -42,15 +44,10 @@ export const Streamline: FC = () => {
         <>
           <StreamlinePre>
             {dataStreamline.data.dates.map(({ date, calendars }, index) => (
-              <>
-                <StreamlineBoxDate
-                  //
-                  key={index}
-                  spacesOffset={0}
-                  date={date}
-                />
+              <Fragment key={index}>
+                <StreamlineBoxDate spacesOffset={0} date={date} />
                 {calendars.map((calendar, index) => (
-                  <>
+                  <Fragment key={index}>
                     <StreamlineBoxCalendar
                       key={index}
                       spacesOffset={2}
@@ -82,9 +79,9 @@ export const Streamline: FC = () => {
                       />
                     ))}*/}
                     {'\n'}
-                  </>
+                  </Fragment>
                 ))}
-              </>
+              </Fragment>
             ))}
           </StreamlinePre>
         </>

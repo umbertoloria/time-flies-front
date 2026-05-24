@@ -1,3 +1,5 @@
+'use client'
+
 import { FC, useEffect, useRef } from 'react'
 import { GenericDialog } from '../../components/calendar/GenericDialog.tsx'
 import { useDialogForCalendarManagement } from './ContextDialogForCalendarManagement.tsx'

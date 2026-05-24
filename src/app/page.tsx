@@ -1,4 +1,4 @@
-import HomePageContent from '../pages/HomePage.tsx'
+import HomePageContent from '../pages/HomePage'
 
 export default function HomePage() {
   return <HomePageContent />

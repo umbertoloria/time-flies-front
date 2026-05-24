@@ -1,3 +1,5 @@
+'use client'
+
 import { FC, PropsWithChildren, useEffect } from 'react'
 import { getITMonthFromLocalDate } from '../../lib/utils'
 import { DayStatus, DayStatusProps } from './DayStatus'

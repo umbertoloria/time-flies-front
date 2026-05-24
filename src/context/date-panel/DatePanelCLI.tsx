@@ -1,3 +1,5 @@
+'use client'
+
 import { FC, useEffect } from 'react'
 import { Badge } from '../../components/calendar/Badge.tsx'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'

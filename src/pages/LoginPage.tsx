@@ -1,6 +1,8 @@
+'use client'
+
 import { getSDK } from '../remote/remote.ts'
 import classNames from 'classnames'
-import { baseRoot } from '../main.tsx'
+import { pathHomePage } from '@/app/routing'
 import { setAuthData, sha256 } from '../remote/auth.ts'
 
 export default function LoginPageContent() {
@@ -13,8 +15,8 @@ export default function LoginPageContent() {
 
 const { authLogin } = getSDK()
 const Login = () => {
-  const urlParams = new URLSearchParams(window.location.search)
-  const isFailed = typeof urlParams.get('failed') === 'string'
+  // TODO: Implement failed login UX
+  const isFailed = false
 
   return (
     <form
@@ -31,7 +33,7 @@ const Login = () => {
             authLogin(email, sp).then(outcome => {
               if (outcome === 'ok') {
                 setAuthData(email, sp)
-                location.href = baseRoot
+                location.href = pathHomePage
               } else {
                 throw new Error()
               }

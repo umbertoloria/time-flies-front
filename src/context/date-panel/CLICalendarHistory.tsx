@@ -1,3 +1,5 @@
+'use client'
+
 import { FC, useEffect } from 'react'
 import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
 import { CustomEventFnType } from '../../events/event-builder.ts'

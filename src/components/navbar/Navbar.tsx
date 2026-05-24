@@ -1,12 +1,7 @@
 import { FC } from 'react'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 import { useAuth } from '../../context/AuthContext.tsx'
-import {
-  baseRoot,
-  pathAccountPage,
-  pathHomePage,
-  pathLoginPage,
-} from '../../main.tsx'
+import { pathAccountPage, pathHomePage, pathLoginPage } from '@/app/routing'
 import { resetAuthData } from '../../remote/auth.ts'
 
 export const Navbar = () => {
@@ -25,7 +20,7 @@ export const Navbar = () => {
             <NavbarItem
               onClick={() => {
                 resetAuthData()
-                location.href = baseRoot
+                location.href = pathHomePage
               }}
               label='Logout'
             />
@@ -54,7 +49,7 @@ const NavbarItem: FC<{
           props.onClick()
         }
       }}
-      to={props.to || ''}
+      href={props.to || ''}
       className='no-underline hover:underline'
     >
       {props.label}

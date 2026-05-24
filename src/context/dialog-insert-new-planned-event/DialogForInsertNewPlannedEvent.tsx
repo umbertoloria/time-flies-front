@@ -1,3 +1,5 @@
+'use client'
+
 import { FC, useEffect, useState } from 'react'
 import { GenericDialog } from '../../components/calendar/GenericDialog.tsx'
 import { useDialogForInsertNewPlannedEvent } from './ContextDialogForInsertNewPlannedEvent.tsx'

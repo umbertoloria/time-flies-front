@@ -9,7 +9,7 @@ import { getTodayLocalDate } from '../lib/utils.ts'
 import { getAuthData } from './auth.ts'
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_ENDPOINT,
+  baseURL: process.env.API_ENDPOINT,
   withCredentials: true,
 })
 

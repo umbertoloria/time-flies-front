@@ -1,3 +1,5 @@
+'use client'
+
 import {
   createContext,
   FC,
@@ -8,7 +10,7 @@ import {
 } from 'react'
 import { TAuthUser } from '../remote/sdk/types'
 import { getSDK } from '../remote/remote.ts'
-import { baseRoot, pathLoginPage } from '../main.tsx'
+import { pathLoginPage } from '@/app/routing'
 
 const AuthContext = createContext<{
   user: TAuthUser | undefined
@@ -39,7 +41,7 @@ export const AuthProvider: FC<PropsWithChildren> = props => {
             console.error(err)
           }
           setUser(undefined)
-          location.href = `${baseRoot}/#${pathLoginPage}`
+          location.href = pathLoginPage
         })
         .finally(() => {
           setLoading(false)

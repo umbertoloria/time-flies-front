@@ -3,7 +3,6 @@ import {
   buildWindowsOf16ths,
   createIteratorUponWindowsOf16ths,
 } from './window-of-16ths.ts'
-import { baseRoot } from '../../../main.tsx'
 
 export const createSheet = async ({
   topPattern__,
@@ -272,4 +271,4 @@ const fetchDrumsTemplate = () =>
   fetchDrumsFromPublic('drums-sheet-template.musicxml')
 
 export const fetchDrumsFromPublic = (filename: string) =>
-  fetch(`${baseRoot}/resources/${filename}`).then(res => res.text())
+  fetch(`/resources/${filename}`).then(res => res.text())
