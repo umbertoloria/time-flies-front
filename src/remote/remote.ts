@@ -374,14 +374,15 @@ export const getCalendarDateSDK = () => ({
           .then(({ data }) => data),
   checkDateWithSuccess: (
     id: number,
-    localDate: string,
+    date: string,
     notes: undefined | string
   ): Promise<'ok' | 'invalid'> =>
     debugMode
       ? Promise.resolve('ok')
       : api
-          .post(`calendars/${id}/date-create/${localDate}`, {
+          .post(`calendars/${id}/date-create`, {
             ...getAuthData(),
+            date,
             notes,
           })
           .then<'ok'>(() => 'ok')
@@ -459,29 +460,17 @@ export const getPlannedEventSDK = () => ({
             }
             throw err
           }),
-  checkPlannedEventWithSuccess: (
+  setEventAsDone: (
     calendarId: number,
     eventId: number,
-    mode:
-      | {
-          type: 'done'
-          notes: undefined | string
-        }
-      | {
-          type: 'missed'
-        }
+    notes: undefined | string
   ): Promise<'ok' | 'invalid'> =>
     debugMode
       ? Promise.resolve('ok')
       : api
           .post(`calendars/${calendarId}/todo-done/${eventId}`, {
             ...getAuthData(),
-            mode: mode.type,
-            set_as_missed: mode.type === 'missed' ? 'true' : undefined,
-            notes:
-              mode.type === 'done' && typeof mode.notes === 'string'
-                ? mode.notes
-                : undefined,
+            notes: typeof notes === 'string' ? notes : undefined,
           })
           .then<'ok'>(() => 'ok')
           .catch<'invalid'>(err => {

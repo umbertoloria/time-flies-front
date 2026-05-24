@@ -77,6 +77,10 @@ export const useContextDialogForCheckPlannedEventForUX = (): {
           return
         }
         const { calendar, date, todo, mode } = dialog.data
+        if (mode === 'missed') {
+          alert('Deprecated feature')
+          return
+        }
         setDialog({
           isOpen: true,
           data: {
@@ -87,20 +91,9 @@ export const useContextDialogForCheckPlannedEventForUX = (): {
             loading: true,
           },
         })
-        if (mode === 'done' || mode === 'missed') {
+        if (mode === 'done') {
           plannedEventSdk
-            .checkPlannedEventWithSuccess(
-              calendar.id,
-              todo.id,
-              mode === 'done'
-                ? {
-                    type: 'done',
-                    notes: param,
-                  }
-                : {
-                    type: 'missed',
-                  }
-            )
+            .setEventAsDone(calendar.id, todo.id, param)
             .then(() => {
               // Yay!
 
