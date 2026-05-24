@@ -33,7 +33,10 @@ export const PlacedCalendarManagement: FC = () => {
               textColor='#fff'
               label={displayDateFromLocalDate(data.date)}
             >
-              <button className='close-btn' onClick={closeDialogForDatePanel}>
+              <button
+                className='close-btn btn-primary'
+                onClick={closeDialogForDatePanel}
+              >
                 {'Close'}
               </button>
             </CalendarTitle>
@@ -69,7 +72,7 @@ const PlacedCalendarManagementModeCalendar: FC<{
           <CalendarTitle textColor='#fff' label='Calendario'>
             <div>
               <button
-                className='close-btn mr-2'
+                className='close-btn btn-primary mr-2'
                 onClick={() => {
                   if (!data?.loading && data?.data) {
                     openDialogForCalendarManagement({
@@ -82,7 +85,7 @@ const PlacedCalendarManagementModeCalendar: FC<{
               >
                 {'Edit'}
               </button>
-              <button className='close-btn' onClick={onClose}>
+              <button className='close-btn btn-primary' onClick={onClose}>
                 {'Close'}
               </button>
             </div>

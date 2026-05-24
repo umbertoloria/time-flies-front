@@ -3,10 +3,9 @@
 @tailwind utilities;
 
 @layer components {
-
     .clickable {
         cursor: pointer;
-        transition: .1s;
+        transition: 0.1s;
 
         &:hover {
             transform: scale(1.15);
@@ -15,20 +14,16 @@
     }
 
     .show-today {
-        border: 4px solid rgba(0, 0, 0, .3);
+        border: 4px solid rgba(0, 0, 0, 0.3);
         @apply bg-gray-300;
     }
 
     .btn-primary {
-        @apply py-1 px-2 bg-blue-600 text-white text-sm font-semibold rounded-md shadow-md transition-all
-        hover:bg-blue-700
-        focus:outline-none focus:ring focus:ring-blue-400;
+        @apply py-1 px-2 bg-blue-600 text-white text-sm font-semibold rounded-md shadow-md transition-all hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-400;
     }
 
     .btn-warning {
-        @apply py-1 px-2 bg-yellow-600 text-white text-sm font-semibold rounded-md shadow-md transition-all
-        hover:bg-yellow-700
-        focus:outline-none focus:ring focus:ring-yellow-400;
+        @apply py-1 px-2 bg-yellow-600 text-white text-sm font-semibold rounded-md shadow-md transition-all hover:bg-yellow-700 focus:outline-none focus:ring focus:ring-yellow-400;
     }
 
     .exercise-record {
@@ -78,7 +73,7 @@
         margin: 0 0 4px 0;
         padding: 6px 10px;
         border-radius: 3px;
-        @apply bg-gray-500
+        @apply bg-gray-500;
     }
 
     .calendar-grid,
@@ -98,7 +93,7 @@
         height: 252px;
 
         .close-btn {
-            @reference btn-primary;
+            /* @reference btn-primary; // Doesn't work... */
             height: 30px;
         }
 
@@ -119,7 +114,7 @@
             border-radius: 2px;
             @apply bg-blue-300;
             border-bottom: 4px solid transparent;
-            transition: .2s;
+            transition: 0.2s;
 
             &:hover {
                 @apply border-blue-400;
@@ -158,9 +153,7 @@
                     background: #eee;
                 }
             }
-
         }
-
     }
 
     .dashboard-control {

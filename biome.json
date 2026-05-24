@@ -6,7 +6,9 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["src/**", "!!**/dist"]
+    "includes": [
+      "src/**"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -109,7 +111,9 @@
         "useGetterReturn": "error"
       }
     },
-    "includes": ["**", "**/dist"]
+    "includes": [
+      "src/**"
+    ]
   },
   "javascript": {
     "formatter": {
@@ -128,6 +132,16 @@
     "formatter": {
       "indentScriptAndStyle": false,
       "selfCloseVoidElements": "always"
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    },
+    "formatter": {
+      "enabled": true,
+      "indentStyle": "space",
+      "indentWidth": 4
     }
   },
   "assist": {
