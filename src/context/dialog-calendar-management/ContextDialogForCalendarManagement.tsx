@@ -1,9 +1,9 @@
-import { getCalendarSDK } from '../../remote/remote.ts'
 import { useState } from 'react'
-import { fireEventStreamlineUpdated } from '../../components/streamline/event-streamline-updated.ts'
-import { useUXContext } from '../UXContext.tsx'
-import { TCalendar } from '../../remote/sdk/types'
-import { fireEventCalendarUpdated } from '../../components/calendar/event-calendar-updated.ts'
+import { fireEventCalendarUpdated } from '@/components/calendar/event-calendar-updated'
+import { fireEventStreamlineUpdated } from '@/components/streamline/event-streamline-updated'
+import { useUXContext } from '@/context/UXContext'
+import { getCalendarSDK } from '@/remote/remote'
+import { TCalendar } from '@/remote/sdk/types'
 
 type ContextPartData =
   | {

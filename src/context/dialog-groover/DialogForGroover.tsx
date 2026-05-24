@@ -1,11 +1,11 @@
 'use client'
 
 import { FC, useEffect } from 'react'
-import { useDialogForGroover } from './ContextDialogForGroover.tsx'
-import { GenericDialog } from '../../components/calendar/GenericDialog.tsx'
-import { createSheet } from '../../components/groover/lib/builder.ts'
-import { renderNewScoreInApp } from '../../components/groover/lib/render.ts'
-import { mergeSnareAndGhostsTogether } from '../../components/groover/lib/drums-patterns/snare-patterns.ts'
+import { GenericDialog } from '@/components/calendar/GenericDialog'
+import { createSheet } from '@/components/groover/lib/builder'
+import { mergeSnareAndGhostsTogether } from '@/components/groover/lib/drums-patterns/snare-patterns'
+import { renderNewScoreInApp } from '@/components/groover/lib/render'
+import { useDialogForGroover } from '@/context/dialog-groover/ContextDialogForGroover'
 
 export const DialogForGroover: FC = () => {
   const { isOpen, data, closeDialog } = useDialogForGroover()

@@ -1,19 +1,19 @@
 'use client'
 
 import { FC, PropsWithChildren, useEffect } from 'react'
-import { getITMonthFromLocalDate } from '../../lib/utils'
-import { DayStatus, DayStatusProps } from './DayStatus'
-import { CustomEventFnType } from '../../events/event-builder.ts'
+import classNames from 'classnames'
+import { getITMonthFromLocalDate } from '@/lib/utils'
+import { CustomEventFnType } from '@/events/event-builder'
 import {
   CustomEventTypeCalendarUpdated,
   subscribeToCalendarUpdates,
   unsubscribeToCalendarUpdates,
-} from './event-calendar-updated.ts'
+} from '@/components/calendar/event-calendar-updated'
 import { getFirstAndLastLocalDatesFromDayStatusRows } from './utils'
-import { LogicCalendar } from './logic-calendar.ts'
-import { createDayStatusPropsListFromLogicCalendar } from '../timeline/timeline-utils.ts'
-import classNames from 'classnames'
-import { useDialogForDatePanel } from '../../context/date-panel/ContextDialogForDatePanel.tsx'
+import { LogicCalendar } from '@/components/calendar/logic-calendar'
+import { createDayStatusPropsListFromLogicCalendar } from '@/components/timeline/timeline-utils'
+import { useDialogForDatePanel } from '@/context/date-panel/ContextDialogForDatePanel'
+import { DayStatus, DayStatusProps } from './DayStatus'
 
 export type DayStatusRow = {
   dayStatuses: DayStatusProps[]

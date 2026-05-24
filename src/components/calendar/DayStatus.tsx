@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import classNames from 'classnames'
-import { useDialogForDatePanel } from '../../context/date-panel/ContextDialogForDatePanel.tsx'
+import { useDialogForDatePanel } from '@/context/date-panel/ContextDialogForDatePanel'
 import {
   getDateWithOffsetDays,
   getLocalDayByDate,
@@ -8,8 +8,8 @@ import {
   isLocalDateFuture,
   isLocalDateToday,
   localDatesLTE,
-} from '../../lib/utils.ts'
-import { displayDateFromLocalDate } from './utils.ts'
+} from '@/lib/utils'
+import { displayDateFromLocalDate } from '@/components/calendar/utils'
 
 export type DayStatusProps = {
   date: string // Es. "2023-01-01"

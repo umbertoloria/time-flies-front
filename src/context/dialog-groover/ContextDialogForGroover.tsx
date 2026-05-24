@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useUXContext } from '../UXContext.tsx'
+import { useUXContext } from '@/context/UXContext'
 
 type ContextPartData = {
   bass: string

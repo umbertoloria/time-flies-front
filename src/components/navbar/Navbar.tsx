@@ -1,8 +1,8 @@
 import { FC } from 'react'
 import Link from 'next/link'
-import { useAuth } from '../../context/AuthContext.tsx'
 import { pathAccountPage, pathHomePage, pathLoginPage } from '@/app/routing'
-import { resetAuthData } from '../../remote/auth.ts'
+import { useAuth } from '@/context/AuthContext'
+import { resetAuthData } from '@/remote/auth'
 
 export const Navbar = () => {
   const { user } = useAuth()

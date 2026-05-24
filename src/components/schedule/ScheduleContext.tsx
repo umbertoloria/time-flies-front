@@ -7,8 +7,8 @@ import {
   useContext,
   useState,
 } from 'react'
-import { TExerciseGroup, TSchedule } from '../../remote/sdk/types'
-import { getTodayLocalDate } from '../../lib/utils.ts'
+import { getTodayLocalDate } from '@/lib/utils'
+import { TExerciseGroup, TSchedule } from '@/remote/sdk/types'
 
 const ScheduleContext = createContext<{
   localDate: string

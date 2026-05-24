@@ -1,14 +1,14 @@
 import { FC } from 'react'
-import { useDialogForDatePanel } from '../../context/date-panel/ContextDialogForDatePanel.tsx'
-import { DatePanelInnerCLI } from '../../context/date-panel/DatePanelCLI.tsx'
-import { CalendarTitle } from './CalendarGrid.tsx'
-import { displayDateFromLocalDate } from './utils.ts'
+import { CalendarTitle } from '@/components/calendar/CalendarGrid'
+import { displayDateFromLocalDate } from '@/components/calendar/utils'
+import { Badge } from '@/components/calendar/Badge'
+import { useDialogForDatePanel } from '@/context/date-panel/ContextDialogForDatePanel'
+import { DatePanelInnerCLI } from '@/context/date-panel/DatePanelCLI'
 import {
   CLICalendarHistoryStateless,
   useCalendarDownloader,
-} from '../../context/date-panel/CLICalendarHistory.tsx'
-import { useDialogForCalendarManagement } from '../../context/dialog-calendar-management/ContextDialogForCalendarManagement.tsx'
-import { Badge } from './Badge.tsx'
+} from '@/context/date-panel/CLICalendarHistory'
+import { useDialogForCalendarManagement } from '@/context/dialog-calendar-management/ContextDialogForCalendarManagement'
 
 export const PlacedCalendarManagement: FC = () => {
   const {

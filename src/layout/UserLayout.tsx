@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren } from 'react'
-import { AuthProvider, useAuth } from '../context/AuthContext.tsx'
-import { Navbar } from '../components/navbar/Navbar.tsx'
-import { UXProvider } from '../context/UXContext.tsx'
+import { Navbar } from '@/components/navbar/Navbar'
+import { AuthProvider, useAuth } from '@/context/AuthContext'
+import { UXProvider } from '@/context/UXContext'
 
 export const UserLayout: FC<PropsWithChildren> = props => {
   return (

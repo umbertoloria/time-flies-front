@@ -1,9 +1,9 @@
 'use client'
 
 import { FC, useEffect, useState } from 'react'
-import { useDialogForInsertNewGoal } from './ContextDialogForInsertNewGoal.tsx'
-import { GenericDialog } from '../../components/calendar/GenericDialog.tsx'
 import classNames from 'classnames'
+import { GenericDialog } from '@/components/calendar/GenericDialog'
+import { useDialogForInsertNewGoal } from '@/context/dialog-insert-new-goal/ContextDialogForInsertNewGoal'
 
 const INITIAL_ENABLE_NOTE = false
 const INITIAL_INPUT_VALUE = ''

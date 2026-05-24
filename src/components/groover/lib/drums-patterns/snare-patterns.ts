@@ -1,4 +1,4 @@
-import { isJumpNoteChar } from '../builder.ts'
+import { isJumpNoteChar } from '@/components/groover/lib/builder'
 
 /*
 export const SNARE_PATTERN_24_BACKBEAT: string = '    o   ' as const

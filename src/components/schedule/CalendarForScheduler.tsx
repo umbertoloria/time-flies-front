@@ -1,12 +1,12 @@
 import { FC, useState } from 'react'
+import { LogicCalendarGridListening } from '@/components/calendar/CalendarGrid'
+import { LogicDay } from '@/components/calendar/logic-calendar'
+import { moveDateToClosestNonFutureMonday } from '@/components/calendar/utils'
 import {
   getDateFromLocalDate,
   getDateWithOffsetDays,
   getTodayLocalDate,
-} from '../../lib/utils.ts'
-import { LogicCalendarGridListening } from '../calendar/CalendarGrid.tsx'
-import { LogicDay } from '../calendar/logic-calendar.ts'
-import { moveDateToClosestNonFutureMonday } from '../calendar/utils.ts'
+} from '@/lib/utils'
 
 const defaultNumWeeks = 4 * 2 // Two months
 export const CalendarForScheduler: FC<{

@@ -7,23 +7,23 @@ import {
   getLocalDayByDate,
   getTodayLocalDate,
   localDatesLT,
-} from '../lib/utils.ts'
-import { UserLayout } from '../layout/UserLayout.tsx'
-import { getCalendarSDK } from '../remote/remote.ts'
-import { LogicCalendarGridListening } from '../components/calendar/CalendarGrid.tsx'
-import { useWrapperForCreateResource } from '../lib/remote-resources.ts'
-import { Streamline } from '../components/streamline/Streamline.tsx'
+} from '@/lib/utils'
+import { UserLayout } from '@/layout/UserLayout'
+import { getCalendarSDK } from '@/remote/remote'
+import { useWrapperForCreateResource } from '@/lib/remote-resources'
+import { LogicCalendarGridListening } from '@/components/calendar/CalendarGrid'
+import { Streamline } from '@/components/streamline/Streamline'
 import {
   defaultTimelinesNumDaysBefore,
   Timelines,
-} from '../components/timeline/Timelines.tsx'
-import { moveDateToClosestNonFutureMonday } from '../components/calendar/utils.ts'
-import { createLogicCalendarFromTCalendar } from '../components/calendar/logic-calendar.ts'
-import { PlacedCalendarManagement } from '../components/calendar/PlacedCalendarManagement.tsx'
+} from '@/components/timeline/Timelines'
+import { moveDateToClosestNonFutureMonday } from '@/components/calendar/utils'
+import { createLogicCalendarFromTCalendar } from '@/components/calendar/logic-calendar'
+import { PlacedCalendarManagement } from '@/components/calendar/PlacedCalendarManagement'
 import {
   DashboardControl,
   DEFAULT_SEE_ALL_CALENDARS_FLAG,
-} from '../components/DashboardControl.tsx'
+} from '@/components/DashboardControl'
 
 const periodRefreshCalendarsInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 

@@ -1,10 +1,10 @@
 'use client'
 
 import { FC, useEffect, useState } from 'react'
-import { useDialogForCheckPlannedEvent } from './ContextDialogForCheckPlannedEvents.tsx'
-import { GenericDialog } from '../../components/calendar/GenericDialog.tsx'
-import { NotesFieldEditor } from '../dialog-insert-new-goal/DialogForInsertNewGoal.tsx'
-import { getTodayLocalDate } from '../../lib/utils.ts'
+import { GenericDialog } from '@/components/calendar/GenericDialog'
+import { useDialogForCheckPlannedEvent } from '@/context/dialog-check-planned-events/ContextDialogForCheckPlannedEvents'
+import { NotesFieldEditor } from '@/context/dialog-insert-new-goal/DialogForInsertNewGoal'
+import { getTodayLocalDate } from '@/lib/utils'
 
 const INITIAL_ENABLE_NOTE = false
 const INITIAL_INPUT_VALUE = ''

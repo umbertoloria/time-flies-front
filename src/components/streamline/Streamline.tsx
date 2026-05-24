@@ -1,21 +1,21 @@
 'use client'
 
 import { FC, Fragment, useEffect } from 'react'
-import { CalendarTitle } from '../calendar/CalendarGrid.tsx'
-import { getSDK } from '../../remote/remote.ts'
-import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
-import { CustomEventFnType } from '../../events/event-builder.ts'
+import { Badge } from '@/components/calendar/Badge'
+import { CalendarTitle } from '@/components/calendar/CalendarGrid'
 import {
   subscribeToStreamlineUpdates,
   unsubscribeToStreamlineUpdates,
-} from './event-streamline-updated.ts'
+} from '@/components/streamline/event-streamline-updated'
 import {
   StreamlineBoxCalendar,
   StreamlineBoxDate,
   StreamlinePre,
   StreamlineTodo,
-} from './StreamlineStateless.tsx'
-import { Badge } from '../calendar/Badge.tsx'
+} from '@/components/streamline/StreamlineStateless'
+import { CustomEventFnType } from '@/events/event-builder'
+import { useWrapperForCreateResource } from '@/lib/remote-resources'
+import { getSDK } from '@/remote/remote'
 
 const { readStreamline } = getSDK()
 export const Streamline: FC = () => {

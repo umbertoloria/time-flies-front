@@ -1,8 +1,8 @@
-import { getNotesStacksList } from './notes-stack.ts'
+import { getNotesStacksList } from '@/components/groover/lib/notes-stack'
 import {
   buildWindowsOf16ths,
   createIteratorUponWindowsOf16ths,
-} from './window-of-16ths.ts'
+} from '@/components/groover/lib/window-of-16ths'
 
 export const createSheet = async ({
   topPattern__,

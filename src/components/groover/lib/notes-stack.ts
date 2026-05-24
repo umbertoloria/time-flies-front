@@ -1,5 +1,5 @@
-import { createStack } from './stack.ts'
-import { isJumpNoteChar } from './builder.ts'
+import { createStack } from '@/components/groover/lib/stack'
+import { isJumpNoteChar } from '@/components/groover/lib/builder'
 
 export type NotesStack = {
   type: 'note' | 'rest'

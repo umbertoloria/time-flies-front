@@ -1,24 +1,24 @@
 'use client'
 
 import { FC, useEffect } from 'react'
-import { Badge } from '../../components/calendar/Badge.tsx'
-import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
+import { Badge } from '@/components/calendar/Badge'
+import {
+  CustomEventTypeCalendarUpdated,
+  subscribeToCalendarUpdates,
+  unsubscribeToCalendarUpdates,
+} from '@/components/calendar/event-calendar-updated'
 import {
   placeOffsetSpace,
   StreamlineBoxCalendar,
   StreamlineBoxDate,
   StreamlinePre,
   StreamlineTodo,
-} from '../../components/streamline/StreamlineStateless.tsx'
-import { CustomEventFnType } from '../../events/event-builder.ts'
-import {
-  CustomEventTypeCalendarUpdated,
-  subscribeToCalendarUpdates,
-  unsubscribeToCalendarUpdates,
-} from '../../components/calendar/event-calendar-updated.ts'
-import { useDialogForInsertNewGoal } from '../dialog-insert-new-goal/ContextDialogForInsertNewGoal.tsx'
-import { useDialogForInsertNewPlannedEvent } from '../dialog-insert-new-planned-event/ContextDialogForInsertNewPlannedEvent.tsx'
-import { getCalendarDateSDK } from '../../remote/remote.ts'
+} from '@/components/streamline/StreamlineStateless'
+import { useDialogForInsertNewPlannedEvent } from '@/context/dialog-insert-new-planned-event/ContextDialogForInsertNewPlannedEvent'
+import { useDialogForInsertNewGoal } from '@/context/dialog-insert-new-goal/ContextDialogForInsertNewGoal'
+import { CustomEventFnType } from '@/events/event-builder'
+import { useWrapperForCreateResource } from '@/lib/remote-resources'
+import { getCalendarDateSDK } from '@/remote/remote'
 
 export const periodRefreshDateInMillis = 3 * 60 * 60 * 1000 // 3 minutes.
 

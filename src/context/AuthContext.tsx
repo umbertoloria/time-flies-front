@@ -8,9 +8,9 @@ import {
   useEffect,
   useState,
 } from 'react'
-import { TAuthUser } from '../remote/sdk/types'
-import { getSDK } from '../remote/remote.ts'
 import { pathLoginPage } from '@/app/routing'
+import { TAuthUser } from '@/remote/sdk/types'
+import { getSDK } from '@/remote/remote'
 
 const AuthContext = createContext<{
   user: TAuthUser | undefined

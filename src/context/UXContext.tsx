@@ -1,41 +1,41 @@
 'use client'
 
 import { createContext, FC, PropsWithChildren, useContext } from 'react'
-import { DialogForInsertNewGoal } from './dialog-insert-new-goal/DialogForInsertNewGoal.tsx'
-import { DialogForGroover } from './dialog-groover/DialogForGroover.tsx'
-import { DialogCheckPlannedEvent } from './dialog-check-planned-events/DialogCheckPlannedEvent.tsx'
+import { DialogForInsertNewGoal } from '@/context/dialog-insert-new-goal/DialogForInsertNewGoal'
+import { DialogForGroover } from '@/context/dialog-groover/DialogForGroover'
+import { DialogCheckPlannedEvent } from '@/context/dialog-check-planned-events/DialogCheckPlannedEvent'
 import {
   ContextDialogForInsertNewGoal,
   contextDialogForInsertNewGoalDataDefault,
   useContextDialogForInsertNewGoalForUX,
-} from './dialog-insert-new-goal/ContextDialogForInsertNewGoal.tsx'
+} from '@/context/dialog-insert-new-goal/ContextDialogForInsertNewGoal'
 import {
   ContextDialogForDatePanel,
   contextDialogForDatePanelDataDefault,
   useUXContextDialogForDatePanelForUX,
-} from './date-panel/ContextDialogForDatePanel.tsx'
+} from '@/context/date-panel/ContextDialogForDatePanel'
 import {
   ContextDialogForGroover,
   contextDialogForGrooverDataDefault,
   useContextDialogForGrooverForUX,
-} from './dialog-groover/ContextDialogForGroover.tsx'
+} from '@/context/dialog-groover/ContextDialogForGroover'
 import {
   ContextDialogForCheckPlannedEvent,
   contextDialogForCheckPlannedEventDataDefault,
   useContextDialogForCheckPlannedEventForUX,
-} from './dialog-check-planned-events/ContextDialogForCheckPlannedEvents.tsx'
+} from '@/context/dialog-check-planned-events/ContextDialogForCheckPlannedEvents'
 import {
   ContextDialogForInsertNewPlannedEvent,
   contextDialogForInsertNewPlannedEventDataDefault,
   useContextDialogForInsertNewPlannedEventForUX,
-} from './dialog-insert-new-planned-event/ContextDialogForInsertNewPlannedEvent.tsx'
-import { DialogForInsertNewPlannedEvent } from './dialog-insert-new-planned-event/DialogForInsertNewPlannedEvent.tsx'
+} from '@/context/dialog-insert-new-planned-event/ContextDialogForInsertNewPlannedEvent'
+import { DialogForInsertNewPlannedEvent } from '@/context/dialog-insert-new-planned-event/DialogForInsertNewPlannedEvent'
 import {
   ContextDialogForCalendarManagement,
   contextDialogForCalendarManagementDataDefault,
   useContextDialogForCalendarManagementForUX,
-} from './dialog-calendar-management/ContextDialogForCalendarManagement.tsx'
-import { DialogCalendarManagement } from './dialog-calendar-management/DialogCalendarManagement.tsx'
+} from '@/context/dialog-calendar-management/ContextDialogForCalendarManagement'
+import { DialogCalendarManagement } from '@/context/dialog-calendar-management/DialogCalendarManagement'
 
 const UXContext = createContext<{
   dialogForInsertNewGoal: ContextDialogForInsertNewGoal

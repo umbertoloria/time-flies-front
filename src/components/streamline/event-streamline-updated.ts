@@ -1,4 +1,4 @@
-import { buildCustomEvent } from '../../events/event-builder.ts'
+import { buildCustomEvent } from '@/events/event-builder'
 
 export const {
   subscribe: subscribeToStreamlineUpdates,

@@ -1,22 +1,22 @@
 'use client'
 
 import { FC, useEffect } from 'react'
-import { useWrapperForCreateResource } from '../../lib/remote-resources.ts'
-import { CustomEventFnType } from '../../events/event-builder.ts'
 import {
   CustomEventTypeCalendarUpdated,
   subscribeToCalendarUpdates,
   unsubscribeToCalendarUpdates,
-} from '../../components/calendar/event-calendar-updated.ts'
+} from '@/components/calendar/event-calendar-updated'
 import {
   StreamlineBoxCalendar,
   StreamlineBoxDate,
   StreamlinePre,
   StreamlineTodo,
-} from '../../components/streamline/StreamlineStateless.tsx'
-import { getCalendarSDK } from '../../remote/remote.ts'
-import { periodRefreshDateInMillis } from './DatePanelCLI.tsx'
-import { TCalendar } from '../../remote/sdk/types'
+} from '@/components/streamline/StreamlineStateless'
+import { periodRefreshDateInMillis } from '@/context/date-panel/DatePanelCLI'
+import { CustomEventFnType } from '@/events/event-builder'
+import { useWrapperForCreateResource } from '@/lib/remote-resources'
+import { getCalendarSDK } from '@/remote/remote'
+import { TCalendar } from '@/remote/sdk/types'
 
 const calendarSdk = getCalendarSDK()
 

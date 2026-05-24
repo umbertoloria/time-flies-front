@@ -1,9 +1,9 @@
 'use client'
 
 import { FC, useEffect, useRef } from 'react'
-import { GenericDialog } from '../../components/calendar/GenericDialog.tsx'
-import { useDialogForCalendarManagement } from './ContextDialogForCalendarManagement.tsx'
-import { regexpHexColorRRGGBB } from '../../lib/utils.ts'
+import { GenericDialog } from '@/components/calendar/GenericDialog'
+import { useDialogForCalendarManagement } from '@/context/dialog-calendar-management/ContextDialogForCalendarManagement'
+import { regexpHexColorRRGGBB } from '@/lib/utils'
 
 export const DialogCalendarManagement: FC = () => {
   const { isOpen, data, closeDialog, confirmOperation } =

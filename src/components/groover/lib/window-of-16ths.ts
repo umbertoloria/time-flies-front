@@ -1,4 +1,4 @@
-import { NotesStack } from './notes-stack.ts'
+import { NotesStack } from '@/components/groover/lib/notes-stack'
 
 // Windows of 16ths
 type WindowOf16ths =

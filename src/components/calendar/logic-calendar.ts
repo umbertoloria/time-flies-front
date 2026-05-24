@@ -1,4 +1,4 @@
-import { TCalendarPrev } from '../../remote/sdk/types'
+import { TCalendarPrev } from '@/remote/sdk/types'
 
 export type LogicCalendar = {
   color: string

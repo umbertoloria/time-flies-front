@@ -1,12 +1,12 @@
 import axios from 'axios'
+import { getTodayLocalDate } from '@/lib/utils'
+import { getAuthData } from '@/remote/auth'
 import {
   TAuthStatus,
   TCalendar,
   TCalendarPrev,
   TCalendarSDK,
-} from './sdk/types'
-import { getTodayLocalDate } from '../lib/utils.ts'
-import { getAuthData } from './auth.ts'
+} from '@/remote/sdk/types'
 
 const api = axios.create({
   baseURL: process.env.API_ENDPOINT,

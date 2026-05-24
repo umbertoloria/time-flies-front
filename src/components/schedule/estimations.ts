@@ -1,4 +1,4 @@
-import { TExerciseGroup, TExerciseRecord } from '../../remote/sdk/types'
+import { TExerciseGroup, TExerciseRecord } from '@/remote/sdk/types'
 
 export function estimate_exercise_group_duration_minutes(
   exerciseGroup: TExerciseGroup

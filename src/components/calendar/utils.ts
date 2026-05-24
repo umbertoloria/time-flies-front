@@ -1,4 +1,4 @@
-import { DayStatusRow } from './CalendarGrid.tsx'
+import { DayStatusRow } from '@/components/calendar/CalendarGrid'
 
 export function getFirstAndLastLocalDatesFromDayStatusRows(
   dayStatusRows: DayStatusRow[]

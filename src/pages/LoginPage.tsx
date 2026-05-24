@@ -1,9 +1,9 @@
 'use client'
 
-import { getSDK } from '../remote/remote.ts'
 import classNames from 'classnames'
 import { pathHomePage } from '@/app/routing'
-import { setAuthData, sha256 } from '../remote/auth.ts'
+import { setAuthData, sha256 } from '@/remote/auth'
+import { getSDK } from '@/remote/remote'
 
 export default function LoginPageContent() {
   return (

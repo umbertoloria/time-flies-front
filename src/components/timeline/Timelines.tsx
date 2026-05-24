@@ -1,15 +1,15 @@
 import { FC } from 'react'
+import { Badge } from '@/components/calendar/Badge'
 import {
   CalendarArrowControl,
   CalendarGridStatelessListening,
   CalendarTitle,
-} from '../calendar/CalendarGrid.tsx'
-import { TCalendarPrev } from '../../remote/sdk/types'
-import { getITMonthFromLocalDate } from '../../lib/utils.ts'
-import { getFirstAndLastLocalDatesFromDayStatusRows } from '../calendar/utils.ts'
-import { createDayStatusPropsListFromLogicCalendar } from './timeline-utils.ts'
-import { createLogicCalendarFromTCalendar } from '../calendar/logic-calendar.ts'
-import { Badge } from '../calendar/Badge.tsx'
+} from '@/components/calendar/CalendarGrid'
+import { createLogicCalendarFromTCalendar } from '@/components/calendar/logic-calendar'
+import { getFirstAndLastLocalDatesFromDayStatusRows } from '@/components/calendar/utils'
+import { createDayStatusPropsListFromLogicCalendar } from '@/components/timeline/timeline-utils'
+import { TCalendarPrev } from '@/remote/sdk/types'
+import { getITMonthFromLocalDate } from '@/lib/utils'
 
 export const defaultTimelinesNumDaysBefore = 14 // 14 days before + today => correct "width"
 

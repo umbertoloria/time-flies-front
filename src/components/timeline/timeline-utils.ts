@@ -1,10 +1,10 @@
-import { DayStatusProps } from '../calendar/DayStatus.tsx'
+import { DayStatusProps } from '@/components/calendar/DayStatus'
+import { LogicCalendar } from '@/components/calendar/logic-calendar'
 import {
   getDateWithOffsetDays,
   getLocalDayByDate,
   localDatesLT,
-} from '../../lib/utils.ts'
-import { LogicCalendar } from '../calendar/logic-calendar.ts'
+} from '@/lib/utils'
 
 export function createDayStatusPropsListFromLogicCalendar(
   logicCalendar: LogicCalendar,

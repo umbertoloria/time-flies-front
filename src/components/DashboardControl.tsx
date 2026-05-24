@@ -1,6 +1,6 @@
 import { FC } from 'react'
-import { ColouredLabel } from './coloured/ColouredLabel.tsx'
-import { useDialogForCalendarManagement } from '../context/dialog-calendar-management/ContextDialogForCalendarManagement.tsx'
+import { ColouredLabel } from '@/components/coloured/ColouredLabel'
+import { useDialogForCalendarManagement } from '@/context/dialog-calendar-management/ContextDialogForCalendarManagement'
 
 export const DEFAULT_SEE_ALL_CALENDARS_FLAG = false
 export const DashboardControl: FC<{
