@@ -126,7 +126,6 @@ const InnerPage: FC = () => {
     refetchAllCalendars()
   }, [minFromDate, seeAllCalendars])
   // @ts-ignore
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const refetchOneCalendar = (calendarId: number) => {
     // TODO: Improve partial loadings
     refetchAllCalendars()
