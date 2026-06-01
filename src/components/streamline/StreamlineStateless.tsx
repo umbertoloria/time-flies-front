@@ -1,8 +1,137 @@
 import { FC, PropsWithChildren } from 'react'
+import {
+  CalendarDays,
+  Info,
+  NotebookPen,
+  Square,
+  SquareCheck,
+} from 'lucide-react'
 import { displayDateFromLocalDate } from '@/components/calendar/utils'
 import { useDialogForDatePanel } from '@/context/date-panel/ContextDialogForDatePanel'
 import { useDialogForCheckPlannedEvent } from '@/context/dialog-check-planned-events/ContextDialogForCheckPlannedEvents'
-import { TCalendarRcd, TNewTodo } from '@/remote/sdk/types'
+import { TCalendarRcd, TCalendarSDK, TNewTodo } from '@/remote/sdk/types'
+
+export const StreamlineNew: FC<{
+  dates: TCalendarSDK.ReadPlannedEventsResponseDateBox[]
+}> = ({ dates }) => {
+  return (
+    <div className='streamline-new'>
+      {dates.map(({ date, calendars }, index) => (
+        <StreamlineNewDate key={index} date={date} calendars={calendars} />
+      ))}
+    </div>
+  )
+}
+
+const StreamlineNewDate: FC<{
+  date: string
+  calendars: TCalendarSDK.ReadPlannedEventsResponseCalendar[]
+}> = ({ date, calendars }) => {
+  return (
+    <div className='streamline-new-date'>
+      <h2>{displayDateFromLocalDate(date)}</h2>
+      {calendars.map((calendar, index) => (
+        <StreamlineNewCalendar key={index} calendar={calendar} date={date} />
+      ))}
+    </div>
+  )
+}
+
+const StreamlineNewCalendar: FC<{
+  calendar: TCalendarSDK.ReadPlannedEventsResponseCalendar
+  date: string
+}> = ({ calendar, date }) => {
+  return (
+    <div className='streamline-new-date-calendar'>
+      <h3
+        style={{
+          color: calendar.color,
+        }}
+      >
+        {calendar.name}
+      </h3>
+      {calendar.todos.map((todo, index) => (
+        <StreamlineNewTodo
+          key={index}
+          calendar={calendar}
+          date={date}
+          todo={todo}
+        />
+      ))}
+    </div>
+  )
+}
+
+const StreamlineNewTodo: FC<{
+  calendar: TCalendarSDK.ReadPlannedEventsResponseCalendar
+  date: string
+  todo: TNewTodo
+}> = ({ calendar, date, todo }) => {
+  const { openDialog: openDialogForCheckPlannedEvent } =
+    useDialogForCheckPlannedEvent()
+  const { openDialog: openDialogForDatePanel } = useDialogForDatePanel()
+
+  return (
+    <div className='streamline-new-date-calendar-todo'>
+      <div className='icons'>
+        <span
+          className='pre-btn check'
+          style={{
+            color: calendar.color,
+          }}
+          onClick={() => {
+            openDialogForCheckPlannedEvent(calendar, date, todo, 'done')
+          }}
+        >
+          <Square className='idle' />
+          <SquareCheck className='hover' />
+        </span>
+        <span
+          className='pre-btn'
+          onClick={() => {
+            openDialogForCheckPlannedEvent(calendar, date, todo, 'move')
+          }}
+        >
+          <CalendarDays />
+        </span>
+        {!!calendar.usesNotes && (
+          <span
+            className='pre-btn'
+            onClick={() => {
+              openDialogForCheckPlannedEvent(
+                calendar,
+                date,
+                todo,
+                'update-notes'
+              )
+            }}
+          >
+            <NotebookPen />
+          </span>
+        )}
+        <span
+          className='pre-btn'
+          onClick={() => {
+            openDialogForDatePanel({
+              mode: 'calendar-date-panel',
+              calendarId: calendar.id,
+              date,
+            })
+          }}
+        >
+          <Info />
+        </span>
+      </div>
+      {!!calendar.usesNotes && !!todo.notes ? (
+        <span className='todo-notes'>{todo.notes}</span>
+      ) : (
+        <span className='todo-notes'>
+          <i>Niente note</i>
+        </span>
+      )}
+    </div>
+  )
+}
 
 export const StreamlinePre: FC<PropsWithChildren> = ({ children }) => {
   return (

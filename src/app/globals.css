@@ -160,6 +160,75 @@
         }
     }
 
+    .streamline-new {
+        .streamline-new-date {
+            margin-top: 1.5rem;
+
+            h2 {
+                font-size: 1.2rem;
+                font-weight: 500;
+            }
+
+            .streamline-new-date-calendar {
+                margin-top: 0.8rem;
+
+                h3 {
+                    font-size: 1.1rem;
+                    font-weight: 500;
+                }
+
+                .pre-btn {
+                    cursor: pointer;
+                }
+
+                svg {
+                    display: inline;
+                }
+
+                .streamline-new-date-calendar-todo {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 0.5rem;
+
+                    .icons {
+                        display: flex;
+                        flex-wrap: nowrap;
+                        gap: 0.2rem;
+
+                        span {
+                            opacity: 0.65;
+                            transition: 0.2s;
+
+                            &:hover {
+                                opacity: 1;
+                            }
+
+                            &.check {
+                                .idle {
+                                    display: inline-block;
+                                }
+                                .hover {
+                                    display: none;
+                                }
+                                &:hover {
+                                    .idle {
+                                        display: none;
+                                    }
+                                    .hover {
+                                        display: inline-block;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    .todo-notes {
+                    }
+                }
+            }
+        }
+    }
+
     .dashboard-control {
         /* ... */
     }
