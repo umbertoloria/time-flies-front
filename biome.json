@@ -141,7 +141,7 @@
     "formatter": {
       "enabled": true,
       "indentStyle": "space",
-      "indentWidth": 4
+      "indentWidth": 2
     }
   },
   "assist": {

@@ -3,233 +3,233 @@
 @tailwind utilities;
 
 @layer components {
-    .clickable {
+  .clickable {
+    cursor: pointer;
+    transition: 0.1s;
+
+    &:hover {
+      transform: scale(1.15);
+      @apply bg-gray-300;
+    }
+  }
+
+  .show-today {
+    border: 4px solid rgba(0, 0, 0, 0.3);
+    @apply bg-gray-300;
+  }
+
+  .btn-primary {
+    @apply py-1 px-2 bg-blue-600 text-white text-sm font-semibold rounded-md shadow-md transition-all hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-400;
+  }
+
+  .btn-warning {
+    @apply py-1 px-2 bg-yellow-600 text-white text-sm font-semibold rounded-md shadow-md transition-all hover:bg-yellow-700 focus:outline-none focus:ring focus:ring-yellow-400;
+  }
+
+  .exercise-record {
+    @apply bg-gray-200 px-1 py-1 rounded-md flex flex-wrap gap-2 items-center;
+  }
+
+  .main-section-grids {
+    margin: auto;
+    width: calc((280px + 40px) * 3 + 280px);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 40px;
+
+    @media only screen and (max-width: 480px) {
+      width: 280px;
+    }
+  }
+
+  .calendar-grid {
+    tr {
+      width: 280px;
+
+      td {
+        margin: 0;
+        padding: 0;
+
+        .date-div {
+          width: 40px;
+          height: 36px;
+          padding: 4px;
+        }
+      }
+    }
+
+    .head-row {
+      th {
+        padding: 0;
+        height: 24px;
+      }
+    }
+  }
+
+  .calendar-title {
+    height: 44px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    /*margin: 0 4px 4px 4px;*/
+    margin: 0 0 4px 0;
+    padding: 6px 10px;
+    border-radius: 3px;
+    @apply bg-gray-500;
+  }
+
+  .calendar-grid,
+  .dashboard-control {
+    /* Single-sized */
+    width: 280px;
+  }
+
+  .streamline-box,
+  .timelines-grids,
+  .placed-calendar-management {
+    /* Double-sized */
+    width: calc(280px * 2 + 40px);
+  }
+
+  .placed-calendar-management {
+    height: 252px;
+
+    .close-btn {
+      /* @reference btn-primary; // Doesn't work... */
+      height: 30px;
+    }
+
+    .tabs-content {
+      height: 166px;
+      overflow-y: auto;
+    }
+  }
+
+  .tabs-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+
+    .tab-btn {
+      padding: 2px 6px 0 6px;
+      border-radius: 2px;
+      @apply bg-blue-300;
+      border-bottom: 4px solid transparent;
+      transition: 0.2s;
+
+      &:hover {
+        @apply border-blue-400;
+      }
+
+      &.active {
+        @apply bg-blue-400;
+      }
+    }
+  }
+
+  .streamline {
+    height: 204px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: auto;
+    overflow-y: scroll;
+    width: 100%;
+    @apply text-gray-700;
+
+    .streamline-pre {
+      font-family: monospace;
+      font-weight: 300;
+      font-size: 15px;
+      padding: 8px;
+      background: #444;
+      color: #eee;
+
+      .pre-btn {
+        font-weight: 700;
         cursor: pointer;
-        transition: 0.1s;
 
         &:hover {
-            transform: scale(1.15);
-            @apply bg-gray-300;
+          color: #555;
+          background: #eee;
         }
+      }
     }
+  }
 
-    .show-today {
-        border: 4px solid rgba(0, 0, 0, 0.3);
-        @apply bg-gray-300;
-    }
+  .streamline-new {
+    .streamline-new-date {
+      margin-top: 1.5rem;
 
-    .btn-primary {
-        @apply py-1 px-2 bg-blue-600 text-white text-sm font-semibold rounded-md shadow-md transition-all hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-400;
-    }
+      h2 {
+        font-size: 1.2rem;
+        font-weight: 500;
+      }
 
-    .btn-warning {
-        @apply py-1 px-2 bg-yellow-600 text-white text-sm font-semibold rounded-md shadow-md transition-all hover:bg-yellow-700 focus:outline-none focus:ring focus:ring-yellow-400;
-    }
+      .streamline-new-date-calendar {
+        margin-top: 0.8rem;
 
-    .exercise-record {
-        @apply bg-gray-200 px-1 py-1 rounded-md flex flex-wrap gap-2 items-center;
-    }
-
-    .main-section-grids {
-        margin: auto;
-        width: calc((280px + 40px) * 3 + 280px);
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        gap: 40px;
-
-        @media only screen and (max-width: 480px) {
-            width: 280px;
+        h3 {
+          font-size: 1.1rem;
+          font-weight: 500;
         }
-    }
 
-    .calendar-grid {
-        tr {
-            width: 280px;
+        .pre-btn {
+          cursor: pointer;
+        }
 
-            td {
-                margin: 0;
-                padding: 0;
+        svg {
+          display: inline;
+        }
 
-                .date-div {
-                    width: 40px;
-                    height: 36px;
-                    padding: 4px;
+        .streamline-new-date-calendar-todo {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+
+          .icons {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 0.2rem;
+
+            span {
+              opacity: 0.65;
+              transition: 0.2s;
+
+              &:hover {
+                opacity: 1;
+              }
+
+              &.check {
+                .idle {
+                  display: inline-block;
                 }
-            }
-        }
-
-        .head-row {
-            th {
-                padding: 0;
-                height: 24px;
-            }
-        }
-    }
-
-    .calendar-title {
-        height: 44px;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-between;
-        /*margin: 0 4px 4px 4px;*/
-        margin: 0 0 4px 0;
-        padding: 6px 10px;
-        border-radius: 3px;
-        @apply bg-gray-500;
-    }
-
-    .calendar-grid,
-    .dashboard-control {
-        /* Single-sized */
-        width: 280px;
-    }
-
-    .streamline-box,
-    .timelines-grids,
-    .placed-calendar-management {
-        /* Double-sized */
-        width: calc(280px * 2 + 40px);
-    }
-
-    .placed-calendar-management {
-        height: 252px;
-
-        .close-btn {
-            /* @reference btn-primary; // Doesn't work... */
-            height: 30px;
-        }
-
-        .tabs-content {
-            height: 166px;
-            overflow-y: auto;
-        }
-    }
-
-    .tabs-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 8px;
-
-        .tab-btn {
-            padding: 2px 6px 0 6px;
-            border-radius: 2px;
-            @apply bg-blue-300;
-            border-bottom: 4px solid transparent;
-            transition: 0.2s;
-
-            &:hover {
-                @apply border-blue-400;
-            }
-
-            &.active {
-                @apply bg-blue-400;
-            }
-        }
-    }
-
-    .streamline {
-        height: 204px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        margin: auto;
-        overflow-y: scroll;
-        width: 100%;
-        @apply text-gray-700;
-
-        .streamline-pre {
-            font-family: monospace;
-            font-weight: 300;
-            font-size: 15px;
-            padding: 8px;
-            background: #444;
-            color: #eee;
-
-            .pre-btn {
-                font-weight: 700;
-                cursor: pointer;
-
+                .hover {
+                  display: none;
+                }
                 &:hover {
-                    color: #555;
-                    background: #eee;
+                  .idle {
+                    display: none;
+                  }
+                  .hover {
+                    display: inline-block;
+                  }
                 }
+              }
             }
+          }
+
+          .todo-notes {
+          }
         }
+      }
     }
+  }
 
-    .streamline-new {
-        .streamline-new-date {
-            margin-top: 1.5rem;
-
-            h2 {
-                font-size: 1.2rem;
-                font-weight: 500;
-            }
-
-            .streamline-new-date-calendar {
-                margin-top: 0.8rem;
-
-                h3 {
-                    font-size: 1.1rem;
-                    font-weight: 500;
-                }
-
-                .pre-btn {
-                    cursor: pointer;
-                }
-
-                svg {
-                    display: inline;
-                }
-
-                .streamline-new-date-calendar-todo {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 0.5rem;
-
-                    .icons {
-                        display: flex;
-                        flex-wrap: nowrap;
-                        gap: 0.2rem;
-
-                        span {
-                            opacity: 0.65;
-                            transition: 0.2s;
-
-                            &:hover {
-                                opacity: 1;
-                            }
-
-                            &.check {
-                                .idle {
-                                    display: inline-block;
-                                }
-                                .hover {
-                                    display: none;
-                                }
-                                &:hover {
-                                    .idle {
-                                        display: none;
-                                    }
-                                    .hover {
-                                        display: inline-block;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    .todo-notes {
-                    }
-                }
-            }
-        }
-    }
-
-    .dashboard-control {
-        /* ... */
-    }
+  .dashboard-control {
+    /* ... */
+  }
 }
