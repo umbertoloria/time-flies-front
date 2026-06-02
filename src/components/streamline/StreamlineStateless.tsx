@@ -58,7 +58,7 @@ const StreamlineNewCalendar: FC<{
         {calendar.name}
       </h3>
       {calendar.todos.map((todo, index) => (
-        <StreamlineNewTodo
+        <StreamlineTodo
           key={index}
           calendar={calendar}
           date={date}
@@ -119,7 +119,7 @@ export const StreamlineNew3: FC<{
 
           {/* Show all Todos */}
           {data.todos.map((todo, index) => (
-            <StreamlineNewTodo
+            <StreamlineTodo
               key={index}
               calendar={calendar}
               date={date}
@@ -175,7 +175,7 @@ export const StreamlineNew3: FC<{
   )
 }
 
-const StreamlineNewTodo: FC<{
+const StreamlineTodo: FC<{
   calendar: TCalendarRcd
   date: string
   todo: TNewTodo

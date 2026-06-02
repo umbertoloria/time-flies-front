@@ -1,4 +1,5 @@
 import './globals.css'
+import './streamline.css'
 
 import { ReactNode } from 'react'
 
