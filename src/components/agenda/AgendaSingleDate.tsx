@@ -7,9 +7,7 @@ import { ListItemTaskTodo } from './ListItemTaskTodo'
 
 export const AgendaSingleDate: FC<{
   data: TCalendarSDK.ReadDateResponse
-  allowNewDoneTasks: boolean
-  allowNewTodos: boolean
-}> = ({ data, allowNewDoneTasks, allowNewTodos }) => {
+}> = ({ data }) => {
   const { calendar, date } = data
   const { openDialog: openDialogForInsertNewGoal } = useDialogForInsertNewGoal()
   const { openDialog: openDialogForInsertNewPlannedEvent } =
@@ -47,36 +45,32 @@ export const AgendaSingleDate: FC<{
         ))}
       </div>
 
-      {(allowNewDoneTasks || allowNewTodos) && (
-        <div className='mt-2'>
-          {allowNewDoneTasks && (
-            <button
-              className='btn-primary'
-              onClick={() => {
-                openDialogForInsertNewGoal(
-                  calendar.id,
-                  calendar.usesNotes || false,
-                  date
-                )
-              }}
-            >
-              {'Add done task'}
-            </button>
-          )}
-          {allowNewTodos && (
-            <button
-              className='btn-primary ml-1'
-              onClick={() => {
-                openDialogForInsertNewPlannedEvent(
-                  calendar.id,
-                  calendar.usesNotes || false,
-                  date
-                )
-              }}
-            >
-              {'Add todo'}
-            </button>
-          )}
+      {data.doneTasks.length === 0 && data.todos.length === 0 && (
+        <div>
+          <button
+            className='btn-primary'
+            onClick={() => {
+              openDialogForInsertNewGoal(
+                calendar.id,
+                calendar.usesNotes || false,
+                date
+              )
+            }}
+          >
+            {'Add done task'}
+          </button>
+          <button
+            className='btn-primary ml-1'
+            onClick={() => {
+              openDialogForInsertNewPlannedEvent(
+                calendar.id,
+                calendar.usesNotes || false,
+                date
+              )
+            }}
+          >
+            {'Add todo'}
+          </button>
         </div>
       )}
     </div>

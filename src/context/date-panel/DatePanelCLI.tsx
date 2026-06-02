@@ -48,14 +48,6 @@ export const DatePanelInnerCLI: FC<{
       unsubscribeToCalendarUpdates(listener)
     }
   }, [])
-  const allowNewDoneTasks =
-    !data?.loading && !!data?.data
-      ? data.data.doneTasks.length === 0 && data.data.todos.length === 0
-      : false
-  const allowNewTodos =
-    !data?.loading && !!data?.data
-      ? data.data.doneTasks.length === 0 && data.data.todos.length === 0
-      : false
 
   return (
     <>
@@ -64,15 +56,7 @@ export const DatePanelInnerCLI: FC<{
           <Badge>Loading...</Badge>
         </>
       )}
-      {!data?.loading && !!data?.data && (
-        <>
-          <AgendaSingleDate
-            data={data.data}
-            allowNewDoneTasks={allowNewDoneTasks}
-            allowNewTodos={allowNewTodos}
-          />
-        </>
-      )}
+      {!data?.loading && !!data?.data && <AgendaSingleDate data={data.data} />}
     </>
   )
 }
