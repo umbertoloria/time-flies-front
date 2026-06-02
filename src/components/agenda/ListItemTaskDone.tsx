@@ -8,8 +8,8 @@ export const ListItemTaskDone: FC<{
   calendar: TCalendarRcd
   date: string
   notes?: string
-  showButtonToOpenInDatePanel?: boolean
-}> = ({ calendar, date, notes }) => {
+  showDate?: boolean
+}> = ({ calendar, date, notes, showDate }) => {
   const { openDialog: openDialogForCheckPlannedEvent } =
     useDialogForCheckPlannedEvent()
 
@@ -43,9 +43,11 @@ export const ListItemTaskDone: FC<{
           </span>
         )}
       </div>
-      <span>
-        <i>{displayDateFromLocalDate(date)}</i>
-      </span>
+      {showDate && (
+        <span>
+          <i>{displayDateFromLocalDate(date)}</i>
+        </span>
+      )}
       {!!calendar.usesNotes && !!notes && (
         <span className='todo-notes'>{notes}</span>
       )}

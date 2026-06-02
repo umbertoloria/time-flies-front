@@ -1,4 +1,5 @@
 import { DayStatusRow } from '@/components/calendar/CalendarGrid'
+import { isLocalDateToday, isLocalDateYesterday } from '@/lib/utils'
 
 export function getFirstAndLastLocalDatesFromDayStatusRows(
   dayStatusRows: DayStatusRow[]
@@ -37,6 +38,16 @@ export function displayDateFromLocalDate(localDate: string) {
     year: 'numeric',
   })
   return formatter.format(new Date(localDate))
+}
+
+export function prettyDate(localDate: string) {
+  if (isLocalDateToday(localDate)) {
+    return 'Oggi'
+  }
+  if (isLocalDateYesterday(localDate)) {
+    return 'Ieri'
+  }
+  return displayDateFromLocalDate(localDate)
 }
 
 export function moveDateToClosestNonFutureMonday(date: Date) {

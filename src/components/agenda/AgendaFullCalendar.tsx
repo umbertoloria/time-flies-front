@@ -21,7 +21,7 @@ export const AgendaFullCalendar: FC<{
             calendar={calendar}
             date={date.date}
             notes={date.notes}
-            showButtonToOpenInDatePanel
+            showDate
           />
         ))}
       </div>

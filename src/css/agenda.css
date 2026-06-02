@@ -48,13 +48,16 @@
         .idle {
           display: inline-block;
         }
+
         .hover {
           display: none;
         }
+
         &:hover {
           .idle {
             display: none;
           }
+
           .hover {
             display: inline-block;
           }

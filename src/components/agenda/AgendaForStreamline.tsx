@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { TCalendarSDK } from '@/remote/sdk/types'
-import { displayDateFromLocalDate } from '@/components/calendar/utils'
+import { prettyDate } from '@/components/calendar/utils'
 import { ListItemTaskTodo } from './ListItemTaskTodo'
 
 export const AgendaForStreamline: FC<{
@@ -10,7 +10,7 @@ export const AgendaForStreamline: FC<{
     <div className='agenda'>
       {dates.map(({ date, calendars }, index) => (
         <div key={index}>
-          <h2>{displayDateFromLocalDate(date)}</h2>
+          <h2>{prettyDate(date)}</h2>
           {calendars.map((calendar, index) => (
             <div key={index} className='mt-3'>
               <h3
