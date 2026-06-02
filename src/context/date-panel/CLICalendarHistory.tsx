@@ -6,7 +6,7 @@ import {
   subscribeToCalendarUpdates,
   unsubscribeToCalendarUpdates,
 } from '@/components/calendar/event-calendar-updated'
-import { AgendaFullCalendar } from '@/components/streamline/Agendas'
+import { AgendaFullCalendar } from '@/components/agenda'
 import { periodRefreshDateInMillis } from '@/context/date-panel/DatePanelCLI'
 import { CustomEventFnType } from '@/events/event-builder'
 import { useWrapperForCreateResource } from '@/lib/remote-resources'

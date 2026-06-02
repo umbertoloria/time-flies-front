@@ -7,7 +7,7 @@ import {
   subscribeToStreamlineUpdates,
   unsubscribeToStreamlineUpdates,
 } from '@/components/streamline/event-streamline-updated'
-import { AgendaForStreamline } from '@/components/streamline/Agendas'
+import { AgendaForStreamline } from '@/components/agenda'
 import { CustomEventFnType } from '@/events/event-builder'
 import { useWrapperForCreateResource } from '@/lib/remote-resources'
 import { getSDK } from '@/remote/remote'
