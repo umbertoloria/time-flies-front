@@ -13,8 +13,6 @@ import {
   TCalendar,
   TCalendarRcd,
   TCalendarSDK,
-  TDay,
-  TNewDoneTask,
   TNewTodo,
 } from '@/remote/sdk/types'
 import { useDialogForInsertNewGoal } from '@/context/dialog-insert-new-goal/ContextDialogForInsertNewGoal'
@@ -85,7 +83,13 @@ export const StreamlineNewCalendar2: FC<{
         {calendar.name}
       </h3>
       {calendar.days.map((date, index) => (
-        <StreamlineDoneTask key={index} calendar={calendar} date={date} />
+        <StreamlineDoneTask
+          key={index}
+          calendar={calendar}
+          date={date.date}
+          notes={date.notes}
+          showButtonToOpenInDatePanel
+        />
       ))}
     </div>
   )
@@ -125,11 +129,11 @@ export const StreamlineNew3: FC<{
 
           {/* Show all Done Tasks */}
           {(data.doneTasks || []).map((doneTask, index) => (
-            <StreamlineDoneTaskSingle
+            <StreamlineDoneTask
               key={index}
               calendar={calendar}
               date={date}
-              doneTask={doneTask}
+              notes={doneTask.notes}
             />
           ))}
         </div>
@@ -247,69 +251,10 @@ const StreamlineNewTodo: FC<{
 
 const StreamlineDoneTask: FC<{
   calendar: TCalendarRcd
-  date: TDay
-}> = ({ calendar, date }) => {
-  const { openDialog: openDialogForCheckPlannedEvent } =
-    useDialogForCheckPlannedEvent()
-  const { openDialog: openDialogForDatePanel } = useDialogForDatePanel()
-
-  return (
-    <div className='streamline-new-date-calendar-todo'>
-      <div className='icons'>
-        <span
-          className='check'
-          style={{
-            color: calendar.color,
-          }}
-        >
-          <SquareCheck />
-        </span>
-        {!!calendar.usesNotes && (
-          <span
-            className='pre-btn'
-            onClick={() => {
-              openDialogForCheckPlannedEvent(
-                calendar,
-                date.date,
-                {
-                  id: 0, // FIXME: Never used but dangerous!
-                  notes: date.notes,
-                },
-                'update-done-task-notes'
-              )
-            }}
-          >
-            <NotebookPen />
-          </span>
-        )}
-        <span
-          className='pre-btn'
-          onClick={() => {
-            openDialogForDatePanel({
-              mode: 'calendar-date-panel',
-              calendarId: calendar.id,
-              date: date.date,
-            })
-          }}
-        >
-          <Info />
-        </span>
-      </div>
-      <span>
-        <i>{displayDateFromLocalDate(date.date)}</i>
-      </span>
-      {!!calendar.usesNotes && !!date.notes && (
-        <span className='todo-notes'>{date.notes}</span>
-      )}
-    </div>
-  )
-}
-
-const StreamlineDoneTaskSingle: FC<{
-  calendar: TCalendarRcd
   date: string
-  doneTask: TNewDoneTask
-}> = ({ calendar, date, doneTask }) => {
+  notes?: string
+  showButtonToOpenInDatePanel?: boolean
+}> = ({ calendar, date, notes }) => {
   const { openDialog: openDialogForCheckPlannedEvent } =
     useDialogForCheckPlannedEvent()
 
@@ -333,7 +278,7 @@ const StreamlineDoneTaskSingle: FC<{
                 date,
                 {
                   id: 0, // FIXME: Never used but dangerous!
-                  notes: doneTask.notes,
+                  notes,
                 },
                 'update-done-task-notes'
               )
@@ -346,8 +291,8 @@ const StreamlineDoneTaskSingle: FC<{
       <span>
         <i>{displayDateFromLocalDate(date)}</i>
       </span>
-      {!!calendar.usesNotes && !!doneTask.notes && (
-        <span className='todo-notes'>{doneTask.notes}</span>
+      {!!calendar.usesNotes && !!notes && (
+        <span className='todo-notes'>{notes}</span>
       )}
     </div>
   )
