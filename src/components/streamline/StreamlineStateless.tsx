@@ -58,7 +58,7 @@ const StreamlineNewCalendar: FC<{
         {calendar.name}
       </h3>
       {calendar.todos.map((todo, index) => (
-        <StreamlineTodo
+        <ListItemTaskTodo
           key={index}
           calendar={calendar}
           date={date}
@@ -83,7 +83,7 @@ export const StreamlineNewCalendar2: FC<{
         {calendar.name}
       </h3>
       {calendar.days.map((date, index) => (
-        <StreamlineDoneTask
+        <ListItemTaskDone
           key={index}
           calendar={calendar}
           date={date.date}
@@ -119,7 +119,7 @@ export const StreamlineNew3: FC<{
 
           {/* Show all Todos */}
           {data.todos.map((todo, index) => (
-            <StreamlineTodo
+            <ListItemTaskTodo
               key={index}
               calendar={calendar}
               date={date}
@@ -129,7 +129,7 @@ export const StreamlineNew3: FC<{
 
           {/* Show all Done Tasks */}
           {(data.doneTasks || []).map((doneTask, index) => (
-            <StreamlineDoneTask
+            <ListItemTaskDone
               key={index}
               calendar={calendar}
               date={date}
@@ -175,7 +175,7 @@ export const StreamlineNew3: FC<{
   )
 }
 
-const StreamlineTodo: FC<{
+const ListItemTaskTodo: FC<{
   calendar: TCalendarRcd
   date: string
   todo: TNewTodo
@@ -186,7 +186,7 @@ const StreamlineTodo: FC<{
   const { openDialog: openDialogForDatePanel } = useDialogForDatePanel()
 
   return (
-    <div className='streamline-new-date-calendar-todo'>
+    <div className='list-item-task'>
       <div className='icons'>
         <span
           className='pre-btn check'
@@ -249,7 +249,7 @@ const StreamlineTodo: FC<{
   )
 }
 
-const StreamlineDoneTask: FC<{
+const ListItemTaskDone: FC<{
   calendar: TCalendarRcd
   date: string
   notes?: string
@@ -259,7 +259,7 @@ const StreamlineDoneTask: FC<{
     useDialogForCheckPlannedEvent()
 
   return (
-    <div className='streamline-new-date-calendar-todo'>
+    <div className='list-item-task'>
       <div className='icons'>
         <span
           className='check'
