@@ -7,15 +7,7 @@ import {
   subscribeToCalendarUpdates,
   unsubscribeToCalendarUpdates,
 } from '@/components/calendar/event-calendar-updated'
-import {
-  placeOffsetSpace,
-  StreamlineBoxCalendar,
-  StreamlineBoxDate,
-  StreamlinePre,
-  StreamlineTodo,
-} from '@/components/streamline/StreamlineStateless'
-import { useDialogForInsertNewPlannedEvent } from '@/context/dialog-insert-new-planned-event/ContextDialogForInsertNewPlannedEvent'
-import { useDialogForInsertNewGoal } from '@/context/dialog-insert-new-goal/ContextDialogForInsertNewGoal'
+import { StreamlineNew3 } from '@/components/streamline/StreamlineStateless'
 import { CustomEventFnType } from '@/events/event-builder'
 import { useWrapperForCreateResource } from '@/lib/remote-resources'
 import { getCalendarDateSDK } from '@/remote/remote'
@@ -65,10 +57,6 @@ export const DatePanelInnerCLI: FC<{
       ? data.data.doneTasks.length === 0 && data.data.todos.length === 0
       : false
 
-  const { openDialog: openDialogForInsertNewGoal } = useDialogForInsertNewGoal()
-  const { openDialog: openDialogForInsertNewPlannedEvent } =
-    useDialogForInsertNewPlannedEvent()
-
   return (
     <>
       {data?.loading && (
@@ -78,81 +66,11 @@ export const DatePanelInnerCLI: FC<{
       )}
       {!data?.loading && !!data?.data && (
         <>
-          <StreamlinePre>
-            <StreamlineBoxDate
-              //
-              spacesOffset={0}
-              date={data.data.date}
-            />
-            <StreamlineBoxCalendar
-              spacesOffset={2}
-              calendarColor={data.data.calendar.color}
-              calendarName={data.data.calendar.name}
-            />
-            {/* Show all Todos */}
-            {data.data.todos.map((todo, index) => (
-              <StreamlineTodo
-                key={index}
-                calendar={data.data.calendar}
-                date={date}
-                mode={{
-                  type: 'todo',
-                  todo,
-                }}
-                showButtonToOpenInDatePanel={false}
-              />
-            ))}
-            {/* Show all Done Tasks */}
-            {(data.data.doneTasks || []).map((doneTask, index) => (
-              <StreamlineTodo
-                key={index}
-                calendar={data.data.calendar}
-                date={date}
-                mode={{
-                  type: 'done-task',
-                  doneTask,
-                }}
-                showButtonToOpenInDatePanel={false}
-              />
-            ))}
-            {(allowNewDoneTasks || allowNewTodos) && (
-              <>
-                {placeOffsetSpace(2)}
-                {allowNewDoneTasks && (
-                  <>
-                    <span
-                      className='pre-btn'
-                      onClick={() => {
-                        openDialogForInsertNewGoal(
-                          data.data.calendar.id,
-                          data.data.calendar.usesNotes || false,
-                          date
-                        )
-                      }}
-                    >
-                      {'[Add done task]'}
-                    </span>{' '}
-                  </>
-                )}
-                {allowNewTodos && (
-                  <>
-                    <span
-                      className='pre-btn'
-                      onClick={() => {
-                        openDialogForInsertNewPlannedEvent(
-                          data.data.calendar.id,
-                          data.data.calendar.usesNotes || false,
-                          date
-                        )
-                      }}
-                    >
-                      {'[Add todo]'}
-                    </span>{' '}
-                  </>
-                )}
-              </>
-            )}
-          </StreamlinePre>
+          <StreamlineNew3
+            data={data.data}
+            allowNewDoneTasks={allowNewDoneTasks}
+            allowNewTodos={allowNewTodos}
+          />
         </>
       )}
     </>
