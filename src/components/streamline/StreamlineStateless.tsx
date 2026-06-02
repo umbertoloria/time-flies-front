@@ -9,7 +9,13 @@ import {
 import { displayDateFromLocalDate } from '@/components/calendar/utils'
 import { useDialogForDatePanel } from '@/context/date-panel/ContextDialogForDatePanel'
 import { useDialogForCheckPlannedEvent } from '@/context/dialog-check-planned-events/ContextDialogForCheckPlannedEvents'
-import { TCalendarRcd, TCalendarSDK, TNewTodo } from '@/remote/sdk/types'
+import {
+  TCalendar,
+  TCalendarRcd,
+  TCalendarSDK,
+  TDay,
+  TNewTodo,
+} from '@/remote/sdk/types'
 
 export const StreamlineNew: FC<{
   dates: TCalendarSDK.ReadPlannedEventsResponseDateBox[]
@@ -62,8 +68,27 @@ const StreamlineNewCalendar: FC<{
   )
 }
 
+export const StreamlineNewCalendar2: FC<{
+  calendar: TCalendar
+}> = ({ calendar }) => {
+  return (
+    <div className='streamline-new-date-calendar'>
+      <h3
+        style={{
+          color: calendar.color,
+        }}
+      >
+        {calendar.name}
+      </h3>
+      {calendar.days.map((date, index) => (
+        <StreamlineDoneTask key={index} calendar={calendar} date={date} />
+      ))}
+    </div>
+  )
+}
+
 const StreamlineNewTodo: FC<{
-  calendar: TCalendarSDK.ReadPlannedEventsResponseCalendar
+  calendar: TCalendarRcd
   date: string
   todo: TNewTodo
 }> = ({ calendar, date, todo }) => {
@@ -128,6 +153,66 @@ const StreamlineNewTodo: FC<{
         <span className='todo-notes'>
           <i>Niente note</i>
         </span>
+      )}
+    </div>
+  )
+}
+
+const StreamlineDoneTask: FC<{
+  calendar: TCalendarRcd
+  date: TDay
+}> = ({ calendar, date }) => {
+  const { openDialog: openDialogForCheckPlannedEvent } =
+    useDialogForCheckPlannedEvent()
+  const { openDialog: openDialogForDatePanel } = useDialogForDatePanel()
+
+  return (
+    <div className='streamline-new-date-calendar-todo'>
+      <div className='icons'>
+        <span
+          className='check'
+          style={{
+            color: calendar.color,
+          }}
+        >
+          <SquareCheck />
+        </span>
+        {!!calendar.usesNotes && (
+          <span
+            className='pre-btn'
+            onClick={() => {
+              openDialogForCheckPlannedEvent(
+                calendar,
+                date.date,
+                {
+                  id: 0, // FIXME: Never used but dangerous!
+                  notes: date.notes,
+                },
+                'update-done-task-notes'
+              )
+            }}
+          >
+            <NotebookPen />
+          </span>
+        )}
+        <span
+          className='pre-btn'
+          onClick={() => {
+            openDialogForDatePanel({
+              mode: 'calendar-date-panel',
+              calendarId: calendar.id,
+              date: date.date,
+            })
+          }}
+        >
+          <Info />
+        </span>
+      </div>
+      <span>
+        <i>{displayDateFromLocalDate(date.date)}</i>
+      </span>
+      {!!calendar.usesNotes && !!date.notes && (
+        <span className='todo-notes'>{date.notes}</span>
       )}
     </div>
   )

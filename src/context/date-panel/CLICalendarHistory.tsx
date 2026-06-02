@@ -6,12 +6,7 @@ import {
   subscribeToCalendarUpdates,
   unsubscribeToCalendarUpdates,
 } from '@/components/calendar/event-calendar-updated'
-import {
-  StreamlineBoxCalendar,
-  StreamlineBoxDate,
-  StreamlinePre,
-  StreamlineTodo,
-} from '@/components/streamline/StreamlineStateless'
+import { StreamlineNewCalendar2 } from '@/components/streamline/StreamlineStateless'
 import { periodRefreshDateInMillis } from '@/context/date-panel/DatePanelCLI'
 import { CustomEventFnType } from '@/events/event-builder'
 import { useWrapperForCreateResource } from '@/lib/remote-resources'
@@ -59,37 +54,11 @@ export const CLICalendarHistoryStateless: FC<{
     }
   }, [])
   return (
-    <>
-      <StreamlinePre>
-        <StreamlineBoxCalendar
-          spacesOffset={0}
-          calendarColor={calendar.color}
-          calendarName={calendar.name}
-        />
-        {calendar.days.map((date, index) => (
-          <>
-            <StreamlineBoxDate
-              //
-              key={index}
-              spacesOffset={2}
-              date={date.date}
-            />
-            <StreamlineTodo
-              calendar={calendar}
-              date={date.date}
-              mode={{
-                type: 'done-task',
-                doneTask: {
-                  notes: date.notes,
-                },
-              }}
-              showButtonToOpenInDatePanel
-            />
-            {'\n'}
-          </>
-        ))}
-      </StreamlinePre>
-    </>
+    <div className='streamline-new'>
+      <div className='streamline-new-date'>
+        <StreamlineNewCalendar2 calendar={calendar} />
+      </div>
+    </div>
   )
 
   /*
