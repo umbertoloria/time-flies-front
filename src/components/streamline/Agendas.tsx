@@ -18,7 +18,7 @@ import {
 import { useDialogForInsertNewGoal } from '@/context/dialog-insert-new-goal/ContextDialogForInsertNewGoal'
 import { useDialogForInsertNewPlannedEvent } from '@/context/dialog-insert-new-planned-event/ContextDialogForInsertNewPlannedEvent'
 
-export const StreamlineNew: FC<{
+export const AgendaForStreamline: FC<{
   dates: TCalendarSDK.ReadPlannedEventsResponseDateBox[]
 }> = ({ dates }) => {
   return (
@@ -27,11 +27,24 @@ export const StreamlineNew: FC<{
         <div key={index}>
           <h2>{displayDateFromLocalDate(date)}</h2>
           {calendars.map((calendar, index) => (
-            <StreamlineNewCalendar
-              key={index}
-              calendar={calendar}
-              date={date}
-            />
+            <div key={index} className='mt-3'>
+              <h3
+                style={{
+                  color: calendar.color,
+                }}
+              >
+                {calendar.name}
+              </h3>
+              {calendar.todos.map((todo, index) => (
+                <ListItemTaskTodo
+                  key={index}
+                  calendar={calendar}
+                  date={date}
+                  todo={todo}
+                  showButtonToOpenInDatePanel
+                />
+              ))}
+            </div>
           ))}
         </div>
       ))}
@@ -39,53 +52,29 @@ export const StreamlineNew: FC<{
   )
 }
 
-const StreamlineNewCalendar: FC<{
-  calendar: TCalendarSDK.ReadPlannedEventsResponseCalendar
-  date: string
-}> = ({ calendar, date }) => {
-  return (
-    <div className='streamline-new-date-calendar'>
-      <h3
-        style={{
-          color: calendar.color,
-        }}
-      >
-        {calendar.name}
-      </h3>
-      {calendar.todos.map((todo, index) => (
-        <ListItemTaskTodo
-          key={index}
-          calendar={calendar}
-          date={date}
-          todo={todo}
-          showButtonToOpenInDatePanel
-        />
-      ))}
-    </div>
-  )
-}
-
-export const StreamlineNewCalendar2: FC<{
+export const AgendaFullCalendar: FC<{
   calendar: TCalendar
 }> = ({ calendar }) => {
   return (
-    <div className='streamline-new-date-calendar'>
-      <h3
-        style={{
-          color: calendar.color,
-        }}
-      >
-        {calendar.name}
-      </h3>
-      {calendar.days.map((date, index) => (
-        <ListItemTaskDone
-          key={index}
-          calendar={calendar}
-          date={date.date}
-          notes={date.notes}
-          showButtonToOpenInDatePanel
-        />
-      ))}
+    <div className='agenda'>
+      <div>
+        <h3
+          style={{
+            color: calendar.color,
+          }}
+        >
+          {calendar.name}
+        </h3>
+        {calendar.days.map((date, index) => (
+          <ListItemTaskDone
+            key={index}
+            calendar={calendar}
+            date={date.date}
+            notes={date.notes}
+            showButtonToOpenInDatePanel
+          />
+        ))}
+      </div>
     </div>
   )
 }

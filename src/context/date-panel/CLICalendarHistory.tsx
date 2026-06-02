@@ -6,7 +6,7 @@ import {
   subscribeToCalendarUpdates,
   unsubscribeToCalendarUpdates,
 } from '@/components/calendar/event-calendar-updated'
-import { StreamlineNewCalendar2 } from '@/components/streamline/StreamlineStateless'
+import { AgendaFullCalendar } from '@/components/streamline/Agendas'
 import { periodRefreshDateInMillis } from '@/context/date-panel/DatePanelCLI'
 import { CustomEventFnType } from '@/events/event-builder'
 import { useWrapperForCreateResource } from '@/lib/remote-resources'
@@ -53,13 +53,7 @@ export const CLICalendarHistoryStateless: FC<{
       unsubscribeToCalendarUpdates(listener)
     }
   }, [])
-  return (
-    <div className='agenda'>
-      <div>
-        <StreamlineNewCalendar2 calendar={calendar} />
-      </div>
-    </div>
-  )
+  return <AgendaFullCalendar calendar={calendar} />
 
   /*
   const allYears = calendar.days

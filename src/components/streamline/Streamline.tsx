@@ -7,7 +7,7 @@ import {
   subscribeToStreamlineUpdates,
   unsubscribeToStreamlineUpdates,
 } from '@/components/streamline/event-streamline-updated'
-import { StreamlineNew } from '@/components/streamline/StreamlineStateless'
+import { AgendaForStreamline } from '@/components/streamline/Agendas'
 import { CustomEventFnType } from '@/events/event-builder'
 import { useWrapperForCreateResource } from '@/lib/remote-resources'
 import { getSDK } from '@/remote/remote'
@@ -36,9 +36,7 @@ export const Streamline: FC = () => {
       {!dataStreamline?.data ? (
         <Badge>Caricamento...</Badge>
       ) : (
-        <>
-          <StreamlineNew dates={dataStreamline.data.dates} />
-        </>
+        <AgendaForStreamline dates={dataStreamline.data.dates} />
       )}
     </div>
   )

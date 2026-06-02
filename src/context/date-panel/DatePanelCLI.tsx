@@ -7,7 +7,7 @@ import {
   subscribeToCalendarUpdates,
   unsubscribeToCalendarUpdates,
 } from '@/components/calendar/event-calendar-updated'
-import { AgendaSingleDate } from '@/components/streamline/StreamlineStateless'
+import { AgendaSingleDate } from '@/components/streamline/Agendas'
 import { CustomEventFnType } from '@/events/event-builder'
 import { useWrapperForCreateResource } from '@/lib/remote-resources'
 import { getCalendarDateSDK } from '@/remote/remote'

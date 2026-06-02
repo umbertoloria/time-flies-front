@@ -1,5 +1,5 @@
-import './globals.css'
-import './streamline.css'
+import '../css/globals.css'
+import '../css/agenda.css'
 
 import { ReactNode } from 'react'
 
