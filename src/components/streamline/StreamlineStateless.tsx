@@ -24,21 +24,16 @@ export const StreamlineNew: FC<{
   return (
     <div className='streamline-new'>
       {dates.map(({ date, calendars }, index) => (
-        <StreamlineNewDate key={index} date={date} calendars={calendars} />
-      ))}
-    </div>
-  )
-}
-
-const StreamlineNewDate: FC<{
-  date: string
-  calendars: TCalendarSDK.ReadPlannedEventsResponseCalendar[]
-}> = ({ date, calendars }) => {
-  return (
-    <div className='streamline-new-date'>
-      <h2>{displayDateFromLocalDate(date)}</h2>
-      {calendars.map((calendar, index) => (
-        <StreamlineNewCalendar key={index} calendar={calendar} date={date} />
+        <div key={index} className='streamline-new-date'>
+          <h2>{displayDateFromLocalDate(date)}</h2>
+          {calendars.map((calendar, index) => (
+            <StreamlineNewCalendar
+              key={index}
+              calendar={calendar}
+              date={date}
+            />
+          ))}
+        </div>
       ))}
     </div>
   )
@@ -108,35 +103,33 @@ export const StreamlineNew3: FC<{
   return (
     <div className='streamline-new'>
       <div className='streamline-new-date'>
-        <div className='streamline-new-date-calendar'>
-          <h3
-            style={{
-              color: calendar.color,
-            }}
-          >
-            {calendar.name}
-          </h3>
+        <h3
+          style={{
+            color: calendar.color,
+          }}
+        >
+          {calendar.name}
+        </h3>
 
-          {/* Show all Todos */}
-          {data.todos.map((todo, index) => (
-            <ListItemTaskTodo
-              key={index}
-              calendar={calendar}
-              date={date}
-              todo={todo}
-            />
-          ))}
+        {/* Show all Todos */}
+        {data.todos.map((todo, index) => (
+          <ListItemTaskTodo
+            key={index}
+            calendar={calendar}
+            date={date}
+            todo={todo}
+          />
+        ))}
 
-          {/* Show all Done Tasks */}
-          {(data.doneTasks || []).map((doneTask, index) => (
-            <ListItemTaskDone
-              key={index}
-              calendar={calendar}
-              date={date}
-              notes={doneTask.notes}
-            />
-          ))}
-        </div>
+        {/* Show all Done Tasks */}
+        {(data.doneTasks || []).map((doneTask, index) => (
+          <ListItemTaskDone
+            key={index}
+            calendar={calendar}
+            date={date}
+            notes={doneTask.notes}
+          />
+        ))}
       </div>
 
       {(allowNewDoneTasks || allowNewTodos) && (

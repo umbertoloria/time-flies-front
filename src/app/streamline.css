@@ -3,29 +3,21 @@
   margin: auto;
   overflow-y: scroll;
 
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
   .streamline-new-date {
     margin-top: 1.5rem;
 
-    h2 {
-      font-size: 1.2rem;
-      font-weight: 500;
-    }
-
     .streamline-new-date-calendar {
       margin-top: 0.8rem;
-
-      h3 {
-        font-size: 1.1rem;
-        font-weight: 500;
-      }
-
-      .pre-btn {
-        cursor: pointer;
-      }
-
-      svg {
-        display: inline;
-      }
     }
   }
 }
@@ -43,6 +35,14 @@
     span.pre-btn {
       opacity: 0.65;
       transition: 0.2s;
+
+      .pre-btn {
+        cursor: pointer;
+      }
+
+      svg {
+        display: inline;
+      }
 
       &:hover {
         opacity: 1;
