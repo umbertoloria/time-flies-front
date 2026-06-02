@@ -1,7 +1,11 @@
-.streamline-new {
+.agenda {
   height: 204px;
   margin: auto;
   overflow-y: scroll;
+
+  > div {
+    margin-top: 1.5rem;
+  }
 
   h2 {
     font-size: 1.2rem;
@@ -13,12 +17,8 @@
     font-weight: 500;
   }
 
-  .streamline-new-date {
-    margin-top: 1.5rem;
-
-    .streamline-new-date-calendar {
-      margin-top: 0.8rem;
-    }
+  .streamline-new-date-calendar {
+    margin-top: 0.8rem;
   }
 }
 

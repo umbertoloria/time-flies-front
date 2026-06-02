@@ -54,8 +54,8 @@ export const CLICalendarHistoryStateless: FC<{
     }
   }, [])
   return (
-    <div className='streamline-new'>
-      <div className='streamline-new-date'>
+    <div className='agenda'>
+      <div>
         <StreamlineNewCalendar2 calendar={calendar} />
       </div>
     </div>

@@ -22,9 +22,9 @@ export const StreamlineNew: FC<{
   dates: TCalendarSDK.ReadPlannedEventsResponseDateBox[]
 }> = ({ dates }) => {
   return (
-    <div className='streamline-new'>
+    <div className='agenda'>
       {dates.map(({ date, calendars }, index) => (
-        <div key={index} className='streamline-new-date'>
+        <div key={index}>
           <h2>{displayDateFromLocalDate(date)}</h2>
           {calendars.map((calendar, index) => (
             <StreamlineNewCalendar
@@ -90,7 +90,7 @@ export const StreamlineNewCalendar2: FC<{
   )
 }
 
-export const StreamlineNew3: FC<{
+export const AgendaSingleDate: FC<{
   data: TCalendarSDK.ReadDateResponse
   allowNewDoneTasks: boolean
   allowNewTodos: boolean
@@ -101,8 +101,8 @@ export const StreamlineNew3: FC<{
     useDialogForInsertNewPlannedEvent()
 
   return (
-    <div className='streamline-new'>
-      <div className='streamline-new-date'>
+    <div className='agenda'>
+      <div>
         <h3
           style={{
             color: calendar.color,

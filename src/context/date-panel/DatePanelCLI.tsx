@@ -7,7 +7,7 @@ import {
   subscribeToCalendarUpdates,
   unsubscribeToCalendarUpdates,
 } from '@/components/calendar/event-calendar-updated'
-import { StreamlineNew3 } from '@/components/streamline/StreamlineStateless'
+import { AgendaSingleDate } from '@/components/streamline/StreamlineStateless'
 import { CustomEventFnType } from '@/events/event-builder'
 import { useWrapperForCreateResource } from '@/lib/remote-resources'
 import { getCalendarDateSDK } from '@/remote/remote'
@@ -66,7 +66,7 @@ export const DatePanelInnerCLI: FC<{
       )}
       {!data?.loading && !!data?.data && (
         <>
-          <StreamlineNew3
+          <AgendaSingleDate
             data={data.data}
             allowNewDoneTasks={allowNewDoneTasks}
             allowNewTodos={allowNewTodos}
