@@ -22,9 +22,9 @@ export const DialogCheckPlannedEvent: FC = () => {
         : data?.mode === 'move'
           ? 'Sposta'
           : data?.mode === 'update-notes'
-            ? 'Aggiorna note'
+            ? 'Aggiorna note (evento da fare)'
             : data?.mode === 'update-done-task-notes'
-              ? 'Aggiorna note'
+              ? 'Aggiorna note (evento già chiuso)'
               : '???' // Should never happen.
 
   const [enableNoteInput, setEnableNoteInput] = useState(INITIAL_ENABLE_NOTE)

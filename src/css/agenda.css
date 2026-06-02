@@ -31,10 +31,7 @@
     span.pre-btn {
       opacity: 0.65;
       transition: 0.2s;
-
-      .pre-btn {
-        cursor: pointer;
-      }
+      cursor: pointer;
 
       svg {
         display: inline;
