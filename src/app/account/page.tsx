@@ -11,12 +11,12 @@ import {
 export default function () {
   return (
     <LogtoProviderClient>
-      <TestPage />
+      <AccountPage />
     </LogtoProviderClient>
   )
 }
 
-const TestPage = () => {
+const AccountPage = () => {
   const { signIn, signOut, isAuthenticated, getIdTokenClaims } = useLogto()
   const [user, setUser] = useState<IdTokenClaims>()
 
