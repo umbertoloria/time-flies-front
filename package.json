@@ -10,6 +10,7 @@
     "format": "biome format --write src/"
   },
   "dependencies": {
+    "@logto/react": "^4.0.14",
     "@tailwindcss/postcss": "^4.3.0",
     "axios": "^1.7.3",
     "classnames": "^2.5.1",

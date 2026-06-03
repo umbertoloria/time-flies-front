@@ -1,7 +1,15 @@
+'use client'
+
 import '../css/globals.css'
 import '../css/agenda.css'
 
 import { ReactNode } from 'react'
+import { LogtoProvider, type LogtoConfig } from '@logto/react'
+
+const config: LogtoConfig = {
+  endpoint: process.env.NEXT_PUBLIC_LOGTO_ENDPOINT!,
+  appId: process.env.NEXT_PUBLIC_LOGTO_APP_ID!,
+}
 
 export default function RootLayout({
   children,
@@ -14,7 +22,7 @@ export default function RootLayout({
         <title>Time Flies</title>
       </head>
       <body>
-        {children}
+        <LogtoProvider config={config}>{children}</LogtoProvider>
         {/*
     // FIXME: import this library
     <!-- One will work and the other won't, in both DEV and PROD -->
