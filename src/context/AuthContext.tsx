@@ -8,44 +8,42 @@ import {
   useEffect,
   useState,
 } from 'react'
-import { pathLoginPage } from '@/app/routing'
-import { TAuthUser } from '@/remote/sdk/types'
-import { getSDK } from '@/remote/remote'
+import { type IdTokenClaims, useLogto } from '@logto/react'
+import { Optional } from '@silverhand/essentials'
+import { PAGE_AFTER_LOGIN } from '@/app/logto-provider'
 
 const AuthContext = createContext<{
-  user: TAuthUser | undefined
+  user: IdTokenClaims | undefined
 }>({
   user: undefined,
 })
 
-const { authStatus } = getSDK()
 export const AuthProvider: FC<PropsWithChildren> = props => {
-  const [user, setUser] = useState<TAuthUser | undefined>(undefined)
-  const [loading, setLoading] = useState(false)
-
-  function refreshStatus() {
-    if (!loading) {
-      setLoading(true)
-      authStatus()
-        .then(authStatus => {
-          setUser(authStatus.user)
-        })
-        .catch(err => {
-          if (err.response?.status !== 401) {
-            console.error(err)
-          }
-          setUser(undefined)
-          location.href = pathLoginPage
-        })
-        .finally(() => {
-          setLoading(false)
-        })
-    }
-  }
+  const { isAuthenticated, isLoading, signIn, getIdTokenClaims } = useLogto()
 
   useEffect(() => {
-    refreshStatus()
-  }, [])
+    if (!isLoading && !isAuthenticated) {
+      signIn(PAGE_AFTER_LOGIN).catch(console.error)
+    }
+  }, [isLoading, isAuthenticated, signIn])
+
+  const [user, setUser] = useState<Optional<IdTokenClaims>>()
+
+  useEffect(() => {
+    ;(async () => {
+      if (isAuthenticated) {
+        const claims = await getIdTokenClaims()
+        setUser(claims)
+      }
+    })()
+  }, [isAuthenticated, getIdTokenClaims])
+
+  if (isLoading && !isAuthenticated) {
+    return <></>
+  }
+  if (!user) {
+    return <></>
+  }
 
   return (
     <AuthContext.Provider

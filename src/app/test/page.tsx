@@ -2,8 +2,21 @@
 
 import { useEffect, useState } from 'react'
 import { useLogto, type IdTokenClaims } from '@logto/react'
+import {
+  LogtoProviderClient,
+  PAGE_AFTER_LOGIN,
+  PAGE_AFTER_LOGOUT,
+} from '@/app/logto-provider'
 
-export default function TestPage() {
+export default function () {
+  return (
+    <LogtoProviderClient>
+      <TestPage />
+    </LogtoProviderClient>
+  )
+}
+
+const TestPage = () => {
   const { signIn, signOut, isAuthenticated, getIdTokenClaims } = useLogto()
   const [user, setUser] = useState<IdTokenClaims>()
 
@@ -22,14 +35,14 @@ export default function TestPage() {
       {isAuthenticated ? (
         <button
           className='btn-primary'
-          onClick={() => signOut('http://localhost:3000/')}
+          onClick={() => signOut(PAGE_AFTER_LOGOUT).catch(console.error)}
         >
           Sign Out
         </button>
       ) : (
         <button
           className='btn-primary'
-          onClick={() => signIn('http://localhost:3000/callback/')}
+          onClick={() => signIn(PAGE_AFTER_LOGIN).catch(console.error)}
         >
           Sign In
         </button>

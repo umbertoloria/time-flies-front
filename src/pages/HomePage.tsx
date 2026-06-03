@@ -1,6 +1,5 @@
-'use client'
-
 import { FC, useEffect, useMemo, useState } from 'react'
+import { LogtoProviderClient } from '@/app/logto-provider'
 import {
   getDateFromLocalDate,
   getDateWithOffsetDays,
@@ -29,9 +28,11 @@ const periodRefreshCalendarsInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 
 export default function HomePageContent() {
   return (
-    <UserLayout>
-      <InnerPage />
-    </UserLayout>
+    <LogtoProviderClient>
+      <UserLayout>
+        <InnerPage />
+      </UserLayout>
+    </LogtoProviderClient>
   )
 }
 
