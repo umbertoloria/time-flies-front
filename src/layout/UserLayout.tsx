@@ -16,5 +16,8 @@ export const UserLayout: FC<PropsWithChildren> = props => {
 
 const UserLayoutInner: FC<PropsWithChildren> = props => {
   const { user } = useAuth()
-  return <>{user ? <>{props.children}</> : <>{/* None */}</>}</>
+  if (!user) {
+    return <></>
+  }
+  return <>{props.children}</>
 }

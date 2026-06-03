@@ -14,14 +14,8 @@ import { getSDK } from '@/remote/remote'
 
 const AuthContext = createContext<{
   user: TAuthUser | undefined
-  isLoading: boolean
-  refresh: () => void
 }>({
   user: undefined,
-  isLoading: true, // Starting with loading on.
-  refresh() {
-    // Blank...
-  },
 })
 
 const { authStatus } = getSDK()
@@ -57,10 +51,6 @@ export const AuthProvider: FC<PropsWithChildren> = props => {
     <AuthContext.Provider
       value={{
         user,
-        isLoading: loading,
-        refresh() {
-          refreshStatus()
-        },
       }}
     >
       {props.children}
