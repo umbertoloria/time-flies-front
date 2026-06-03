@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useLogto } from '@logto/react'
 import { pathAccountPage, pathHomePage } from '@/app/routing'
 import { PAGE_AFTER_LOGIN, PAGE_AFTER_LOGOUT } from '@/app/logto-provider'
-import { resetAuthData } from '@/remote/auth'
 
 export const Navbar = () => {
   const { signIn, signOut, isAuthenticated } = useLogto()
@@ -22,7 +21,6 @@ export const Navbar = () => {
             <NavbarItem to={pathAccountPage} label='Account' />
             <NavbarItem
               onClick={() => {
-                resetAuthData()
                 signOut(PAGE_AFTER_LOGOUT).catch(console.error)
               }}
               label='Logout'

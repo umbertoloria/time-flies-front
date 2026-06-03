@@ -1,52 +1,39 @@
 import axios from 'axios'
+import { Optional } from '@silverhand/essentials'
 import { getTodayLocalDate } from '@/lib/utils'
-import { getAuthData } from '@/remote/auth'
-import {
-  TAuthStatus,
-  TCalendar,
-  TCalendarPrev,
-  TCalendarSDK,
-} from '@/remote/sdk/types'
+import { TCalendar, TCalendarPrev, TCalendarSDK } from '@/remote/sdk/types'
+
+export const TF_API = process.env.NEXT_PUBLIC_TF_API!
 
 const api = axios.create({
-  baseURL: process.env.API_ENDPOINT,
+  baseURL: process.env.NEXT_PUBLIC_API_ENDPOINT!,
   withCredentials: true,
 })
+
+export const setupAxiosInterceptors = (
+  getAccessToken: () => Promise<Optional<string>>
+) => {
+  api.interceptors.request.use(
+    async config => {
+      try {
+        const token = await getAccessToken()
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`
+        }
+      } catch (error) {
+        console.error('Unable to retrieve Token for Axios', error)
+      }
+      return config
+    },
+    error => Promise.reject(error)
+  )
+}
 
 // Debug only.
 // const debugMode = true as const
 const debugMode = false as const
 export const getSDK = () => {
   return {
-    // Auth
-    authStatus: (): Promise<TAuthStatus> =>
-      debugMode
-        ? Promise.resolve({
-            user: {
-              id: 1,
-              email: 'test@test.com',
-            },
-          })
-        : (() => {
-            const authData = getAuthData()
-            if (!authData.em || !authData.sp) {
-              return Promise.reject(new Error('Guest user'))
-            }
-            return api.post('/auth/status', authData).then(({ data }) => data)
-          })(),
-    authLogin: (email: string, password: string): Promise<'ok' | 'invalid'> =>
-      debugMode
-        ? Promise.resolve('ok')
-        : api
-            .post('/auth/login', { email, password })
-            .then(({ data }) => (data === 'ok-login' ? 'ok' : 'invalid'))
-            .catch<'invalid'>(err => {
-              if (err.response?.data === 'invalid') {
-                return 'invalid'
-              }
-              throw err
-            }),
-
     /*
     // TODx: Deprecate these Schedule logics
     // Schedule
@@ -191,9 +178,7 @@ export const getSDK = () => {
                 })*/
                 return resolve(
                   api
-                    .post('/calendars/streamline', {
-                      ...getAuthData(),
-                    })
+                    .post('/calendars/streamline')
                     .then(({ data }) => data)
                     .catch<'unable'>(() => 'unable')
                 )
@@ -245,7 +230,6 @@ export const getCalendarSDK = () => ({
         })
       : api
           .post('/calendars', {
-            ...getAuthData(),
             'date-from': filters.dateFrom, // This is actually optional.
             'show-all': filters.seeAllCalendars ? 'true' : undefined,
           })
@@ -287,9 +271,7 @@ export const getCalendarSDK = () => ({
           return Promise.reject(new Error('Calendar not found (debug mode)'))
         })()
       : api
-          .post(`/calendars/${id}`, {
-            ...getAuthData(),
-          })
+          .post(`/calendars/${id}`)
           .then(({ data }) => data)
           .catch(() => {
             return 'unable'
@@ -302,7 +284,6 @@ export const getCalendarSDK = () => ({
   }) =>
     api
       .post('/calendars/create', {
-        ...getAuthData(),
         name: data.name,
         color: data.color,
         'planned-color': data.plannedColor,
@@ -320,7 +301,6 @@ export const getCalendarSDK = () => ({
   ): Promise<'calendar-uses-notes-cannot-be-disabled' | 'ok-updated'> =>
     api
       .post('/calendars/update', {
-        ...getAuthData(),
         cid: `${calendarId}`,
         name: data.name || undefined,
         color: data.color || undefined,
@@ -370,7 +350,7 @@ export const getCalendarDateSDK = () => ({
           return Promise.reject(new Error('Calendar not found (debug mode)'))
         })()
       : api
-          .post(`calendars/${calendarId}/date/${date}`, { ...getAuthData() })
+          .post(`calendars/${calendarId}/date/${date}`)
           .then(({ data }) => data),
   checkDateWithSuccess: (
     id: number,
@@ -381,7 +361,6 @@ export const getCalendarDateSDK = () => ({
       ? Promise.resolve('ok')
       : api
           .post(`calendars/${id}/date-create`, {
-            ...getAuthData(),
             date,
             notes,
           })
@@ -401,7 +380,6 @@ export const getCalendarDateSDK = () => ({
       ? Promise.resolve('ok')
       : api
           .post(`calendars/${calendarId}/date-upd-notes/${localDate}`, {
-            ...getAuthData(),
             notes,
           })
           .then<'ok'>(() => 'ok'),
@@ -416,7 +394,6 @@ export const getPlannedEventSDK = () => ({
       ? Promise.resolve('ok')
       : api
           .post(`calendars/${id}/todo-create/${localDate}`, {
-            ...getAuthData(),
             notes,
           })
           .then<'ok'>(() => 'ok')
@@ -435,7 +412,6 @@ export const getPlannedEventSDK = () => ({
       ? Promise.resolve('ok')
       : api
           .post(`calendars/${calendarId}/todo-upd/${eventId}`, {
-            ...getAuthData(),
             notes,
           })
           .then<'ok'>(() => 'ok')
@@ -450,7 +426,6 @@ export const getPlannedEventSDK = () => ({
       ? Promise.resolve('ok')
       : api
           .post(`calendars/${calendarId}/todo-move/${eventId}`, {
-            ...getAuthData(),
             date: newDate,
           })
           .then<'ok'>(() => 'ok')
@@ -469,7 +444,6 @@ export const getPlannedEventSDK = () => ({
       ? Promise.resolve('ok')
       : api
           .post(`calendars/${calendarId}/todo-done/${eventId}`, {
-            ...getAuthData(),
             notes: typeof notes === 'string' ? notes : undefined,
           })
           .then<'ok'>(() => 'ok')
