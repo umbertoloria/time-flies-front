@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack",
     "build": "next build --turbopack",
+    "dev": "next dev --turbopack",
     "start": "next start",
     "format": "biome format --write src/"
   },
