@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { TCalendar } from '@/remote/sdk/types'
 import { ListItemTaskDone } from './ListItemTaskDone'
+import { ListItemTaskTodo } from './ListItemTaskTodo'
 
 export const AgendaFullCalendar: FC<{
   calendar: TCalendar
@@ -22,6 +23,17 @@ export const AgendaFullCalendar: FC<{
             date={date.date}
             notes={date.notes}
             showDate
+          />
+        ))}
+        {calendar.plannedDays?.map((date, index) => (
+          <ListItemTaskTodo
+            key={index}
+            calendar={calendar}
+            date={date.date}
+            todo={{
+              id: 0, // FIXME: Missing ID
+              notes: date.notes,
+            }}
           />
         ))}
       </div>

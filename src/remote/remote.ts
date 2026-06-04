@@ -194,45 +194,42 @@ export const getCalendarSDK = () => ({
   readAllCalendars: (filters: {
     dateFrom: string
     seeAllCalendars: boolean
-  }): Promise<{ calendars: TCalendarPrev[] }> =>
+  }): Promise<TCalendarPrev[]> =>
     debugMode
-      ? Promise.resolve({
-          calendars: [
-            {
-              id: 1,
-              name: 'Debug calendar 1',
-              color: '#f77',
-              plannedColor: '#fee',
-              usesNotes: true,
-              days: [
-                {
-                  date: getTodayLocalDate(),
-                  notes: 'Debug notes',
-                },
-              ],
-              plannedDays: [],
-            },
-            {
-              id: 2,
-              name: 'Debug calendar 2',
-              color: '#77f',
-              plannedColor: '#eef',
-              usesNotes: true,
-              days: [
-                {
-                  date: getTodayLocalDate(),
-                  notes: 'Debug notes',
-                },
-              ],
-              plannedDays: [],
-            },
-          ],
-        })
+      ? Promise.resolve([
+          {
+            id: 1,
+            name: 'Debug calendar 1',
+            color: '#f77',
+            plannedColor: '#fee',
+            usesNotes: true,
+            days: [
+              {
+                date: getTodayLocalDate(),
+                notes: 'Debug notes',
+              },
+            ],
+            plannedDays: [],
+          },
+          {
+            id: 2,
+            name: 'Debug calendar 2',
+            color: '#77f',
+            plannedColor: '#eef',
+            usesNotes: true,
+            days: [
+              {
+                date: getTodayLocalDate(),
+                notes: 'Debug notes',
+              },
+            ],
+            plannedDays: [],
+          },
+        ])
       : api
-          .post('/calendars', {
-            'date-from': filters.dateFrom, // This is actually optional.
-            'show-all': filters.seeAllCalendars ? 'true' : undefined,
-          })
+          .get(
+            `/calendars?dateFrom=${filters.dateFrom}${filters.seeAllCalendars ? '&showAll=true' : ''}`
+          )
           .then(({ data }) => data),
   readCalendar: (id: number): Promise<TCalendar | 'unable'> =>
     debugMode

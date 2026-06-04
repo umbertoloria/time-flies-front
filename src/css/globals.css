@@ -32,7 +32,7 @@
 
   .main-section-grids {
     margin: auto;
-    width: calc((280px + 40px) * 3 + 280px);
+    width: calc((280px + 40px) * 4 - 40px);
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;

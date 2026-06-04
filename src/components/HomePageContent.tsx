@@ -137,7 +137,7 @@ export const HomePageContent: FC = () => {
 
         {!!dataAllCalendars?.data && (
           <>
-            {dataAllCalendars.data.calendars.map((calendar, index) => (
+            {dataAllCalendars.data.map((calendar, index) => (
               <div key={index}>
                 <LogicCalendarGridListening
                   logicCalendar={createLogicCalendarFromTCalendar(calendar)}
@@ -158,7 +158,7 @@ export const HomePageContent: FC = () => {
 
             <Timelines
               fromDate={timelinesFromDate}
-              allCalendars={dataAllCalendars.data.calendars}
+              allCalendars={dataAllCalendars.data}
               isLoading={dataAllCalendars.loading}
               goInThePast={() => {
                 setTimelinesWeeksBefore(timelinesWeeksBefore + 1)
