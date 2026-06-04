@@ -7,11 +7,14 @@ import {
   PAGE_AFTER_LOGIN,
   PAGE_AFTER_LOGOUT,
 } from '@/app/logto-provider'
+import { UserLayout } from '@/layout/UserLayout'
 
 export default function () {
   return (
     <LogtoProviderClient>
-      <AccountPage />
+      <UserLayout>
+        <AccountPage />
+      </UserLayout>
     </LogtoProviderClient>
   )
 }
@@ -30,7 +33,7 @@ const AccountPage = () => {
   }, [getIdTokenClaims, isAuthenticated])
 
   return (
-    <>
+    <section className='p-8'>
       {isAuthenticated ? (
         <button
           className='btn-primary'
@@ -66,6 +69,6 @@ const AccountPage = () => {
           </tbody>
         </table>
       )}
-    </>
+    </section>
   )
 }

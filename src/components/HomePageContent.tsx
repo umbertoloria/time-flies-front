@@ -1,5 +1,4 @@
 import { FC, useEffect, useMemo, useState } from 'react'
-import { LogtoProviderClient } from '@/app/logto-provider'
 import {
   getDateFromLocalDate,
   getDateWithOffsetDays,
@@ -7,7 +6,6 @@ import {
   getTodayLocalDate,
   localDatesLT,
 } from '@/lib/utils'
-import { UserLayout } from '@/layout/UserLayout'
 import { getCalendarSDK } from '@/remote/remote'
 import { useWrapperForCreateResource } from '@/lib/remote-resources'
 import { LogicCalendarGridListening } from '@/components/calendar/CalendarGrid'
@@ -26,23 +24,11 @@ import {
 
 const periodRefreshCalendarsInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 
-export default function HomePageContent() {
-  return (
-    <LogtoProviderClient>
-      <UserLayout>
-        <InnerPage />
-      </UserLayout>
-    </LogtoProviderClient>
-  )
-}
-
 // Calendars Grids
 // One month prior, one week future
 const defaultCalendarGridNumWeeks = 5
 const defaultCalendarGridWeeksInAdvance = 1
-export const getCalendarGridFromDateMondayOnMonthsOffset = (
-  monthsOffset: number
-) =>
+const getCalendarGridFromDateMondayOnMonthsOffset = (monthsOffset: number) =>
   moveDateToClosestNonFutureMonday(
     getDateWithOffsetDays(
       getDateFromLocalDate(getTodayLocalDate()),
@@ -55,7 +41,7 @@ export const getCalendarGridFromDateMondayOnMonthsOffset = (
   )
 
 const calendarSdk = getCalendarSDK()
-const InnerPage: FC = () => {
+export const HomePageContent: FC = () => {
   const todayLocalDate = getTodayLocalDate()
 
   // Calendars: 4 weeks offsets
