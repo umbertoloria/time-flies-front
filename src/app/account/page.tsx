@@ -1,13 +1,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useLogto, type IdTokenClaims } from '@logto/react'
+import { type IdTokenClaims, useLogto } from '@logto/react'
 import {
   LogtoProviderClient,
   PAGE_AFTER_LOGIN,
   PAGE_AFTER_LOGOUT,
 } from '@/app/logto-provider'
-import { TF_API } from '@/remote/remote'
 
 export default function () {
   return (
@@ -32,12 +31,6 @@ const AccountPage = () => {
 
   return (
     <>
-      Endpoint:"{process.env.NEXT_PUBLIC_LOGTO_ENDPOINT!}"<br />
-      AppId:"{process.env.NEXT_PUBLIC_LOGTO_APP_ID!}"<br />
-      Login:"{PAGE_AFTER_LOGIN}"<br />
-      Logout:"{PAGE_AFTER_LOGOUT}"<br />
-      TF_API:"{TF_API}"<br />
-      API:"{process.env.NEXT_PUBLIC_API_ENDPOINT!}"<br />
       {isAuthenticated ? (
         <button
           className='btn-primary'
