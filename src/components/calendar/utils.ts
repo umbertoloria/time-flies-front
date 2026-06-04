@@ -1,5 +1,9 @@
 import { DayStatusRow } from '@/components/calendar/CalendarGrid'
-import { isLocalDateToday, isLocalDateYesterday } from '@/lib/utils'
+import {
+  isLocalDateToday,
+  isLocalDateTomorrow,
+  isLocalDateYesterday,
+} from '@/lib/utils'
 
 export function getFirstAndLastLocalDatesFromDayStatusRows(
   dayStatusRows: DayStatusRow[]
@@ -46,6 +50,9 @@ export function prettyDate(localDate: string) {
   }
   if (isLocalDateYesterday(localDate)) {
     return 'Ieri'
+  }
+  if (isLocalDateTomorrow(localDate)) {
+    return 'Domani'
   }
   return displayDateFromLocalDate(localDate)
 }

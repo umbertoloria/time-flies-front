@@ -60,6 +60,11 @@ export function isLocalDateToday(localDate: string) {
   return datesInTheSameDay(getDateFromLocalDate(localDate), getTodayDate())
 }
 
+export function isLocalDateTomorrow(localDate: string) {
+  const tomorrowDate = getDateWithOffsetDays(getTodayDate(), +1)
+  return datesInTheSameDay(getDateFromLocalDate(localDate), tomorrowDate)
+}
+
 export function isLocalDateFuture(localDate: string) {
   return localDatesLT(getTodayLocalDate(), localDate)
 }
