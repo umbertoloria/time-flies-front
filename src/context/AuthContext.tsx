@@ -10,7 +10,7 @@ import {
 } from 'react'
 import { type IdTokenClaims, useLogto } from '@logto/react'
 import { Optional } from '@silverhand/essentials'
-import { LOGTO_API_ID, PAGE_AFTER_LOGIN } from '@/app/logto-provider'
+import { getPageAfterSignIn, LOGTO_API_ID } from '@/app/logto-provider'
 import { setupAxiosInterceptors } from '@/remote/remote'
 
 const AuthContext = createContext<{
@@ -30,7 +30,7 @@ export const AuthProvider: FC<PropsWithChildren> = props => {
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      signIn(PAGE_AFTER_LOGIN).catch(console.error)
+      signIn(getPageAfterSignIn()).catch(console.error)
     }
   }, [isLoading, isAuthenticated, signIn])
 

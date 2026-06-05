@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react'
 import { type IdTokenClaims, useLogto } from '@logto/react'
 import {
+  getPageAfterSignIn,
+  getPageAfterSignOut,
   LogtoProviderClient,
-  PAGE_AFTER_LOGIN,
-  PAGE_AFTER_LOGOUT,
 } from '@/app/logto-provider'
 import { UserLayout } from '@/layout/UserLayout'
 
@@ -37,14 +37,14 @@ const AccountPage = () => {
       {isAuthenticated ? (
         <button
           className='btn-primary'
-          onClick={() => signOut(PAGE_AFTER_LOGOUT).catch(console.error)}
+          onClick={() => signOut(getPageAfterSignOut()).catch(console.error)}
         >
           Sign Out
         </button>
       ) : (
         <button
           className='btn-primary'
-          onClick={() => signIn(PAGE_AFTER_LOGIN).catch(console.error)}
+          onClick={() => signIn(getPageAfterSignIn()).catch(console.error)}
         >
           Sign In
         </button>

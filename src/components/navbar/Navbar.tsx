@@ -4,7 +4,7 @@ import { FC } from 'react'
 import Link from 'next/link'
 import { useLogto } from '@logto/react'
 import { pathAccountPage, pathHomePage } from '@/app/routing'
-import { PAGE_AFTER_LOGIN, PAGE_AFTER_LOGOUT } from '@/app/logto-provider'
+import { getPageAfterSignIn, getPageAfterSignOut } from '@/app/logto-provider'
 
 export const Navbar = () => {
   const { signIn, signOut, isAuthenticated } = useLogto()
@@ -21,7 +21,7 @@ export const Navbar = () => {
             <NavbarItem to={pathAccountPage} label='Account' />
             <NavbarItem
               onClick={() => {
-                signOut(PAGE_AFTER_LOGOUT).catch(console.error)
+                signOut(getPageAfterSignOut()).catch(console.error)
               }}
               label='Logout'
             />
@@ -30,7 +30,7 @@ export const Navbar = () => {
           <>
             {/* Consider "isLoading" to disable click */}
             <NavbarItem
-              onClick={() => signIn(PAGE_AFTER_LOGIN).catch(console.error)}
+              onClick={() => signIn(getPageAfterSignIn()).catch(console.error)}
               label='Login'
             />
           </>

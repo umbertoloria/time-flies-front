@@ -5,6 +5,12 @@ import { type LogtoConfig, LogtoProvider } from '@logto/react'
 
 export const LOGTO_API_ID = process.env.NEXT_PUBLIC_LOGTO_API_ID!
 
+export const getPageAfterSignOut = () =>
+  process.env.NEXT_PUBLIC_PAGE_AFTER_SIGNOUT!
+
+export const getPageAfterSignIn = () =>
+  `${process.env.NEXT_PUBLIC_PAGE_AFTER_SIGNOUT}callback/`
+
 const config: LogtoConfig = {
   endpoint: process.env.NEXT_PUBLIC_LOGTO_ENDPOINT!,
   appId: process.env.NEXT_PUBLIC_LOGTO_APP_ID!,
@@ -15,7 +21,3 @@ const config: LogtoConfig = {
 export function LogtoProviderClient({ children }: { children: ReactNode }) {
   return <LogtoProvider config={config}>{children}</LogtoProvider>
 }
-
-export const PAGE_AFTER_LOGOUT = process.env.NEXT_PUBLIC_PAGE_AFTER_LOGOUT!
-
-export const PAGE_AFTER_LOGIN = process.env.NEXT_PUBLIC_PAGE_AFTER_LOGIN!
