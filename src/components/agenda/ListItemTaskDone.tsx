@@ -7,9 +7,10 @@ import { TCalendarRcd } from '@/remote/sdk/types'
 export const ListItemTaskDone: FC<{
   calendar: TCalendarRcd
   date: string
+  taskId: number
   notes?: string
   showDate?: boolean
-}> = ({ calendar, date, notes, showDate }) => {
+}> = ({ calendar, date, taskId, notes, showDate }) => {
   const { openDialog: openDialogForCheckPlannedEvent } =
     useDialogForCheckPlannedEvent()
 
@@ -32,7 +33,7 @@ export const ListItemTaskDone: FC<{
                 calendar,
                 date,
                 {
-                  id: 0, // FIXME: Never used but dangerous!
+                  id: taskId,
                   notes,
                 },
                 'update-done-task-notes'

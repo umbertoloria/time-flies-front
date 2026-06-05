@@ -40,6 +40,7 @@ export const AgendaSingleDate: FC<{
             key={index}
             calendar={calendar}
             date={date}
+            taskId={doneTask.id}
             notes={doneTask.notes}
           />
         ))}

@@ -21,6 +21,7 @@ export const AgendaFullCalendar: FC<{
             key={index}
             calendar={calendar}
             date={date.date}
+            taskId={date.taskId || 0} // TODO: Never happens, but clean
             notes={date.notes}
             showDate
           />
@@ -31,7 +32,7 @@ export const AgendaFullCalendar: FC<{
             calendar={calendar}
             date={date.date}
             todo={{
-              id: 0, // FIXME: Missing ID
+              id: date.todoId || 0, // TODO: Never happens, but clean
               notes: date.notes,
             }}
           />

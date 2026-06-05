@@ -374,7 +374,7 @@ export const getCalendarDateSDK = () => ({
           }),
   updateCalendarDateNotes: (
     calendarId: number,
-    localDate: string,
+    todoId: number,
     notes: undefined | string
   ): Promise<TNewDoneTask> =>
     debugMode
@@ -384,7 +384,7 @@ export const getCalendarDateSDK = () => ({
           notes: 'Debug notes',
         })
       : api
-          .post(`calendars/${calendarId}/date/${localDate}`, {
+          .post(`calendars/${calendarId}/date/${todoId}`, {
             notes,
           })
           .then(({ data }) => data),

@@ -184,7 +184,7 @@ export const useContextDialogForCheckPlannedEventForUX = (): {
             })
         } else if (mode === 'update-done-task-notes') {
           calendarDateSdk
-            .updateCalendarDateNotes(calendar.id, date, param || undefined)
+            .updateCalendarDateNotes(calendar.id, todo.id, param || undefined)
             .then(() => {
               // Yay!
 

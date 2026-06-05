@@ -1,6 +1,6 @@
 // Types
-// 2026-06-03T18:22:49Z
-// v3.8
+// 2026-06-05T21:14:12Z
+// v3.9
 
 // Calendar
 export type TCalendarPrev = TCalendarRcd & {
@@ -11,7 +11,7 @@ export type TCalendar = TCalendarRcd & {
   days: TDay[]
   plannedDays?: TDay[]
 }
-type TCalendarRcd = {
+export type TCalendarRcd = {
   id: number
   name: string
   color: string
@@ -21,6 +21,8 @@ type TCalendarRcd = {
 export type TDay = {
   date: string // Es. "2023-01-01"
   notes?: string
+  taskId?: number
+  todoId?: number
 }
 // Todos
 export type TNewTodo = {
