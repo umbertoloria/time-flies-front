@@ -2,13 +2,14 @@
 
 import { ReactNode } from 'react'
 import { type LogtoConfig, LogtoProvider } from '@logto/react'
-import { TF_API } from '@/remote/remote'
+
+export const LOGTO_API_ID = process.env.NEXT_PUBLIC_LOGTO_API_ID!
 
 const config: LogtoConfig = {
   endpoint: process.env.NEXT_PUBLIC_LOGTO_ENDPOINT!,
   appId: process.env.NEXT_PUBLIC_LOGTO_APP_ID!,
   // scopes: [UserScope.CustomData],
-  resources: [TF_API],
+  resources: [LOGTO_API_ID],
 }
 
 export function LogtoProviderClient({ children }: { children: ReactNode }) {

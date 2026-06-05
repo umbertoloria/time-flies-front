@@ -9,8 +9,6 @@ import {
   TNewTodo,
 } from '@/remote/sdk/types'
 
-export const TF_API = process.env.NEXT_PUBLIC_TF_API!
-
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_ENDPOINT!,
   withCredentials: true,
@@ -179,9 +177,6 @@ export const getSDK = () => {
             setTimeout(() => {
               // FIXME: Delaying Streamline retrieval due to DB slowness
               try {
-                /*return resolve({
-                  dates: [],
-                })*/
                 return resolve(
                   api
                     .get('/calendars/streamline')

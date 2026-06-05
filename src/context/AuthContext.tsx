@@ -10,8 +10,8 @@ import {
 } from 'react'
 import { type IdTokenClaims, useLogto } from '@logto/react'
 import { Optional } from '@silverhand/essentials'
-import { PAGE_AFTER_LOGIN } from '@/app/logto-provider'
-import { setupAxiosInterceptors, TF_API } from '@/remote/remote'
+import { LOGTO_API_ID, PAGE_AFTER_LOGIN } from '@/app/logto-provider'
+import { setupAxiosInterceptors } from '@/remote/remote'
 
 const AuthContext = createContext<{
   user: IdTokenClaims | undefined
@@ -42,7 +42,7 @@ export const AuthProvider: FC<PropsWithChildren> = props => {
         const claims = await getIdTokenClaims()
         setUser(claims)
 
-        setupAxiosInterceptors(() => getAccessToken(TF_API))
+        setupAxiosInterceptors(() => getAccessToken(LOGTO_API_ID))
       }
     })()
   }, [isAuthenticated, getIdTokenClaims, getAccessToken])
