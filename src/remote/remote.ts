@@ -451,7 +451,7 @@ export const getPlannedEventSDK = () => ({
           notes: 'Debug notes',
         })
       : api
-          .post(`calendars/${calendarId}/todo/${eventId}/done`, {
+          .post(`calendars/${calendarId}/todo/${eventId}/set-as-done`, {
             notes: typeof notes === 'string' ? notes : undefined,
           })
           .then(({ data }) => data),
