@@ -1,7 +1,13 @@
 import axios from 'axios'
 import { Optional } from '@silverhand/essentials'
 import { getTodayLocalDate } from '@/lib/utils'
-import { TCalendar, TCalendarPrev, TCalendarSDK } from '@/remote/sdk/types'
+import {
+  TCalendar,
+  TCalendarPrev,
+  TCalendarSDK,
+  TNewDoneTask,
+  TNewTodo,
+} from '@/remote/sdk/types'
 
 export const TF_API = process.env.NEXT_PUBLIC_TF_API!
 
@@ -178,7 +184,7 @@ export const getSDK = () => {
                 })*/
                 return resolve(
                   api
-                    .post('/calendars/streamline')
+                    .get('/calendars/streamline')
                     .then(({ data }) => data)
                     .catch<'unable'>(() => 'unable')
                 )
@@ -268,7 +274,7 @@ export const getCalendarSDK = () => ({
           return Promise.reject(new Error('Calendar not found (debug mode)'))
         })()
       : api
-          .post(`/calendars/${id}`)
+          .get(`/calendars/${id}`)
           .then(({ data }) => data)
           .catch(() => {
             return 'unable'
@@ -280,7 +286,7 @@ export const getCalendarSDK = () => ({
     usesNotes: boolean
   }) =>
     api
-      .post('/calendars/create', {
+      .post('/calendars', {
         name: data.name,
         color: data.color,
         'planned-color': data.plannedColor,
@@ -295,14 +301,13 @@ export const getCalendarSDK = () => ({
       plannedColor?: string // Es. "#115599"
       usesNotes?: boolean
     }
-  ): Promise<'calendar-uses-notes-cannot-be-disabled' | 'ok-updated'> =>
+  ) =>
     api
-      .post('/calendars/update', {
-        cid: `${calendarId}`,
+      .post(`/calendars/${calendarId}`, {
         name: data.name || undefined,
         color: data.color || undefined,
-        'planned-color': data.plannedColor || undefined,
-        'uses-notes':
+        plannedColor: data.plannedColor || undefined,
+        usesNotes:
           typeof data.usesNotes === 'boolean'
             ? data.usesNotes
               ? 'true'
@@ -347,21 +352,25 @@ export const getCalendarDateSDK = () => ({
           return Promise.reject(new Error('Calendar not found (debug mode)'))
         })()
       : api
-          .post(`calendars/${calendarId}/date/${date}`)
+          .get(`calendars/${calendarId}/date/${date}`)
           .then(({ data }) => data),
   checkDateWithSuccess: (
     id: number,
     date: string,
     notes: undefined | string
-  ): Promise<'ok' | 'invalid'> =>
+  ): Promise<TNewDoneTask> =>
     debugMode
-      ? Promise.resolve('ok')
+      ? Promise.resolve({
+          id: 1,
+          // date: getTodayLocalDate(),
+          notes: 'Debug notes',
+        })
       : api
-          .post(`calendars/${id}/date-create`, {
+          .post(`calendars/${id}/date`, {
             date,
             notes,
           })
-          .then<'ok'>(() => 'ok')
+          .then(({ data }) => data)
           .catch<'invalid'>(err => {
             if (err.response?.data === 'invalid') {
               return 'invalid'
@@ -372,28 +381,37 @@ export const getCalendarDateSDK = () => ({
     calendarId: number,
     localDate: string,
     notes: undefined | string
-  ): Promise<'ok' | 'invalid'> =>
+  ): Promise<TNewDoneTask> =>
     debugMode
-      ? Promise.resolve('ok')
+      ? Promise.resolve({
+          id: 1,
+          // date: getTodayLocalDate(),
+          notes: 'Debug notes',
+        })
       : api
-          .post(`calendars/${calendarId}/date-upd-notes/${localDate}`, {
+          .post(`calendars/${calendarId}/date/${localDate}`, {
             notes,
           })
-          .then<'ok'>(() => 'ok'),
+          .then(({ data }) => data),
 })
 export const getPlannedEventSDK = () => ({
   setDateAsPlannedEvent: (
     id: number,
     localDate: string,
     notes: undefined | string
-  ) =>
+  ): Promise<TNewTodo> =>
     debugMode
-      ? Promise.resolve('ok')
+      ? Promise.resolve({
+          id: 1,
+          // date: getTodayLocalDate(),
+          notes: 'Debug notes',
+        })
       : api
-          .post(`calendars/${id}/todo-create/${localDate}`, {
+          .post(`calendars/${id}/todo`, {
+            date: localDate,
             notes,
           })
-          .then<'ok'>(() => 'ok')
+          .then(({ data }) => data)
           .catch<'invalid'>(err => {
             if (err.response?.data === 'invalid') {
               return 'invalid'
@@ -408,21 +426,15 @@ export const getPlannedEventSDK = () => ({
     debugMode
       ? Promise.resolve('ok')
       : api
-          .post(`calendars/${calendarId}/todo-upd/${eventId}`, {
+          .post(`calendars/${calendarId}/todo/${eventId}/update-notes`, {
             notes,
           })
-          .then<'ok'>(() => 'ok')
-          .catch<'invalid'>(err => {
-            if (err.response?.data === 'invalid') {
-              return 'invalid'
-            }
-            throw err
-          }),
+          .then(({ data }) => data),
   movePlannedEvent: (calendarId: number, eventId: number, newDate: string) =>
     debugMode
       ? Promise.resolve('ok')
       : api
-          .post(`calendars/${calendarId}/todo-move/${eventId}`, {
+          .post(`calendars/${calendarId}/todo/${eventId}/move`, {
             date: newDate,
           })
           .then<'ok'>(() => 'ok')
@@ -436,18 +448,16 @@ export const getPlannedEventSDK = () => ({
     calendarId: number,
     eventId: number,
     notes: undefined | string
-  ): Promise<'ok' | 'invalid'> =>
+  ): Promise<TNewDoneTask> =>
     debugMode
-      ? Promise.resolve('ok')
+      ? Promise.resolve({
+          id: 1,
+          // date: getTodayLocalDate(),
+          notes: 'Debug notes',
+        })
       : api
-          .post(`calendars/${calendarId}/todo-done/${eventId}`, {
+          .post(`calendars/${calendarId}/todo/${eventId}/done`, {
             notes: typeof notes === 'string' ? notes : undefined,
           })
-          .then<'ok'>(() => 'ok')
-          .catch<'invalid'>(err => {
-            if (err.response?.data === 'invalid') {
-              return 'invalid'
-            }
-            throw err
-          }),
+          .then(({ data }) => data),
 })

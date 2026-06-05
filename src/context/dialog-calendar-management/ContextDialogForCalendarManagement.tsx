@@ -125,13 +125,7 @@ export const useContextDialogForCalendarManagementForUX = (): {
               plannedColor,
               usesNotes,
             })
-            .then(response => {
-              if (
-                response === 'calendar-uses-notes-cannot-be-disabled' ||
-                response !== 'ok-updated'
-              ) {
-                throw new Error('Unable to update')
-              }
+            .then(() => {
               // Yay!
 
               fireEventStreamlineUpdated(undefined)
