@@ -110,7 +110,7 @@ export const HomePageContent: FC = () => {
         dateFrom: minFromDate,
         seeAllCalendars,
       })
-    })
+    }, true)
   useEffect(() => {
     refetchAllCalendars()
   }, [minFromDate, seeAllCalendars])

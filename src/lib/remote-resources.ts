@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 
 export const useWrapperForCreateResource = <T>(
-  fn: () => Promise<T>
+  fn: () => Promise<T>,
+  skipFirstRun?: boolean
 ): [
   data:
     | undefined
@@ -21,11 +22,11 @@ export const useWrapperForCreateResource = <T>(
   )
 
   const fnfn = () => {
-    // console.log('useWrapperForCreateResource', data, 'start loading')
+    // console.debug('useWrapperForCreateResource', data, 'start loading')
     setData(old => (old ? { ...old, loading: true } : undefined))
     fn()
       .then(data => {
-        // console.log('useWrapperForCreateResource', data, 'stop loading ok')
+        // console.debug('useWrapperForCreateResource', data, 'stop loading ok')
         setData({ data, loading: false })
       })
       .catch(err => {
@@ -36,6 +37,9 @@ export const useWrapperForCreateResource = <T>(
   }
 
   useEffect(() => {
+    if (skipFirstRun) {
+      return
+    }
     fnfn()
   }, [])
 
