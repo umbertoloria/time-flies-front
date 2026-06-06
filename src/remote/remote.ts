@@ -173,21 +173,7 @@ export const getSDK = () => {
               },
             ],
           })
-        : new Promise((resolve, reject) => {
-            setTimeout(() => {
-              // FIXME: Delaying Streamline retrieval due to DB slowness
-              try {
-                return resolve(
-                  api
-                    .get('/calendars/streamline')
-                    .then(({ data }) => data)
-                    .catch<'unable'>(() => 'unable')
-                )
-              } catch (e) {
-                reject(e)
-              }
-            }, 1500)
-          }),
+        : api.get('/calendars/streamline').then(({ data }) => data),
   }
 }
 
