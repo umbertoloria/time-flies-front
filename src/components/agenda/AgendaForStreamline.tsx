@@ -2,6 +2,7 @@ import { FC } from 'react'
 import { TCalendarSDK } from '@/remote/sdk/types'
 import { prettyDate } from '@/components/calendar/utils'
 import { ListItemTaskTodo } from './ListItemTaskTodo'
+import { ListItemTaskDone } from './ListItemTaskDone'
 
 export const AgendaForStreamline: FC<{
   dates: TCalendarSDK.ReadPlannedEventsResponseDateBox[]
@@ -20,7 +21,17 @@ export const AgendaForStreamline: FC<{
               >
                 {calendar.name}
               </h3>
-              {calendar.todos.map((todo, index) => (
+              {calendar.doneTasks?.map((task, index) => (
+                <ListItemTaskDone
+                  key={index}
+                  calendar={calendar}
+                  date={date}
+                  taskId={task.id}
+                  notes={task.notes}
+                  showDate={true}
+                />
+              ))}
+              {calendar.todos?.map((todo, index) => (
                 <ListItemTaskTodo
                   key={index}
                   calendar={calendar}
