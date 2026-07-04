@@ -9,7 +9,6 @@ import {
   useState,
 } from 'react'
 import { type IdTokenClaims, useLogto } from '@logto/react'
-import { Optional } from '@silverhand/essentials'
 import { getPageAfterSignIn } from '@/app/logto-provider'
 import { setupAxiosInterceptors } from '@/remote/remote'
 
@@ -34,7 +33,7 @@ export const AuthProvider: FC<PropsWithChildren> = props => {
     }
   }, [isLoading, isAuthenticated, signIn])
 
-  const [user, setUser] = useState<Optional<IdTokenClaims>>()
+  const [user, setUser] = useState<IdTokenClaims | undefined>()
 
   useEffect(() => {
     ;(async () => {
