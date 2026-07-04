@@ -135,7 +135,9 @@ export const useContextDialogForCheckPlannedEventForUX = (): {
             return
           }
           plannedEventSdk
-            .moveTodo(calendar.id, todo.id, param)
+            .updateTodo(calendar.id, todo.id, {
+              date: param,
+            })
             .then(() => {
               // Yay!
 
@@ -200,7 +202,9 @@ export const useContextDialogForCheckPlannedEventForUX = (): {
             })
         } else if (mode === 'update-notes') {
           plannedEventSdk
-            .updateTodoNotes(calendar.id, todo.id, param || undefined)
+            .updateTodo(calendar.id, todo.id, {
+              notes: param || null,
+            })
             .then(() => {
               // Yay!
 

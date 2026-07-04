@@ -403,28 +403,22 @@ export const getPlannedEventSDK = () => ({
             }
             throw err
           }),
-  updateTodoNotes: (calendarId: number, todoId: number, notes?: string) =>
+  updateTodo: (
+    calendarId: number,
+    todoId: number,
+    fields: {
+      notes?: string | null
+      date?: string
+    }
+  ) =>
     debugMode
       ? Promise.resolve('ok')
       : api
-          .post(`calendars/${calendarId}/todos/${todoId}/update-notes`, {
-            notes,
+          .post(`calendars/${calendarId}/todos/${todoId}`, {
+            notes: fields.notes === null ? '' : fields.notes || undefined,
+            date: fields.date || undefined,
           })
           .then(({ data }) => data),
-  moveTodo: (calendarId: number, todoId: number, newDate: string) =>
-    debugMode
-      ? Promise.resolve('ok')
-      : api
-          .post(`calendars/${calendarId}/todos/${todoId}/move`, {
-            date: newDate,
-          })
-          .then<'ok'>(() => 'ok')
-          .catch<'invalid'>(err => {
-            if (err.response?.data === 'invalid') {
-              return 'invalid'
-            }
-            throw err
-          }),
   setTodoAsDone: (
     calendarId: number,
     todoId: number,
