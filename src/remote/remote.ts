@@ -419,11 +419,7 @@ export const getPlannedEventSDK = () => ({
             date: fields.date || undefined,
           })
           .then(({ data }) => data),
-  setTodoAsDone: (
-    calendarId: number,
-    todoId: number,
-    notes: undefined | string
-  ): Promise<TNewDoneTask> =>
+  setTodoAsDone: (calendarId: number, todoId: number): Promise<TNewDoneTask> =>
     debugMode
       ? Promise.resolve({
           id: 1,
@@ -431,8 +427,6 @@ export const getPlannedEventSDK = () => ({
           notes: 'Debug notes',
         })
       : api
-          .post(`calendars/${calendarId}/todos/${todoId}/set-as-done`, {
-            notes: typeof notes === 'string' ? notes : undefined,
-          })
+          .post(`calendars/${calendarId}/todos/${todoId}/set-as-done`)
           .then(({ data }) => data),
 })

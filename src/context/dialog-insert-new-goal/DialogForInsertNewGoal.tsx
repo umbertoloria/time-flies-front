@@ -68,23 +68,27 @@ export const DialogForInsertNewGoal: FC = () => {
 }
 
 export const NotesFieldEditor: FC<{
-  enableNoteInput: boolean
-  setEnableNoteInput: (enableNoteInput: boolean) => void
+  enableNoteInput?: boolean
+  setEnableNoteInput?: (enableNoteInput: boolean) => void
   inputValue: string
   setInputValue: (inputValue: string) => void
 }> = ({ enableNoteInput, setEnableNoteInput, inputValue, setInputValue }) => {
   return (
     <>
       <div className='pt-2'>
-        {'Inserisci note'}
-        <input
-          type='checkbox'
-          className='inline ml-1'
-          checked={enableNoteInput}
-          onChange={event => {
-            setEnableNoteInput(event.currentTarget.checked)
-          }}
-        />
+        {!setEnableNoteInput ? 'Anteprima note' : 'Inserisci note'}
+        {setEnableNoteInput && (
+          <input
+            type='checkbox'
+            className='inline ml-1'
+            checked={enableNoteInput}
+            onChange={event => {
+              if (setEnableNoteInput) {
+                setEnableNoteInput(event.currentTarget.checked)
+              }
+            }}
+          />
+        )}
         <input
           type='text'
           id='input-field'

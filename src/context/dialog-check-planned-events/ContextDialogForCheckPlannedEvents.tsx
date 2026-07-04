@@ -102,7 +102,7 @@ export const useContextDialogForCheckPlannedEventForUX = (): {
         })
         if (mode === 'done') {
           plannedEventSdk
-            .setTodoAsDone(calendar.id, todo.id, param)
+            .setTodoAsDone(calendar.id, todo.id)
             .then(() => {
               // Yay!
 

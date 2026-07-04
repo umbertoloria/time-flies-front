@@ -35,9 +35,9 @@ export const DialogCheckPlannedEvent: FC = () => {
   useEffect(() => {
     if (isOpen) {
       if (data?.mode === 'done') {
-        // This helps to copy Planned Event Notes into Date Notes.
+        // This is just for preview! Notes are not updated here.
         if (data.todo.notes) {
-          setEnableNoteInput(true)
+          setEnableNoteInput(false)
           setNotesInputValue(data.todo.notes)
         } else {
           setEnableNoteInput(false)
@@ -86,8 +86,6 @@ export const DialogCheckPlannedEvent: FC = () => {
                 <p>{'Confermi di aver svolto questa attività?'}</p>
                 {!!data.calendar.usesNotes && (
                   <NotesFieldEditor
-                    enableNoteInput={enableNoteInput}
-                    setEnableNoteInput={setEnableNoteInput}
                     inputValue={notesInputValue}
                     setInputValue={setNotesInputValue}
                   />
