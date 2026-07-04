@@ -17,17 +17,15 @@ export const DialogCheckPlannedEvent: FC = () => {
   const title =
     data?.mode === 'done'
       ? 'Segna come fatto'
-      : data?.mode === 'missed'
-        ? 'Segna come saltato'
-        : data?.mode === 'move'
-          ? 'Sposta'
-          : data?.mode === 'move-done-task'
-            ? 'Sposta (evento già chiuso)'
-            : data?.mode === 'update-notes'
-              ? 'Aggiorna note (evento da fare)'
-              : data?.mode === 'update-done-task-notes'
-                ? 'Aggiorna note (evento già chiuso)'
-                : '???' // Should never happen.
+      : data?.mode === 'move'
+        ? 'Sposta'
+        : data?.mode === 'move-done-task'
+          ? 'Sposta (evento già chiuso)'
+          : data?.mode === 'update-notes'
+            ? 'Aggiorna note (evento da fare)'
+            : data?.mode === 'update-done-task-notes'
+              ? 'Aggiorna note (evento già chiuso)'
+              : '???' // Should never happen.
 
   const [enableNoteInput, setEnableNoteInput] = useState(INITIAL_ENABLE_NOTE)
   const [notesInputValue, setNotesInputValue] = useState(INITIAL_INPUT_VALUE)
@@ -90,12 +88,6 @@ export const DialogCheckPlannedEvent: FC = () => {
                     setInputValue={setNotesInputValue}
                   />
                 )}
-              </>
-            )}
-
-            {data?.mode === 'missed' && (
-              <>
-                <p>{'Confermi di voler saltare questa attività?'}</p>
               </>
             )}
 
@@ -189,9 +181,6 @@ export const DialogCheckPlannedEvent: FC = () => {
 
                 if (data?.mode === 'done') {
                   confirmProgressDone(notes)
-                }
-                if (data?.mode === 'missed') {
-                  confirmProgressDone(undefined)
                 }
                 if (data?.mode === 'move') {
                   // FIXME: Validate local date

@@ -7,7 +7,6 @@ import { TCalendarRcd, TNewTodo } from '@/remote/sdk/types'
 
 type DialogForCheckPlannedEventsMode =
   | 'done'
-  | 'missed'
   | 'move'
   | 'move-done-task'
   | 'update-notes'
@@ -85,11 +84,6 @@ export const useContextDialogForCheckPlannedEventForUX = (): {
           return
         }
         const { calendar, date, todo, mode } = dialog.data
-        if (mode === 'missed') {
-          // FIXME: remove deprecated "missed" feature
-          alert('Deprecated feature')
-          return
-        }
         setDialog({
           isOpen: true,
           data: {
