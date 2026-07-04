@@ -29,8 +29,8 @@ export const AgendaSingleDate: FC<{
           <ListItemTaskTodo
             key={index}
             calendar={calendar}
-            date={date}
             todo={todo}
+            date={date}
           />
         ))}
 

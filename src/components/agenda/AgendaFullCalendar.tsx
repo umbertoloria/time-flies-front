@@ -30,11 +30,11 @@ export const AgendaFullCalendar: FC<{
           <ListItemTaskTodo
             key={index}
             calendar={calendar}
-            date={date.date}
             todo={{
               id: date.todoId || 0, // TODO: Never happens, but clean
               notes: date.notes,
             }}
+            date={date.date}
           />
         ))}
       </div>

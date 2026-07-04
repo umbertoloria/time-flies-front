@@ -9,13 +9,14 @@ import {
 import { TCalendarRcd, TNewTodo } from '@/remote/sdk/types'
 import { useDialogForCheckPlannedEvent } from '@/context/dialog-check-planned-events/ContextDialogForCheckPlannedEvents'
 import { useDialogForDatePanel } from '@/context/date-panel/ContextDialogForDatePanel'
+import { displayDateFromLocalDate } from '@/components/calendar/utils'
 
 export const ListItemTaskTodo: FC<{
   calendar: TCalendarRcd
-  date: string
   todo: TNewTodo
+  date: string
   showButtonToOpenInDatePanel?: boolean
-}> = ({ calendar, date, todo, showButtonToOpenInDatePanel }) => {
+}> = ({ calendar, todo, date, showButtonToOpenInDatePanel }) => {
   const { openDialog: openDialogForCheckPlannedEvent } =
     useDialogForCheckPlannedEvent()
   const { openDialog: openDialogForDatePanel } = useDialogForDatePanel()
@@ -29,7 +30,7 @@ export const ListItemTaskTodo: FC<{
             color: calendar.color,
           }}
           onClick={() => {
-            openDialogForCheckPlannedEvent(calendar, date, todo, 'done')
+            openDialogForCheckPlannedEvent(calendar, todo, 'done', date)
           }}
         >
           <Square className='idle' />
@@ -38,7 +39,7 @@ export const ListItemTaskTodo: FC<{
         <span
           className='pre-btn'
           onClick={() => {
-            openDialogForCheckPlannedEvent(calendar, date, todo, 'move')
+            openDialogForCheckPlannedEvent(calendar, todo, 'move', date)
           }}
         >
           <CalendarDays />
@@ -49,9 +50,9 @@ export const ListItemTaskTodo: FC<{
             onClick={() => {
               openDialogForCheckPlannedEvent(
                 calendar,
-                date,
                 todo,
-                'update-notes'
+                'update-notes',
+                date
               )
             }}
           >
@@ -73,6 +74,11 @@ export const ListItemTaskTodo: FC<{
           </span>
         )}
       </div>
+      {date && (
+        <span>
+          <i>{displayDateFromLocalDate(date)}</i>
+        </span>
+      )}
       {!!calendar.usesNotes && !!todo.notes ? (
         <span className='todo-notes'>{todo.notes}</span>
       ) : (

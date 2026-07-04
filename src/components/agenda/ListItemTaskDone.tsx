@@ -30,12 +30,12 @@ export const ListItemTaskDone: FC<{
           onClick={() => {
             openDialogForCheckPlannedEvent(
               calendar,
-              date,
               {
                 id: taskId,
                 notes,
               },
-              'move-done-task'
+              'move-done-task',
+              date
             )
           }}
         >
@@ -47,12 +47,12 @@ export const ListItemTaskDone: FC<{
             onClick={() => {
               openDialogForCheckPlannedEvent(
                 calendar,
-                date,
                 {
                   id: taskId,
                   notes,
                 },
-                'update-done-task-notes'
+                'update-done-task-notes',
+                date
               )
             }}
           >

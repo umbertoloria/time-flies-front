@@ -14,8 +14,8 @@ type DialogForCheckPlannedEventsMode =
 
 type ContextPartData = {
   calendar: TCalendarRcd
-  date: string
   todo: TNewTodo
+  date: string
   mode: DialogForCheckPlannedEventsMode
   loading: boolean
 }
@@ -24,9 +24,9 @@ export type ContextDialogForCheckPlannedEvent = {
   data?: ContextPartData
   openDialog: (
     calendar: TCalendarRcd,
-    date: string,
     todo: TNewTodo,
-    mode: DialogForCheckPlannedEventsMode
+    mode: DialogForCheckPlannedEventsMode,
+    date: string
   ) => void
   closeDialog: () => void
   confirmProgressDone: (param: undefined | string) => void
@@ -53,7 +53,7 @@ export const useContextDialogForCheckPlannedEventForUX = (): {
     dialogForCheckPlannedEvent: {
       isOpen: dialog.isOpen,
       data: dialog.data,
-      openDialog(calendar, date, todo, mode) {
+      openDialog(calendar, todo, mode, date) {
         if (dialog.isOpen || dialog.data?.loading) {
           return
         }
@@ -62,8 +62,8 @@ export const useContextDialogForCheckPlannedEventForUX = (): {
           isOpen: true,
           data: {
             calendar,
-            date,
             todo,
+            date,
             mode,
             loading: false,
           },
@@ -83,13 +83,13 @@ export const useContextDialogForCheckPlannedEventForUX = (): {
         if (!dialog.isOpen || !dialog.data || dialog.data.loading) {
           return
         }
-        const { calendar, date, todo, mode } = dialog.data
+        const { calendar, todo, date, mode } = dialog.data
         setDialog({
           isOpen: true,
           data: {
             calendar,
-            date,
             todo,
+            date,
             mode,
             loading: true,
           },
@@ -116,8 +116,8 @@ export const useContextDialogForCheckPlannedEventForUX = (): {
                 isOpen: true,
                 data: {
                   calendar,
-                  date,
                   todo,
+                  date,
                   mode,
                   loading: false,
                 },
@@ -151,8 +151,8 @@ export const useContextDialogForCheckPlannedEventForUX = (): {
                 isOpen: true,
                 data: {
                   calendar,
-                  date,
                   todo,
+                  date,
                   mode,
                   loading: false,
                 },
@@ -187,8 +187,8 @@ export const useContextDialogForCheckPlannedEventForUX = (): {
                 isOpen: true,
                 data: {
                   calendar,
-                  date,
                   todo,
+                  date,
                   mode,
                   loading: false,
                 },
@@ -218,8 +218,8 @@ export const useContextDialogForCheckPlannedEventForUX = (): {
                 isOpen: true,
                 data: {
                   calendar,
-                  date,
                   todo,
+                  date,
                   mode,
                   loading: false,
                 },
@@ -250,8 +250,8 @@ export const useContextDialogForCheckPlannedEventForUX = (): {
                 isOpen: true,
                 data: {
                   calendar,
-                  date,
                   todo,
+                  date,
                   mode,
                   loading: false,
                 },
