@@ -93,7 +93,7 @@ export const useContextDialogForCheckPlannedEventForUX = (): {
         })
         if (mode === 'done') {
           plannedEventSdk
-            .setEventAsDone(calendar.id, todo.id, param)
+            .setTodoAsDone(calendar.id, todo.id, param)
             .then(() => {
               // Yay!
 
@@ -126,7 +126,7 @@ export const useContextDialogForCheckPlannedEventForUX = (): {
             return
           }
           plannedEventSdk
-            .movePlannedEvent(calendar.id, todo.id, param)
+            .moveTodo(calendar.id, todo.id, param)
             .then(() => {
               // Yay!
 
@@ -155,7 +155,7 @@ export const useContextDialogForCheckPlannedEventForUX = (): {
             })
         } else if (mode === 'update-notes') {
           plannedEventSdk
-            .updatePlannedEventNotes(calendar.id, todo.id, param || undefined)
+            .updateTodoNotes(calendar.id, todo.id, param || undefined)
             .then(() => {
               // Yay!
 
@@ -183,8 +183,9 @@ export const useContextDialogForCheckPlannedEventForUX = (): {
               })
             })
         } else if (mode === 'update-done-task-notes') {
+          // TODO: In this case "todo" is actually a Task
           calendarDateSdk
-            .updateCalendarDateNotes(calendar.id, todo.id, param || undefined)
+            .updateTaskNotes(calendar.id, todo.id, param || undefined)
             .then(() => {
               // Yay!
 

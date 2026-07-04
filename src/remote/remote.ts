@@ -347,7 +347,7 @@ export const getCalendarDateSDK = () => ({
           notes: 'Debug notes',
         })
       : api
-          .post(`calendars/${id}/date`, {
+          .post(`calendars/${id}/tasks/done`, {
             date,
             notes,
           })
@@ -358,9 +358,9 @@ export const getCalendarDateSDK = () => ({
             }
             throw err
           }),
-  updateCalendarDateNotes: (
+  updateTaskNotes: (
     calendarId: number,
-    todoId: number,
+    taskId: number,
     notes: undefined | string
   ): Promise<TNewDoneTask> =>
     debugMode
@@ -370,7 +370,7 @@ export const getCalendarDateSDK = () => ({
           notes: 'Debug notes',
         })
       : api
-          .post(`calendars/${calendarId}/date/${todoId}`, {
+          .post(`calendars/${calendarId}/tasks/${taskId}`, {
             notes,
           })
           .then(({ data }) => data),
@@ -388,7 +388,7 @@ export const getPlannedEventSDK = () => ({
           notes: 'Debug notes',
         })
       : api
-          .post(`calendars/${id}/todo`, {
+          .post(`calendars/${id}/todos`, {
             date: localDate,
             notes,
           })
@@ -399,23 +399,19 @@ export const getPlannedEventSDK = () => ({
             }
             throw err
           }),
-  updatePlannedEventNotes: (
-    calendarId: number,
-    eventId: number,
-    notes?: string
-  ) =>
+  updateTodoNotes: (calendarId: number, todoId: number, notes?: string) =>
     debugMode
       ? Promise.resolve('ok')
       : api
-          .post(`calendars/${calendarId}/todo/${eventId}/update-notes`, {
+          .post(`calendars/${calendarId}/todos/${todoId}/update-notes`, {
             notes,
           })
           .then(({ data }) => data),
-  movePlannedEvent: (calendarId: number, eventId: number, newDate: string) =>
+  moveTodo: (calendarId: number, todoId: number, newDate: string) =>
     debugMode
       ? Promise.resolve('ok')
       : api
-          .post(`calendars/${calendarId}/todo/${eventId}/move`, {
+          .post(`calendars/${calendarId}/todos/${todoId}/move`, {
             date: newDate,
           })
           .then<'ok'>(() => 'ok')
@@ -425,9 +421,9 @@ export const getPlannedEventSDK = () => ({
             }
             throw err
           }),
-  setEventAsDone: (
+  setTodoAsDone: (
     calendarId: number,
-    eventId: number,
+    todoId: number,
     notes: undefined | string
   ): Promise<TNewDoneTask> =>
     debugMode
@@ -437,7 +433,7 @@ export const getPlannedEventSDK = () => ({
           notes: 'Debug notes',
         })
       : api
-          .post(`calendars/${calendarId}/todo/${eventId}/set-as-done`, {
+          .post(`calendars/${calendarId}/todos/${todoId}/set-as-done`, {
             notes: typeof notes === 'string' ? notes : undefined,
           })
           .then(({ data }) => data),
