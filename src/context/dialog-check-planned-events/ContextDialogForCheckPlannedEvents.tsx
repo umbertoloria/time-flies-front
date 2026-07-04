@@ -15,7 +15,7 @@ type DialogForCheckPlannedEventsMode =
 type ContextPartData = {
   calendar: TCalendarRcd
   todo: TNewTodo
-  date: string
+  date?: string
   mode: DialogForCheckPlannedEventsMode
   loading: boolean
 }
@@ -26,7 +26,7 @@ export type ContextDialogForCheckPlannedEvent = {
     calendar: TCalendarRcd,
     todo: TNewTodo,
     mode: DialogForCheckPlannedEventsMode,
-    date: string
+    date?: string
   ) => void
   closeDialog: () => void
   confirmProgressDone: (param: undefined | string) => void

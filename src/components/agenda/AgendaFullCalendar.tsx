@@ -26,16 +26,16 @@ export const AgendaFullCalendar: FC<{
             showDate
           />
         ))}
-        {calendar.plannedDays?.map((date, index) => (
+        {calendar.plannedDays?.map((todo, index) => (
           <ListItemTaskTodo
             key={index}
             calendar={calendar}
-            todo={{
-              id: date.todoId || 0, // TODO: Never happens, but clean
-              notes: date.notes,
-            }}
-            date={date.date}
+            todo={todo}
+            date={todo.date}
           />
+        ))}
+        {calendar.unplannedTodos?.map((todo, index) => (
+          <ListItemTaskTodo key={index} calendar={calendar} todo={todo} />
         ))}
       </div>
     </div>

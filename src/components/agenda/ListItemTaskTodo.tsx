@@ -14,7 +14,7 @@ import { displayDateFromLocalDate } from '@/components/calendar/utils'
 export const ListItemTaskTodo: FC<{
   calendar: TCalendarRcd
   todo: TNewTodo
-  date: string
+  date?: string
   showButtonToOpenInDatePanel?: boolean
 }> = ({ calendar, todo, date, showButtonToOpenInDatePanel }) => {
   const { openDialog: openDialogForCheckPlannedEvent } =
@@ -63,11 +63,14 @@ export const ListItemTaskTodo: FC<{
           <span
             className='pre-btn'
             onClick={() => {
-              openDialogForDatePanel({
-                mode: 'calendar-date-panel',
-                calendarId: calendar.id,
-                date,
-              })
+              if (date) {
+                // FIXME: Maybe this panel should support IDs if not DATES
+                openDialogForDatePanel({
+                  mode: 'calendar-date-panel',
+                  calendarId: calendar.id,
+                  date,
+                })
+              }
             }}
           >
             <Info />

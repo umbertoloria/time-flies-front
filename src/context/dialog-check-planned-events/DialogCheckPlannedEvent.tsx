@@ -42,9 +42,11 @@ export const DialogCheckPlannedEvent: FC = () => {
           setNotesInputValue('')
         }
       } else if (data?.mode === 'move') {
-        setDateInputValue(data.date)
+        // FIXME: Test with with empty Date
+        setDateInputValue(data.date || '')
       } else if (data?.mode === 'move-done-task') {
-        setDateInputValue(data.date)
+        // FIXME: Test with with empty Date
+        setDateInputValue(data.date || '')
       } else if (data?.mode === 'update-notes') {
         if (data.todo.notes) {
           setEnableNoteInput(true)

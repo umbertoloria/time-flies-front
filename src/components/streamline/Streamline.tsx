@@ -36,7 +36,7 @@ export const Streamline: FC = () => {
       {!dataStreamline?.data ? (
         <Badge>Caricamento...</Badge>
       ) : (
-        <AgendaForStreamline dates={dataStreamline.data.dates} />
+        <AgendaForStreamline data={dataStreamline.data} />
       )}
     </div>
   )

@@ -5,8 +5,9 @@ import { ListItemTaskTodo } from './ListItemTaskTodo'
 import { ListItemTaskDone } from './ListItemTaskDone'
 
 export const AgendaForStreamline: FC<{
-  dates: TCalendarSDK.ReadPlannedEventsResponseDateBox[]
-}> = ({ dates }) => {
+  data: TCalendarSDK.ReadPlannedEventsResponse
+}> = ({ data }) => {
+  const { dates, unplannedTodosCalendars } = data
   return (
     <div className='agenda'>
       {dates.map(({ date, calendars }, index) => (
@@ -44,6 +45,30 @@ export const AgendaForStreamline: FC<{
           ))}
         </div>
       ))}
+      {!!unplannedTodosCalendars?.length && (
+        <div>
+          <h2>Todos senza data</h2>
+          {unplannedTodosCalendars.map((calendar, index) => (
+            <div key={index} className='mt-3'>
+              <h3
+                style={{
+                  color: calendar.color,
+                }}
+              >
+                {calendar.name}
+              </h3>
+              {calendar.todos?.map((todo, index) => (
+                <ListItemTaskTodo
+                  key={index}
+                  calendar={calendar}
+                  todo={todo}
+                  showButtonToOpenInDatePanel
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

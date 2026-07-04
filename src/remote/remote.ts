@@ -172,6 +172,7 @@ export const getSDK = () => {
                 ],
               },
             ],
+            unplannedTodosCalendars: [],
           })
         : api.get('/calendars/streamline').then(({ data }) => data),
   }
@@ -235,6 +236,7 @@ export const getCalendarSDK = () => ({
                 },
               ],
               plannedDays: [],
+              unplannedTodos: [],
             })
           } else if (id === 2) {
             return Promise.resolve<TCalendar>({
@@ -250,6 +252,7 @@ export const getCalendarSDK = () => ({
                 },
               ],
               plannedDays: [],
+              unplannedTodos: [],
             })
           }
           return Promise.reject(new Error('Calendar not found (debug mode)'))
