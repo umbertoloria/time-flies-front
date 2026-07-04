@@ -23,7 +23,6 @@ export const AgendaFullCalendar: FC<{
             date={date.date}
             taskId={date.taskId || 0} // TODO: Never happens, but clean
             notes={date.notes}
-            showDate
           />
         ))}
         {calendar.plannedDays?.map((todo, index) => (

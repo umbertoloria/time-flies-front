@@ -9,8 +9,8 @@ export const ListItemTaskDone: FC<{
   date: string
   taskId: number
   notes?: string
-  showDate?: boolean
-}> = ({ calendar, date, taskId, notes, showDate }) => {
+  hideDate?: boolean
+}> = ({ calendar, date, taskId, notes, hideDate }) => {
   const { openDialog: openDialogForCheckPlannedEvent } =
     useDialogForCheckPlannedEvent()
 
@@ -60,7 +60,7 @@ export const ListItemTaskDone: FC<{
           </span>
         )}
       </div>
-      {showDate && (
+      {!hideDate && (
         <span>
           <i>{displayDateFromLocalDate(date)}</i>
         </span>

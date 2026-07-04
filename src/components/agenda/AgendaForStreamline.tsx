@@ -29,7 +29,7 @@ export const AgendaForStreamline: FC<{
                   date={date}
                   taskId={task.id}
                   notes={task.notes}
-                  showDate={true}
+                  hideDate
                 />
               ))}
               {calendar.todos?.map((todo, index) => (
@@ -38,6 +38,7 @@ export const AgendaForStreamline: FC<{
                   calendar={calendar}
                   todo={todo}
                   date={date}
+                  hideDate
                   showButtonToOpenInDatePanel
                 />
               ))}
@@ -62,6 +63,7 @@ export const AgendaForStreamline: FC<{
                   key={index}
                   calendar={calendar}
                   todo={todo}
+                  hideDate
                   showButtonToOpenInDatePanel
                 />
               ))}
