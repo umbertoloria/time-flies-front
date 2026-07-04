@@ -358,10 +358,13 @@ export const getCalendarDateSDK = () => ({
             }
             throw err
           }),
-  updateTaskNotes: (
+  updateTask: (
     calendarId: number,
     taskId: number,
-    notes: undefined | string
+    fields: {
+      date?: string
+      notes?: string | null
+    }
   ): Promise<TNewDoneTask> =>
     debugMode
       ? Promise.resolve({
@@ -371,7 +374,8 @@ export const getCalendarDateSDK = () => ({
         })
       : api
           .post(`calendars/${calendarId}/tasks/${taskId}`, {
-            notes,
+            date: fields.date || undefined,
+            notes: fields.notes === null ? '' : fields.notes || undefined,
           })
           .then(({ data }) => data),
 })

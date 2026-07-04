@@ -21,11 +21,13 @@ export const DialogCheckPlannedEvent: FC = () => {
         ? 'Segna come saltato'
         : data?.mode === 'move'
           ? 'Sposta'
-          : data?.mode === 'update-notes'
-            ? 'Aggiorna note (evento da fare)'
-            : data?.mode === 'update-done-task-notes'
-              ? 'Aggiorna note (evento già chiuso)'
-              : '???' // Should never happen.
+          : data?.mode === 'move-done-task'
+            ? 'Sposta (evento già chiuso)'
+            : data?.mode === 'update-notes'
+              ? 'Aggiorna note (evento da fare)'
+              : data?.mode === 'update-done-task-notes'
+                ? 'Aggiorna note (evento già chiuso)'
+                : '???' // Should never happen.
 
   const [enableNoteInput, setEnableNoteInput] = useState(INITIAL_ENABLE_NOTE)
   const [notesInputValue, setNotesInputValue] = useState(INITIAL_INPUT_VALUE)
@@ -43,6 +45,8 @@ export const DialogCheckPlannedEvent: FC = () => {
         }
       } else if (data?.mode === 'move') {
         setDateInputValue(data.date)
+      } else if (data?.mode === 'move-done-task') {
+        setDateInputValue(data.date)
       } else if (data?.mode === 'update-notes') {
         if (data.todo.notes) {
           setEnableNoteInput(true)
@@ -59,6 +63,8 @@ export const DialogCheckPlannedEvent: FC = () => {
           setEnableNoteInput(false)
           setNotesInputValue('')
         }
+      } else {
+        // Should never happen.
       }
     } else {
       setEnableNoteInput(INITIAL_ENABLE_NOTE)
@@ -96,6 +102,24 @@ export const DialogCheckPlannedEvent: FC = () => {
             )}
 
             {data?.mode === 'move' && (
+              <>
+                <p>{'Confermi di voler spostare questa attività?'}</p>
+                {/* // TODO: Duplicated code (*mkld) */}
+                <span className='pr-2'>{'Data: '}</span>
+                <input
+                  type='date'
+                  className='px-2 py-1 rounded-md'
+                  value={dateInputValue}
+                  onInput={event => {
+                    const newDate = event.currentTarget.value // Es. "2024-11-15"
+                    // TODO: Check if it's valid
+                    setDateInputValue(newDate)
+                  }}
+                />
+              </>
+            )}
+
+            {data?.mode === 'move-done-task' && (
               <>
                 <p>{'Confermi di voler spostare questa attività?'}</p>
                 {/* // TODO: Duplicated code (*mkld) */}
@@ -172,6 +196,10 @@ export const DialogCheckPlannedEvent: FC = () => {
                   confirmProgressDone(undefined)
                 }
                 if (data?.mode === 'move') {
+                  // FIXME: Validate local date
+                  confirmProgressDone(dateInputValue)
+                }
+                if (data?.mode === 'move-done-task') {
                   // FIXME: Validate local date
                   confirmProgressDone(dateInputValue)
                 }

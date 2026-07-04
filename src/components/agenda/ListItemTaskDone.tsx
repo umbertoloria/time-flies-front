@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { NotebookPen, SquareCheck } from 'lucide-react'
+import { CalendarDays, NotebookPen, SquareCheck } from 'lucide-react'
 import { displayDateFromLocalDate } from '@/components/calendar/utils'
 import { useDialogForCheckPlannedEvent } from '@/context/dialog-check-planned-events/ContextDialogForCheckPlannedEvents'
 import { TCalendarRcd } from '@/remote/sdk/types'
@@ -24,6 +24,22 @@ export const ListItemTaskDone: FC<{
           }}
         >
           <SquareCheck />
+        </span>
+        <span
+          className='pre-btn'
+          onClick={() => {
+            openDialogForCheckPlannedEvent(
+              calendar,
+              date,
+              {
+                id: taskId,
+                notes,
+              },
+              'move-done-task'
+            )
+          }}
+        >
+          <CalendarDays />
         </span>
         {!!calendar.usesNotes && (
           <span
