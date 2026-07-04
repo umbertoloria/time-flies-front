@@ -131,7 +131,7 @@ export const HomePageContent: FC = () => {
   return (
     <section className='p-8'>
       <div className='main-section-grids'>
-        <Streamline />
+        <Streamline seeAllCalendars={seeAllCalendars} />
 
         <PlacedCalendarManagement />
 

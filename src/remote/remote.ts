@@ -134,9 +134,9 @@ export const getSDK = () => {
               throw err
             }),
     */
-    readStreamline: (): Promise<
-      TCalendarSDK.ReadPlannedEventsResponse | 'unable'
-    > =>
+    readStreamline: (filters: {
+      seeAllCalendars: boolean
+    }): Promise<TCalendarSDK.ReadPlannedEventsResponse | 'unable'> =>
       debugMode
         ? Promise.resolve<TCalendarSDK.ReadPlannedEventsResponse>({
             dates: [
@@ -174,7 +174,11 @@ export const getSDK = () => {
             ],
             unplannedTodosCalendars: [],
           })
-        : api.get('/calendars/streamline').then(({ data }) => data),
+        : api
+            .get(
+              `/calendars/streamline${filters.seeAllCalendars ? '?includeArchivedCalendars=true' : ''}`
+            )
+            .then(({ data }) => data),
   }
 }
 

@@ -13,12 +13,22 @@ import { useWrapperForCreateResource } from '@/lib/remote-resources'
 import { getSDK } from '@/remote/remote'
 
 const { readStreamline } = getSDK()
-export const Streamline: FC = () => {
+export const Streamline: FC<{
+  seeAllCalendars: boolean
+}> = ({ seeAllCalendars }) => {
   // Showing only Today Planned Events
   const [dataStreamline, { refetch: refreshStreamline }] =
-    useWrapperForCreateResource(() =>
-      readStreamline().then(data => (data === 'unable' ? undefined : data))
+    useWrapperForCreateResource(
+      () =>
+        readStreamline({
+          seeAllCalendars,
+        }).then(data => (data === 'unable' ? undefined : data)),
+      true
     )
+
+  useEffect(() => {
+    refreshStreamline()
+  }, [seeAllCalendars])
 
   useEffect(() => {
     const listener: CustomEventFnType<undefined> = () => {
