@@ -4,6 +4,7 @@ import '../css/globals.css'
 import '../css/agenda.css'
 
 import { ReactNode } from 'react'
+import Providers from './providers'
 
 export default function RootLayout({
   children,
@@ -16,7 +17,7 @@ export default function RootLayout({
         <title>Time Flies</title>
       </head>
       <body>
-        {children}
+        <Providers>{children}</Providers>
         {/*
     // FIXME: import this library
     <!-- One will work and the other won't, in both DEV and PROD -->

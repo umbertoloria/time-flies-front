@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from 'react'
+import { FC, useMemo, useState } from 'react'
 import {
   getDateFromLocalDate,
   getDateWithOffsetDays,
@@ -6,8 +6,7 @@ import {
   getTodayLocalDate,
   localDatesLT,
 } from '@/lib/utils'
-import { getCalendarSDK } from '@/remote/remote'
-import { useWrapperForCreateResource } from '@/lib/remote-resources'
+import { useReadAllCalendars } from '@/remote/useCalendarQueries'
 import { LogicCalendarGridListening } from '@/components/calendar/CalendarGrid'
 import { Streamline } from '@/components/streamline/Streamline'
 import {
@@ -21,8 +20,6 @@ import {
   DashboardControl,
   DEFAULT_SEE_ALL_CALENDARS_FLAG,
 } from '@/components/DashboardControl'
-
-const periodRefreshCalendarsInMillis = 10 * 60 * 60 * 1000 // 10 minutes.
 
 // Calendars Grids
 // One month prior, one week future
@@ -40,7 +37,6 @@ const getCalendarGridFromDateMondayOnMonthsOffset = (monthsOffset: number) =>
     )
   )
 
-const calendarSdk = getCalendarSDK()
 export const HomePageContent: FC = () => {
   const todayLocalDate = getTodayLocalDate()
 
@@ -104,29 +100,15 @@ export const HomePageContent: FC = () => {
   )
 
   // Calendars
-  const [dataAllCalendars, { refetch: refetchAllCalendars }] =
-    useWrapperForCreateResource(() => {
-      return calendarSdk.readAllCalendars({
-        dateFrom: minFromDate,
-        seeAllCalendars,
-      })
-    }, true)
-  useEffect(() => {
-    refetchAllCalendars()
-  }, [minFromDate, seeAllCalendars])
-  // @ts-ignore
-  const refetchOneCalendar = (calendarId: number) => {
+  const { data, isPending, error, refetch } = useReadAllCalendars({
+    dateFrom: minFromDate,
+    seeAllCalendars,
+  })
+
+  const refetchOneCalendar = (_: number) => {
     // TODO: Improve partial loadings
-    refetchAllCalendars()
+    refetch().then()
   }
-  useEffect(() => {
-    const refreshCalendarIntervalTimer = setInterval(() => {
-      refetchAllCalendars()
-    }, periodRefreshCalendarsInMillis)
-    return () => {
-      clearInterval(refreshCalendarIntervalTimer)
-    }
-  }, [])
 
   return (
     <section className='p-8'>
@@ -135,9 +117,9 @@ export const HomePageContent: FC = () => {
 
         <PlacedCalendarManagement />
 
-        {!!dataAllCalendars?.data && (
+        {!isPending && !error && (
           <>
-            {dataAllCalendars.data.map((calendar, index) => (
+            {data.map((calendar, index) => (
               <div key={index}>
                 <LogicCalendarGridListening
                   logicCalendar={createLogicCalendarFromTCalendar(calendar)}
@@ -158,8 +140,8 @@ export const HomePageContent: FC = () => {
 
             <Timelines
               fromDate={timelinesFromDate}
-              allCalendars={dataAllCalendars.data}
-              isLoading={dataAllCalendars.loading}
+              allCalendars={data}
+              isLoading={false}
               goInThePast={() => {
                 setTimelinesWeeksBefore(timelinesWeeksBefore + 1)
               }}

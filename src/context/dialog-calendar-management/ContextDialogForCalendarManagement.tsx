@@ -2,7 +2,10 @@ import { useState } from 'react'
 import { fireEventCalendarUpdated } from '@/components/calendar/event-calendar-updated'
 import { fireEventStreamlineUpdated } from '@/components/streamline/event-streamline-updated'
 import { useUXContext } from '@/context/UXContext'
-import { getCalendarSDK } from '@/remote/remote'
+import {
+  useCreateCalendar,
+  useUpdateCalendar,
+} from '@/remote/useCalendarQueries'
 import { TCalendar } from '@/remote/sdk/types'
 
 type ContextPartData =
@@ -36,14 +39,17 @@ export const contextDialogForCalendarManagementDataDefault: ContextDialogForCale
     confirmOperation() {},
   } as const
 
-const calendarSdk = getCalendarSDK()
 export const useContextDialogForCalendarManagementForUX = (): {
   dialogForCalendarManagement: ContextDialogForCalendarManagement
 } => {
+  const createCalendarMutation = useCreateCalendar()
+  const updateCalendarMutation = useUpdateCalendar()
+
   const [dialog, setDialog] = useState<{
     isOpen: boolean
     data?: ContextPartData
   }>({ isOpen: false })
+
   return {
     dialogForCalendarManagement: {
       isOpen: dialog.isOpen,
@@ -83,72 +89,81 @@ export const useContextDialogForCalendarManagementForUX = (): {
           },
         })
         if (mode === 'insert') {
-          calendarSdk
-            .createCalendar({
+          createCalendarMutation.mutate(
+            {
               name,
               color,
               plannedColor,
               usesNotes,
-            })
-            .then(() => {
-              // Yay!
+            },
+            {
+              onSuccess: () => {
+                // Yay!
 
-              fireEventStreamlineUpdated(undefined)
-              // fireEventCalendarUpdated({ calendarId: 7 })
-              // FIXME: This work-around would be very very bad!
-              location.reload()
-              // TODO: Avoid refreshing the whole page
+                fireEventStreamlineUpdated(undefined)
+                // fireEventCalendarUpdated({ calendarId: 7 })
+                // FIXME: This work-around would be very very bad!
+                location.reload()
+                // TODO: Avoid refreshing the whole page
 
-              setDialog({
-                isOpen: false,
-                // data: undefined,
-              })
-            })
-            .catch(err => {
-              console.error(err)
-              // TODO: Tell user all went KO
-              alert('Errore avvenuto')
-              setDialog({
-                isOpen: true,
-                data: {
-                  mode,
-                  loading: false,
-                },
-              })
-            })
+                setDialog({
+                  isOpen: false,
+                  // data: undefined,
+                })
+              },
+              onError: err => {
+                console.error(err)
+                // TODO: Tell user all went KO
+                alert('Errore avvenuto')
+                setDialog({
+                  isOpen: true,
+                  data: {
+                    mode,
+                    loading: false,
+                  },
+                })
+              },
+            }
+          )
         } else if (mode === 'update') {
           const { calendar } = dialog.data
-          calendarSdk
-            .updateCalendar(calendar.id, {
-              name,
-              color,
-              plannedColor,
-              usesNotes,
-            })
-            .then(() => {
-              // Yay!
+          updateCalendarMutation.mutate(
+            {
+              id: calendar.id,
+              data: {
+                name,
+                color,
+                plannedColor,
+                usesNotes,
+              },
+            },
+            {
+              onSuccess: () => {
+                // Yay!
 
-              fireEventStreamlineUpdated(undefined)
-              fireEventCalendarUpdated({ calendarId: calendar.id })
+                fireEventStreamlineUpdated(undefined)
+                fireEventCalendarUpdated({ calendarId: calendar.id })
 
-              setDialog({
-                isOpen: false,
-                // data: undefined,
-              })
-            })
-            .catch(err => {
-              console.error(err)
-              // TODO: Tell user all went KO
-              alert('Errore avvenuto')
-              setDialog({
-                isOpen: true,
-                data: {
-                  mode,
-                  loading: false,
-                  calendar,
-                },
-              })
-            })
+                setDialog({
+                  isOpen: false,
+                  // data: undefined,
+                })
+              },
+              onError: err => {
+                console.error(err)
+                // TODO: Tell user all went KO
+                alert('Errore avvenuto')
+                setDialog({
+                  isOpen: true,
+                  data: {
+                    mode,
+                    loading: false,
+                    calendar,
+                  },
+                })
+              },
+            }
+          )
         } else {
           // Should never happen.
         }

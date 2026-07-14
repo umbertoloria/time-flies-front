@@ -31,20 +31,15 @@ export const setupAxiosInterceptors = (
   )
 }
 
-export const getSDK = () => {
-  return {
-    readStreamline: (filters: {
-      seeAllCalendars: boolean
-    }): Promise<TCalendarSDK.ReadPlannedEventsResponse | 'unable'> =>
-      api
-        .get(
-          `/calendars/streamline${filters.seeAllCalendars ? '?includeArchivedCalendars=true' : ''}`
-        )
-        .then(({ data }) => data),
-  }
-}
-
-export const getCalendarSDK = () => ({
+export const getSDK = () => ({
+  readStreamline: (filters: {
+    seeAllCalendars: boolean
+  }): Promise<TCalendarSDK.ReadPlannedEventsResponse> =>
+    api
+      .get(
+        `/calendars/streamline${filters.seeAllCalendars ? '?includeArchivedCalendars=true' : ''}`
+      )
+      .then(({ data }) => data),
   readAllCalendars: (filters: {
     dateFrom: string
     seeAllCalendars: boolean
@@ -54,13 +49,8 @@ export const getCalendarSDK = () => ({
         `/calendars?dateFrom=${filters.dateFrom}${filters.seeAllCalendars ? '&showAll=true' : ''}`
       )
       .then(({ data }) => data),
-  readCalendar: (id: number): Promise<TCalendar | 'unable'> =>
-    api
-      .get(`/calendars/${id}`)
-      .then(({ data }) => data)
-      .catch(() => {
-        return 'unable'
-      }),
+  readCalendar: (id: number): Promise<TCalendar> =>
+    api.get(`/calendars/${id}`).then(({ data }) => data),
   createCalendar: (data: {
     name: string
     color: string // Es. "#115599"
@@ -97,14 +87,12 @@ export const getCalendarSDK = () => ({
             : undefined,
       })
       .then(({ data }) => data),
-})
-export const getCalendarDateSDK = () => ({
   readCalendarDate: (
     calendarId: number,
     date: string
   ): Promise<TCalendarSDK.ReadDateResponse> =>
     api.get(`calendars/${calendarId}/date/${date}`).then(({ data }) => data),
-  checkDateWithSuccess: (
+  createDoneTask: (
     id: number,
     date: string,
     notes: undefined | string
@@ -135,9 +123,7 @@ export const getCalendarDateSDK = () => ({
         notes: fields.notes === null ? '' : fields.notes || undefined,
       })
       .then(({ data }) => data),
-})
-export const getPlannedEventSDK = () => ({
-  setDateAsPlannedEvent: (
+  createTodo: (
     id: number,
     localDate: string,
     notes: undefined | string

@@ -4,11 +4,9 @@ import { displayDateFromLocalDate } from '@/components/calendar/utils'
 import { Badge } from '@/components/calendar/Badge'
 import { useDialogForDatePanel } from '@/context/date-panel/ContextDialogForDatePanel'
 import { DatePanelInnerCLI } from '@/context/date-panel/DatePanelCLI'
-import {
-  CLICalendarHistoryStateless,
-  useCalendarDownloader,
-} from '@/context/date-panel/CLICalendarHistory'
+import { CLICalendarHistoryStateless } from '@/context/date-panel/CLICalendarHistory'
 import { useDialogForCalendarManagement } from '@/context/dialog-calendar-management/ContextDialogForCalendarManagement'
+import { useReadCalendar } from '@/remote/useCalendarQueries'
 
 export const PlacedCalendarManagement: FC = () => {
   const {
@@ -56,29 +54,29 @@ const PlacedCalendarManagementModeCalendar: FC<{
   calendarId: number
   onClose: () => void
 }> = ({ calendarId, onClose }) => {
-  const { data, refreshCalendar } = useCalendarDownloader(calendarId)
+  const { data, isPending, error, refetch } = useReadCalendar(calendarId)
+
   const { openDialog: openDialogForCalendarManagement } =
     useDialogForCalendarManagement()
 
   return (
     <>
-      {data?.loading && (
-        <>
-          <Badge>Loading...</Badge>
-        </>
-      )}
-      {!data?.loading && !!data?.data && (
+      {isPending ? (
+        <Badge>Caricamento...</Badge>
+      ) : error ? (
+        <Badge>Errore!</Badge>
+      ) : (
         <>
           <CalendarTitle textColor='#fff' label='Calendario'>
             <div>
               <button
                 className='close-btn btn-primary mr-2'
                 onClick={() => {
-                  if (!data?.loading && data?.data) {
+                  if (!isPending && !!data) {
                     openDialogForCalendarManagement({
                       mode: 'update',
                       loading: false, // Should be implicit.
-                      calendar: data.data,
+                      calendar: data,
                     })
                   }
                 }}
@@ -91,8 +89,8 @@ const PlacedCalendarManagementModeCalendar: FC<{
             </div>
           </CalendarTitle>
           <CLICalendarHistoryStateless
-            calendar={data.data}
-            refreshCalendar={refreshCalendar}
+            calendar={data}
+            refreshCalendar={refetch}
           />
         </>
       )}

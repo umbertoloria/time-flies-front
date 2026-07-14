@@ -7,34 +7,8 @@ import {
   unsubscribeToCalendarUpdates,
 } from '@/components/calendar/event-calendar-updated'
 import { AgendaFullCalendar } from '@/components/agenda'
-import { periodRefreshDateInMillis } from '@/context/date-panel/DatePanelCLI'
 import { CustomEventFnType } from '@/events/event-builder'
-import { useWrapperForCreateResource } from '@/lib/remote-resources'
-import { getCalendarSDK } from '@/remote/remote'
 import { TCalendar } from '@/remote/sdk/types'
-
-const calendarSdk = getCalendarSDK()
-
-export const useCalendarDownloader = (calendarId: number) => {
-  const [data, { refetch: refreshCalendar }] = useWrapperForCreateResource(() =>
-    calendarSdk
-      .readCalendar(calendarId)
-      .then(response => (typeof response === 'object' ? response : undefined))
-  )
-  useEffect(() => {
-    const refreshDateIntervalTimer = setInterval(
-      refreshCalendar,
-      periodRefreshDateInMillis
-    )
-    return () => {
-      clearInterval(refreshDateIntervalTimer)
-    }
-  }, [])
-  useEffect(() => {
-    refreshCalendar()
-  }, [calendarId])
-  return { data, refreshCalendar }
-}
 
 export const CLICalendarHistoryStateless: FC<{
   calendar: TCalendar

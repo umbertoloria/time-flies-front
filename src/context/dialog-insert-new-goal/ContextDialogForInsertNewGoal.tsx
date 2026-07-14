@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { fireEventCalendarUpdated } from '@/components/calendar/event-calendar-updated'
 import { fireEventStreamlineUpdated } from '@/components/streamline/event-streamline-updated'
 import { useUXContext } from '@/context/UXContext'
-import { getCalendarDateSDK } from '@/remote/remote'
+import { useCreateDoneTask } from '@/remote/useCalendarQueries'
 
 type ContextPartData = {
   calendar: {
@@ -32,14 +32,16 @@ export const contextDialogForInsertNewGoalDataDefault: ContextDialogForInsertNew
     confirmProgressDone() {},
   } as const
 
-const calendarDateSdk = getCalendarDateSDK()
 export const useContextDialogForInsertNewGoalForUX = (): {
   dialogForInsertNewGoal: ContextDialogForInsertNewGoal
 } => {
+  const createDoneTaskMutation = useCreateDoneTask()
+
   const [dialog, setDialog] = useState<{
     isOpen: boolean
     data?: ContextPartData
   }>({ isOpen: false })
+
   return {
     dialogForInsertNewGoal: {
       isOpen: dialog.isOpen,
@@ -85,36 +87,43 @@ export const useContextDialogForInsertNewGoalForUX = (): {
             loading: true,
           },
         })
-        calendarDateSdk
-          .checkDateWithSuccess(calendar.id, localDate, notes)
-          .then(() => {
-            // Yay!
+        createDoneTaskMutation.mutate(
+          {
+            id: calendar.id,
+            date: localDate,
+            notes,
+          },
+          {
+            onSuccess: () => {
+              // Yay!
 
-            fireEventCalendarUpdated({ calendarId: calendar.id })
-            fireEventStreamlineUpdated(undefined)
-            // Because maybe there was a Planned Event right on that day.
+              fireEventCalendarUpdated({ calendarId: calendar.id })
+              fireEventStreamlineUpdated(undefined)
+              // Because maybe there was a Planned Event right on that day.
 
-            setDialog({
-              isOpen: false,
-              // data: undefined,
-            })
-          })
-          .catch(err => {
-            console.error(err)
-            // TODO: Tell user all went KO
-            alert('Errore avvenuto')
-            setDialog({
-              isOpen: true,
-              data: {
-                calendar: {
-                  id: calendar.id,
-                  usesNotes: calendar.usesNotes,
+              setDialog({
+                isOpen: false,
+                // data: undefined,
+              })
+            },
+            onError: err => {
+              console.error(err)
+              // TODO: Tell user all went KO
+              alert('Errore avvenuto')
+              setDialog({
+                isOpen: true,
+                data: {
+                  calendar: {
+                    id: calendar.id,
+                    usesNotes: calendar.usesNotes,
+                  },
+                  localDate,
+                  loading: false,
                 },
-                localDate,
-                loading: false,
-              },
-            })
-          })
+              })
+            },
+          }
+        )
       },
     },
   }
